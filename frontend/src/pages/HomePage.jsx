@@ -1,6 +1,7 @@
 import { Navbar } from '../components/Navbar'
 import { Header } from '../components/Header'
 import styled from 'styled-components'
+import { CreateQuest } from '../components/CreateQuest'
 
 export const Home = () => {
   return (
@@ -10,6 +11,7 @@ export const Home = () => {
       <Div>
         <p>Motivational things</p>
       </Div>
+      <CreateQuest />
       <Div>
         <p>Motivational things</p>
       </Div>
