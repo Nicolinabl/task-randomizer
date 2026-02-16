@@ -4,6 +4,11 @@ import mongoose from "mongoose";
 import listEndpoints from "express-list-endpoints";
 import { Quest } from "./schemas";
 import { User } from "./schemas";
+import quests from "./quests.json";
+import bcrypt from "bcrypt-nodejs";
+import { authentificateUser } from "./authMiddleware";
+
+//console.log("Quests: ", quests.length);
 
 const mongoUrl = process.env.MONGO_URL || "mongodb://localhost/final-project";
 mongoose.connect(mongoUrl);
@@ -15,7 +20,14 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-// TODO ---- AUTHORISATION MIDDLEWARE
+//Middleware to hadnle error at service availability before running anything else
+app.use((req, res, next) => {
+  if (mongoose.connection.readyState === 1) {
+    next();
+  } else {
+    res.status(503).json({ error: "Service unavailable" });
+  }
+});
 
 // DONE ---- All ENDPOINTS, temporarily ----
 
@@ -29,14 +41,46 @@ app.get("/", (req, res) => {
 
 // TODO ---- USER ----
 
-// FIXME MUST ---- Register new user
-app.post("/register", (req, res) => {
-  console.log("register");
+// FIXME MUST ---- Register new user ----
+app.post("/signup", async (req, res) => {
+  try {
+    const { name, email, password } = req.body;
+
+    //One-way encryption:
+    const salt = bcrypt.genSaltSync();
+    const hashedPass = bcrypt.hashSync(password, salt);
+
+    const user = new User({
+      name,
+      email,
+      password: hashedPass,
+    });
+    await user.save();
+    res.status(201).json({ id: user._id, accessToken: user.accessToken });
+  } catch (err) {
+    res
+      .status(400)
+      .json({ message: "Could not create user", errors: err.errors });
+  }
 });
 
-// FIXME MUST ---- Login with existing user
-app.post("/login", (req, res) => {
-  console.log("login");
+// FIXME Update error handling MUST ---- Login with existing user ----
+app.post("/login", async (req, res) => {
+  const { email, password } = req.body;
+  const user = await User.findOne({ email }); //retrieving from database by email, should be unique
+  try {
+    if (user && bcrypt.compareSync(password, user.password)) {
+      //Success
+      res.json({ userID: user._id, accessToken: user.accessToken });
+    } else {
+      //Failed:
+      //1.User doesn't exist
+      //2.Password doesn't match
+      res.json({ notFound: true });
+    }
+  } catch (err) {
+    res.status(400).json({ err: "Bad request" });
+  }
 });
 
 // TODO ---- QUESTS ----
@@ -46,17 +90,17 @@ app.post("/quests", (req, res) => {
   res.send("Create your quest");
 });
 
-// FIXME MUST ---- Quests randomization, (filter tasks =< time available today; re-try rule; randomization session with sessionId), >>>>> only for auth users
+// FIXME MUST ---- ??? is it post? Quests randomization, (filter tasks =< time available today; re-try rule; randomization session with sessionId), >>>>> only for auth users
 app.post("/quests/random", (req, res) => {
-  console.log("randomize quest and select by time");
+  res.send("Random quest");
 });
 
-// FIXME MUST ---- Re-try to get a new quest >>>>> only for auth users
+// FIXME MUST ---- ??? is it post? Re-try to get a new quest >>>>> only for auth users
 app.post("quests/random/:sessionId/retry", (req, res) => {
   console.log("re-try");
 });
 
-// FIXME ---- Complete task >>>>> only for auth users
+// FIXME ---- Complete a quest >>>>> only for auth users
 app.post("quests/:questid/complete", (req, res) => {
   console.log("Task is done");
 });
@@ -79,7 +123,7 @@ app.post("/quests/:questid/repeat");
 
 // ---- FRIENDS ----
 // FIXME MUST --- Give kudos >>>>> only for auth users
-app.post("/friends/:postid/kudos", (req, res) => {
+app.post("/friends/:postid/kudos", authentificateUser, (req, res) => {
   console.log("Give kudos");
 });
 
@@ -131,44 +175,72 @@ app.get("/friends", (req, res) => {
 });
 
 // FIXME NICE+ ---- Find a friend bi ID page
-app.get("/friends/:friendid", (req, res) => {
-  console.log("friend by id");
+app.get("/friends/:friendid", async (req, res) => {
+  const friend = await User.findById(req.params.id); //search through users ids in database?
+  res.json(friend);
 });
 
 // FIXME NICE+ ---- Find a friend by :name page
-app.get("/friends/:name", (req, res) => {
-  console.log("friend by name");
+app.get("/friends/:name", async (req, res) => {
+  const friend = await User.findOne(req.params.name); //search through users names in database?
+  res.json(friend);
 });
 
 // TODO ---- QUESTS ----
 
 // FIXME MUST ---- Quests default library (returns default tasks, categories, est time)
 app.get("/quests/library", (req, res) => {
-  console.log("Default quest library");
+  res.json(quests);
 });
 
-// FIXME MUST --- User created quests (returns defaut tasks user added, user created tasks, categories, est time) >>>>> only for auth users
-app.get("/quests", (req, res) => {
-  res.send("This is a list of your quests");
+// FIXME MUST --- User's quests (returns defaut tasks user added, user created tasks, categories, est time) >>>>> only for auth users
+app.get("/user/:id/quests/", authentificateUser, async (req, res) => {
+  //const userQuests = await Quest.find().populate("createdBy");
+  //res.send(userQuests);
+  const user = await User.findById(req.params.id);
+  const quests = await Quest.find({
+    user: mongoose.Types.ObjectId.createFromHexString(user.id),
+  });
+  try {
+    if (user) {
+      res.json(quests);
+    } else {
+      res.status(404).json({ error: "Oops, user not found" });
+    }
+  } catch (err) {
+    res.status(400).json({ error: "Invalid user ID" });
+  }
 });
 
-// FIXME MUST ---- Users one quest >>>>> only for auth users
+// FIXME MUST ---- Quests randomization, (filter tasks =< time available today; re-try rule; randomization session with sessionId), >>>>> only for auth users
+app.get("/quests/random", (req, res) => {
+  res.send("Random quest");
+});
+
+// FIXME MUST ---- User's done quest /user/:id/quests/done/:done
+app.get("quests/done/:done", (req, res) => {
+  const done = req.params.done;
+  const questsDone = quests.filter((item) => item.done === done);
+  res.json(questsDone);
+});
+
+// FIXME MUST ---- User's daily random(!) quest >>>>> only for auth users
 app.get("/user/:id/quests/:id", (req, res) => {
-  console.log("My one quest of the day");
+  res.send("My one quest of the day");
 });
 
 // FIXME MUST ---- Rewards >>>>> only for auth users
-app.get("/rewards", (req, res) => {
-  console.log("Your reward is here");
+app.get("user/:id/rewards", (req, res) => {
+  res.send("Your reward is here");
 });
 
 // FIXME MUST ---- Streaks >>>>> only for auth users
-app.get("/streaks", (req, res) => {
+app.get("user/:id/streaks", (req, res) => {
   console.log("Your streak");
 });
 
 // FIXME NICE+ ---- Quests history >>>>>> only for auth users
-app.get("/quests/history", (req, res) => {
+app.get("user/:id/quests/history", (req, res) => {
   console.log("Shows how much user have done before");
 });
 

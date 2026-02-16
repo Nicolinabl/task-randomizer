@@ -1,0 +1,54 @@
+[
+  {
+    "_id": "682bab8c12155b00101732cb",
+    "message": "Clean the toilet",
+    "timeNeed": 20,
+    "category": ["Cleaning", "Bathroom"],
+    "deadline": "2026-03-15T22:07:08.999Z",
+    "done": "true",
+    "createdAt": "2026-03-08T22:07:08.999Z",
+    "updatedAt": "2025-03-14T22:07:08.999Z",
+    "createdBy": "",
+    "__v": 0
+  },
+  {
+    "_id": "682bab8c12155b00101732cb",
+    "message": "Do one laundry run",
+    "timeNeed": 12,
+    "category": ["Washing", "Clothes"],
+    "deadline": "2026-03-17T22:07:08.999Z",
+    "done": "false",
+    "createdAt": "2026-03-08T22:07:08.999Z",
+    "__v": 0
+  },
+  {
+    "_id": "682bab8c12155b00101732cb",
+    "message": "Vacuum clean bedroom",
+    "timeNeed": 25,
+    "category": ["Cleaning", "Bedroom"],
+    "deadline": "2026-03-10T22:07:08.999Z",
+    "done": "true",
+    "createdAt": "2026-03-04T22:07:08.999Z",
+    "updatedAt": "2025-03-09T22:07:08.999Z",
+    "__v": 0
+  },
+  {
+    "_id": "682bab8c12155b00101732cb",
+    "message": "Water your plants",
+    "timeNeed": 5,
+    "category": ["Plants"],
+    "done": "false",
+    "createdAt": "2026-03-08T22:07:08.999Z",
+    "__v": 0
+  },
+  {
+    "_id": "682bab8c12155b00101732cb",
+    "message": "Unload dishwasher",
+    "timeNeed": 16,
+    "category": ["Cleaning", "Bathroom"],
+    "done": "true",
+    "createdAt": "2026-03-08T22:07:08.999Z",
+    "updatedAt": "2025-03-09T22:07:08.999Z",
+    "__v": 0
+  }
+]

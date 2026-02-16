@@ -1,4 +1,6 @@
 import mongoose from "mongoose";
+import crypto from "crypto";
+import bcrypt from "bcrypt-nodejs";
 
 const mongoUrl = process.env.MONGO_URL || "mongodb://localhost/final-project";
 mongoose.connect(mongoUrl);
@@ -31,6 +33,11 @@ const questSchema = new mongoose.Schema(
     done: {
       type: Boolean,
       default: false,
+    },
+
+    createdBy: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
     },
   },
 
@@ -83,6 +90,11 @@ const userSchema = new mongoose.Schema(
     },
 
     moodUrl: String,
+
+    accessToken: {
+      type: String,
+      default: () => crypto.randomBytes(128).toString("hex"),
+    },
   },
 
   { timestamps: true },
@@ -90,4 +102,7 @@ const userSchema = new mongoose.Schema(
 
 export const User = mongoose.model("User", userSchema);
 
-// FIXME ???NICE+ ---- Friend -----
+// TODO ---- Session ----
+// Schema to randomize and sessions?
+
+// TODO ???NICE+ ---- Friends -----
