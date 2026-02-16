@@ -8,8 +8,6 @@ import quests from "./quests.json";
 import bcrypt from "bcrypt-nodejs";
 import { authentificateUser } from "./authMiddleware";
 
-//console.log("Quests: ", quests.length);
-
 const mongoUrl = process.env.MONGO_URL || "mongodb://localhost/final-project";
 mongoose.connect(mongoUrl);
 mongoose.Promise = Promise;
@@ -20,7 +18,7 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-//Middleware to hadnle error at service availability before running anything else
+//Middleware to handle error at service availability before running anything else
 app.use((req, res, next) => {
   if (mongoose.connection.readyState === 1) {
     next();
@@ -88,11 +86,8 @@ app.post("/login", async (req, res) => {
 
 // TODO ---- QUESTS ----
 
-// FIXME Update to auth unauthorized users // MUST --- Create a quest >>>>> only for auth users
+// FIXME Update to auth authorized users, add error handling or redirecting for not authorized // MUST --- Create a quest >>>>> only for auth users
 app.post("/quests", async (req, res) => {
-  //res.send("Create your quest");
-  //const body = req.body;
-  //res.json(body);
   const { message, timeNeeded, category, deadline } = req.body;
 
   try {
@@ -116,9 +111,14 @@ app.post("/quests/library/add", (req, res) => {
   console.log("Add quest from default library to user's list");
 });
 
-// FIXME ---- Complete a quest >>>>> only for auth users
-app.patch("quests/:questid/complete", (req, res) => {
+// FIXME MUST ---- Complete a quest >>>>> only for auth users
+app.post("quests/:questid/complete", (req, res) => {
   console.log("Task is done");
+});
+
+//FIXME NICE+ ---- User completes task too fast confirmation >>>>> only for auth users
+app.post("quests/:questid/confirm-complete", (req, res) => {
+  console.log("Do not cheat, ok?");
 });
 
 // FIXME MUST ---- ??? is it post? Quests randomization, (filter tasks =< time available today; re-try rule; randomization session with sessionId), >>>>> only for auth users
@@ -218,11 +218,11 @@ app.get("quests/done/:done", (req, res) => {
   res.json(questsDone);
 });
 
-// FIXME add randomizing(?here?), add looking through all database update error handling // MUST ---- User's daily random(!) quest >>>>> only for auth users // "/user/:userId/quests/:questId"
+// FIXME add randomizing, add looking through all database update error handling // MUST ---- User's daily random(!) quest >>>>> only for auth users // "/user/:userId/quests/:questId"
 //NOW: only finds one from in-build library
-app.get("/quests/:questId", authentificateUser, (req, res) => {
+app.get("/quests/:id", authentificateUser, (req, res) => {
   //res.send("My one random quest of the day");
-  const id = req.params.questId;
+  const { id } = req.params;
 
   try {
     const dailyQuest = quests.find((item) => item._id === id);
@@ -253,7 +253,8 @@ app.get("user/:id/quests/history", (req, res) => {
 });
 
 // TODO ---- MAIN PAGES ----
-// ---- USER ----
+
+// TODO ---- USER ----
 // FIXME ---- Smiley state of mood ---- >>>> only for auth users, returns sad/happy/delighted avatars
 app.get("/user/:id/state", (req, res) => {
   /* console.log("this is your mode"); */
@@ -261,7 +262,7 @@ app.get("/user/:id/state", (req, res) => {
 });
 
 // FIXME Nice+ ---- User page (shows: current strike, settings, log out, delete user, bonus points, profile picture state, user library) >>>>> only for auth users
-app.get("/profile/:userid", (req, res) => {
+app.get("/profile/:id", (req, res) => {
   /* console.log("user info page"); */
   res.send("User profle");
 });
@@ -287,7 +288,7 @@ app.get("/friends", (req, res) => {
 });
 
 // FIXME NICE+ ---- Find a friend bi ID page
-app.get("/friends/:friendid", async (req, res) => {
+app.get("/friends/:id", async (req, res) => {
   const friend = await User.findById(req.params.id); //search through users ids in database?
   res.json(friend);
 });
@@ -310,8 +311,26 @@ app.delete("/user/:id", (req, res) => {
 // TODO ---- QUESTS ----
 
 // FIXME MUST ---- Delete one quest >>>>> only for authorised users for their list
-app.delete("/user/:id/quests/:id", (req, res) => {
-  console.log("delete test");
+app.delete("/quests/:id", (req, res) => {
+  //console.log("delete test");
+  const { id } = req.params;
+
+  try {
+    const quest = quests.find((item) => item._id === id);
+    if (!quest) {
+      return res
+        .status(404)
+        .json({ error: `Couldn't find and delete quest with id ${id}` });
+    }
+
+    const allQuest = quests.filter((item) => item._id != id);
+
+    quests = allQuest;
+
+    res.json(quest);
+  } catch (err) {
+    res.status(400).json({ error: `Something went wrong, ${id} is not valid` });
+  }
 });
 
 // FIXME EXTRA ---- DELETE more than 1 quest at a time >>>>> only for authorised users for their list
@@ -336,7 +355,7 @@ app.patch("/profile/:id/settings", (req, res) => {
 });
 
 // FIXME NICE+ ---- Edit one quest >>>>> only for authorised users for their list
-app.patch("/user/:id/quests/:id", (req, res) => {
+app.patch("/quests/:id", (req, res) => {
   console.log("delete test");
 });
 
