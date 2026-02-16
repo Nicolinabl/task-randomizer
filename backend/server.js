@@ -1,4 +1,4 @@
-import express from "express";
+import express, { json } from "express";
 import cors from "cors";
 import mongoose from "mongoose";
 import listEndpoints from "express-list-endpoints";
@@ -29,19 +29,22 @@ app.use((req, res, next) => {
   }
 });
 
-// DONE ---- All ENDPOINTS, temporarily ----
+// ---- All ENDPOINTS, temporarily ----
 
 app.get("/", (req, res) => {
   const endpoints = listEndpoints(app);
   console.log({ endpoints: endpoints });
-  res.json(endpoints); // FIXME delete res.json for production
+  res.json({
+    message: "List of all endpoints",
+    endpoints: endpoints,
+  }); // FIXME delete res.json before prod!
 });
 
 // TODO ---- POST ENDPOINTS ----
 
 // TODO ---- USER ----
 
-// FIXME MUST ---- Register new user ----
+// FIXME update error handling and more MUST ---- Register new user ----
 app.post("/signup", async (req, res) => {
   try {
     const { name, email, password } = req.body;
@@ -64,7 +67,7 @@ app.post("/signup", async (req, res) => {
   }
 });
 
-// FIXME Update error handling MUST ---- Login with existing user ----
+// FIXME Update error handling / MUST ---- Login with existing user ----
 app.post("/login", async (req, res) => {
   const { email, password } = req.body;
   const user = await User.findOne({ email }); //retrieving from database by email, should be unique
@@ -76,7 +79,7 @@ app.post("/login", async (req, res) => {
       //Failed:
       //1.User doesn't exist
       //2.Password doesn't match
-      res.json({ notFound: true });
+      res.json({ message: "Smth went wrong, check your email and password" });
     }
   } catch (err) {
     res.status(400).json({ err: "Bad request" });
@@ -85,9 +88,37 @@ app.post("/login", async (req, res) => {
 
 // TODO ---- QUESTS ----
 
-// FIXME MUST --- Create a quest >>>>> only for auth users
-app.post("/quests", (req, res) => {
-  res.send("Create your quest");
+// FIXME Update to auth unauthorized users // MUST --- Create a quest >>>>> only for auth users
+app.post("/quests", async (req, res) => {
+  //res.send("Create your quest");
+  //const body = req.body;
+  //res.json(body);
+  const { message, timeNeeded, category, deadline } = req.body;
+
+  try {
+    const quest = await new Quest({
+      message,
+      timeNeeded,
+      category,
+      deadline,
+    }).save();
+    res.status(201).json(quest);
+  } catch (err) {
+    res.status(400).json({
+      message: "Couldn't save quest, please try again",
+      error: err.errors,
+    });
+  }
+});
+
+// FIXME MUST ---- Add quest from default library to user's list  >>>>> only for auth users
+app.post("/quests/library/add", (req, res) => {
+  console.log("Add quest from default library to user's list");
+});
+
+// FIXME ---- Complete a quest >>>>> only for auth users
+app.patch("quests/:questid/complete", (req, res) => {
+  console.log("Task is done");
 });
 
 // FIXME MUST ---- ??? is it post? Quests randomization, (filter tasks =< time available today; re-try rule; randomization session with sessionId), >>>>> only for auth users
@@ -98,11 +129,6 @@ app.post("/quests/random", (req, res) => {
 // FIXME MUST ---- ??? is it post? Re-try to get a new quest >>>>> only for auth users
 app.post("quests/random/:sessionId/retry", (req, res) => {
   console.log("re-try");
-});
-
-// FIXME ---- Complete a quest >>>>> only for auth users
-app.post("quests/:questid/complete", (req, res) => {
-  console.log("Task is done");
 });
 
 //FIXME NICE+ ---- User completes task too fast confirmation >>>>> only for auth users
@@ -139,6 +165,92 @@ app.post("/punishment/lock", (req, res) => {
 });
 
 // TODO ---- GET ENDPOINTS ----
+
+// TODO ---- QUESTS ----
+
+// FIXME add error handling // MUST ---- Quests default library (returns default tasks, categories, est time), can filter on one category and time <= N
+app.get("/quests/library", (req, res) => {
+  const { category, time } = req.query;
+  //console.log("category", category);
+  let filteredQuests = quests;
+
+  //Test example: http://localhost:8080/quests/library/?category=cleaning&time=20
+  if (category) {
+    filteredQuests = filteredQuests.filter((item) => {
+      return item.category.some((word) => {
+        return word.toLowerCase() === category.toLowerCase();
+      });
+    });
+  }
+
+  if (time) {
+    filteredQuests = filteredQuests.filter((item) => {
+      return item.timeNeed <= Number(time);
+    });
+  }
+  res.json(filteredQuests);
+});
+
+// FIXME MUST --- User's quests (returns all tasks user saved to their list, both from library and user-created, with categories and est time; can filter on categories and time <= N) >>>>> only for auth users
+//Currently: only checks build-in library
+app.get("/user/:id/quests/", authentificateUser, async (req, res) => {
+  //const userQuests = await Quest.find().populate("createdBy");
+  //res.send(userQuests);
+  const user = await User.findById(req.params.id);
+  const quests = await Quest.find({
+    user: mongoose.Types.ObjectId.createFromHexString(user.id),
+  });
+  try {
+    if (user) {
+      res.json(quests);
+    } else {
+      res.status(404).json({ error: "Oops, user not found" });
+    }
+  } catch (err) {
+    res.status(400).json({ error: "Invalid user ID" });
+  }
+});
+
+// FIXME MUST ---- User's done quests /user/:id/quests/done/true
+app.get("quests/done/:done", (req, res) => {
+  const done = req.params.done;
+  const questsDone = quests.filter((item) => item.done === done);
+  res.json(questsDone);
+});
+
+// FIXME add randomizing(?here?), add looking through all database update error handling // MUST ---- User's daily random(!) quest >>>>> only for auth users // "/user/:userId/quests/:questId"
+//NOW: only finds one from in-build library
+app.get("/quests/:questId", authentificateUser, (req, res) => {
+  //res.send("My one random quest of the day");
+  const id = req.params.questId;
+
+  try {
+    const dailyQuest = quests.find((item) => item._id === id);
+
+    if (!dailyQuest) {
+      return res.status(404).json({ error: `Quest with ${id} is not found` });
+    }
+
+    res.json(dailyQuest);
+  } catch (err) {
+    res.status(400).json({ error: `Something went wrong, ${id} is not valid` });
+  }
+});
+
+// FIXME MUST ---- User's Rewards Collection >>>>> only for auth users
+app.get("user/:id/rewards", (req, res) => {
+  res.send("Your reward is here");
+});
+
+// FIXME MUST ---- Streaks >>>>> only for auth users
+app.get("user/:id/streaks", (req, res) => {
+  console.log("Your streak");
+});
+
+// FIXME NICE+ ---- Quests history >>>>>> only for auth users
+app.get("user/:id/quests/history", (req, res) => {
+  console.log("Shows how much user have done before");
+});
 
 // TODO ---- MAIN PAGES ----
 // ---- USER ----
@@ -184,64 +296,6 @@ app.get("/friends/:friendid", async (req, res) => {
 app.get("/friends/:name", async (req, res) => {
   const friend = await User.findOne(req.params.name); //search through users names in database?
   res.json(friend);
-});
-
-// TODO ---- QUESTS ----
-
-// FIXME MUST ---- Quests default library (returns default tasks, categories, est time)
-app.get("/quests/library", (req, res) => {
-  res.json(quests);
-});
-
-// FIXME MUST --- User's quests (returns defaut tasks user added, user created tasks, categories, est time) >>>>> only for auth users
-app.get("/user/:id/quests/", authentificateUser, async (req, res) => {
-  //const userQuests = await Quest.find().populate("createdBy");
-  //res.send(userQuests);
-  const user = await User.findById(req.params.id);
-  const quests = await Quest.find({
-    user: mongoose.Types.ObjectId.createFromHexString(user.id),
-  });
-  try {
-    if (user) {
-      res.json(quests);
-    } else {
-      res.status(404).json({ error: "Oops, user not found" });
-    }
-  } catch (err) {
-    res.status(400).json({ error: "Invalid user ID" });
-  }
-});
-
-// FIXME MUST ---- Quests randomization, (filter tasks =< time available today; re-try rule; randomization session with sessionId), >>>>> only for auth users
-app.get("/quests/random", (req, res) => {
-  res.send("Random quest");
-});
-
-// FIXME MUST ---- User's done quest /user/:id/quests/done/:done
-app.get("quests/done/:done", (req, res) => {
-  const done = req.params.done;
-  const questsDone = quests.filter((item) => item.done === done);
-  res.json(questsDone);
-});
-
-// FIXME MUST ---- User's daily random(!) quest >>>>> only for auth users
-app.get("/user/:id/quests/:id", (req, res) => {
-  res.send("My one quest of the day");
-});
-
-// FIXME MUST ---- Rewards >>>>> only for auth users
-app.get("user/:id/rewards", (req, res) => {
-  res.send("Your reward is here");
-});
-
-// FIXME MUST ---- Streaks >>>>> only for auth users
-app.get("user/:id/streaks", (req, res) => {
-  console.log("Your streak");
-});
-
-// FIXME NICE+ ---- Quests history >>>>>> only for auth users
-app.get("user/:id/quests/history", (req, res) => {
-  console.log("Shows how much user have done before");
 });
 
 // TODO ---- DELETE ENDPOINTS ----

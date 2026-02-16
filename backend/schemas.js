@@ -21,9 +21,11 @@ const questSchema = new mongoose.Schema(
       require: true,
     },
 
-    category: {
-      type: String,
-    },
+    category: [
+      {
+        type: String,
+      },
+    ],
 
     deadline: {
       type: Date,

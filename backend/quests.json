@@ -1,6 +1,6 @@
 [
   {
-    "_id": "682bab8c12155b00101732cb",
+    "_id": "682bab8c12155b00101732db",
     "message": "Clean the toilet",
     "timeNeed": 20,
     "category": ["Cleaning", "Bathroom"],
@@ -12,7 +12,7 @@
     "__v": 0
   },
   {
-    "_id": "682bab8c12155b00101732cb",
+    "_id": "682bab8c12155b00101732nb",
     "message": "Do one laundry run",
     "timeNeed": 12,
     "category": ["Washing", "Clothes"],
@@ -33,7 +33,7 @@
     "__v": 0
   },
   {
-    "_id": "682bab8c12155b00101732cb",
+    "_id": "682bab8c12155b00101732kb",
     "message": "Water your plants",
     "timeNeed": 5,
     "category": ["Plants"],
@@ -42,10 +42,10 @@
     "__v": 0
   },
   {
-    "_id": "682bab8c12155b00101732cb",
+    "_id": "682bab8c12155b00101732db",
     "message": "Unload dishwasher",
     "timeNeed": 16,
-    "category": ["Cleaning", "Bathroom"],
+    "category": ["Cleaning"],
     "done": "true",
     "createdAt": "2026-03-08T22:07:08.999Z",
     "updatedAt": "2025-03-09T22:07:08.999Z",
