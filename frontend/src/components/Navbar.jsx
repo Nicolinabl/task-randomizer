@@ -6,6 +6,7 @@ export const Navbar = () => {
     <>
       <Nav>
         <StyledLink to='/'>Home</StyledLink>
+        <StyledLink to='/profile'>Profile</StyledLink>
         <StyledLink to='/feed'>Friends</StyledLink>
         <StyledLink to='/about'>About</StyledLink>
         <StyledLink to='/login'>Log in</StyledLink>

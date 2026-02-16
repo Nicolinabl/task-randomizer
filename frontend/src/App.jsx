@@ -28,6 +28,3 @@ export const App = () => {
   );
 };
 
-// TODO: create page + route for logged in user (=profile?)
-
-// TODO: create page + route for getting quest of the day
