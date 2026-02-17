@@ -24,7 +24,7 @@ export const Home = () => {
 const Div = styled.div`
   display: flex;
   background-color: var(--accent-color);
-  margin: 5px;
+  margin: 10px;
   justify-content: center;
 `
 

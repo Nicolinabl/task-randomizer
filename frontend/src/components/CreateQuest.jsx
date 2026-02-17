@@ -22,7 +22,7 @@ export const CreateQuest = () => {
 }
 
 const Form = styled.form`
-  margin: 5px;
+  margin: 10px;
   background-color: var(--accent-color)
 `
 

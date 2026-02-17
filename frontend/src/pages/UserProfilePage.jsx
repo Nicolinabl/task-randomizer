@@ -3,6 +3,9 @@ import { Header } from '../components/Header'
 import styled from 'styled-components'
 import { CreateQuest } from '../components/CreateQuest'
 import { QuestLibrary } from '../components/QuestLibrary'
+import { Avatar } from '../components/Avatar'
+import { Strike } from '../components/StrikeDisplay'
+import { Link } from 'react-router-dom'
 
 export const UserProfile = () => {
   return (
@@ -10,14 +13,14 @@ export const UserProfile = () => {
       <Navbar />
       <Header />
       <Div>
-        🤩
-        <button>Get quest of the day</button>
+        <Strike />
+        <Avatar />
+        <Link to="/quests">Get quest of the day</Link>
         {/* TODO: modal for getting quest of the day */}
       </Div>
       <CreateQuest />
       <QuestLibrary />
       {/* NOTE: hide add quest + list of quests by default? Only show when user clicks button?  */}
-      
     </>
   )
 }

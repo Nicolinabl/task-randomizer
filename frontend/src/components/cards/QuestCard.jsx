@@ -19,6 +19,6 @@ const Div = styled.div`
   display: flex;
   flex-direction: column;
   background-color: var(--primary-color);
-  margin: 5px;
+  margin: 10px;
   border-radius: 12px;
 `

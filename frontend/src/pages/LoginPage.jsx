@@ -1,29 +1,13 @@
-import styled from 'styled-components'
-import { Link } from 'react-router-dom'
 import { Navbar } from '../components/Navbar'
+import { LoginForm } from '../components/LoginForm'
 
 export const Login = () => {
   return (
     <>
       <Navbar />
-      <Form>
-          <h4>WelcomeBack! Log in now:</h4>
-          <input type="email" placeholder="email" />
-          <input type="password" placeholder="password" />
-          <button type="submit">Log in</button>
-          <Link to="/signup">Not a user? Sign up</Link>
-      </Form>
+      <LoginForm />
     </>
   )
 }
-
-const Form = styled.form`
-  display: flex;
-  flex-direction: column;
-  background-color: var(--primary-color);
-  margin: 5px;
-  border-radius: 12px;
-
-`
 
 // TODO: Decide, for now login and signup are pages. Do we want it to be modals?
