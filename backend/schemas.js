@@ -24,6 +24,8 @@ const questSchema = new mongoose.Schema(
     category: [
       {
         type: String,
+        lowercase: true,
+        trim: true,
       },
     ],
 

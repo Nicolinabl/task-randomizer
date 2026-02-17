@@ -9,15 +9,27 @@ import bcrypt from "bcrypt-nodejs";
 import { authentificateUser } from "./authMiddleware";
 import "dotenv/config";
 
-const mongoUrl = process.env.MONGO_URL || "mongodb://localhost/final-project";
-mongoose.connect(mongoUrl);
-mongoose.Promise = Promise;
-
 const port = process.env.PORT || 8080;
 const app = express();
 
 app.use(cors());
 app.use(express.json());
+
+const mongoUrl = process.env.MONGO_URL || "mongodb://localhost/final-project";
+mongoose.connect(mongoUrl);
+mongoose.Promise = Promise;
+
+//seeding of DB, OBS! only if =true
+if (process.env.RESET_FB) {
+  const seedDatabase = async () => {
+    await Quest.deleteMany(); //this will delete everything we have in database
+
+    quests.forEach((quest) => {
+      new Quest(quest).save();
+    });
+  };
+  seedDatabase();
+}
 
 // ---- Middleware to handle error at service availability before running anything else
 app.use((req, res, next) => {
@@ -28,7 +40,7 @@ app.use((req, res, next) => {
   }
 });
 
-// ---- All ENDPOINTS, temporarily ----
+// ---- All ENDPOINTS, temporary ----
 
 app.get("/", (req, res) => {
   const endpoints = listEndpoints(app);
@@ -37,17 +49,31 @@ app.get("/", (req, res) => {
     message: "List of all endpoints",
     endpoints: endpoints,
   }); // FIXME delete res.json before prod!
-  console.log("OUR ENV VAR", process.env.OUR_VAR);
+  //console.log("OUR ENV VAR", process.env.OUR_VAR);
 });
 
 // TODO ---- POST ENDPOINTS ----
 
 // TODO ---- USER ----
 
-// FIXME update error handling and more MUST ---- Register new user ----
+// MUST ---- Register new user ----
 app.post("/signup", async (req, res) => {
   try {
     const { name, email, password } = req.body;
+
+    if (!name || !email || !password) {
+      return res.status(400).json({
+        success: false,
+        message: "All fields are required to sign up",
+      });
+    }
+
+    if (password.length < 8) {
+      return res.status(400).json({
+        success: false,
+        message: "Password must be at least 8 characters long",
+      });
+    }
 
     //One-way encryption:
     const salt = bcrypt.genSaltSync();
@@ -58,19 +84,35 @@ app.post("/signup", async (req, res) => {
       email,
       password: hashedPass,
     });
+
     await user.save();
     res.status(201).json({ id: user._id, accessToken: user.accessToken });
   } catch (err) {
-    res
-      .status(400)
-      .json({ message: "Could not create user", errors: err.errors });
+    if (err.code === 11000) {
+      return res.status(400).json({
+        success: false,
+        message: "User with this name or email already exists",
+      });
+    }
+    res.status(400).json({
+      success: false,
+      message: "Could not create user",
+      errors: err.errors,
+    });
   }
 });
 
-// FIXME Update error handling / MUST ---- Login with existing user ----
+// MUST ---- Login with existing user ----
 app.post("/login", async (req, res) => {
   const { email, password } = req.body;
   const user = await User.findOne({ email }); //retrieving from database by email, should be unique
+
+  if (!email || !password) {
+    return res
+      .status(400)
+      .json({ success: false, message: "All fields are required to login" });
+  }
+
   try {
     if (user && bcrypt.compareSync(password, user.password)) {
       //Success
@@ -79,10 +121,13 @@ app.post("/login", async (req, res) => {
       //Failed:
       //1.User doesn't exist
       //2.Password doesn't match
-      res.json({ message: "Smth went wrong, check your email and password" });
+      res.status(401).json({
+        success: false,
+        message: "Smth went wrong, check your email and password",
+      });
     }
   } catch (err) {
-    res.status(400).json({ err: "Bad request" });
+    res.status(500).json({ success: false, err: "Something went wrong" });
   }
 });
 
@@ -114,12 +159,12 @@ app.post("/quests/library/add", (req, res) => {
 });
 
 // FIXME MUST ---- Complete a quest >>>>> only for auth users
-app.post("quests/:questid/complete", (req, res) => {
+app.post("quests/:id/complete", (req, res) => {
   console.log("Task is done");
 });
 
 //FIXME NICE+ ---- User completes task too fast confirmation >>>>> only for auth users
-app.post("quests/:questid/confirm-complete", (req, res) => {
+app.post("quests/:id/confirm-complete", (req, res) => {
   console.log("Do not cheat, ok?");
 });
 
@@ -133,13 +178,8 @@ app.post("quests/random/:sessionId/retry", (req, res) => {
   console.log("re-try");
 });
 
-//FIXME NICE+ ---- User completes task too fast confirmation >>>>> only for auth users
-app.post("quests/:questid/confirm-complete", (req, res) => {
-  console.log("Do not cheat, ok?");
-});
-
 // FIXME EXTRA ---- Add actual time >>>>> only for auth users
-app.post("quests/:questid/add-time", (req, res) => {
+app.post("quests/:id/add-time", (req, res) => {
   console.log("Add actual time");
 });
 
@@ -147,12 +187,36 @@ app.post("quests/:questid/add-time", (req, res) => {
 app.post("/quests/skip");
 
 // FIXME NICE+ ---- Repetitive quests >>>>> only for auth users
-app.post("/quests/:questid/repeat");
+app.post("/quests/:id/repeat");
 
 // ---- FRIENDS ----
-// FIXME MUST --- Give kudos >>>>> only for auth users
-app.post("/friends/:postid/kudos", authentificateUser, (req, res) => {
-  console.log("Give kudos");
+// FIXME add auth MUST --- Give kudos >>>>> only for auth users
+app.post("/friends/:postid/kudos", async (req, res) => {
+  //console.log("Give kudos");
+  const update = { $inc: { kudos: 1 } };
+  const options = { new: true, runValidators: true };
+
+  if (!mongoose.Types.ObjectId.isValid(id)) {
+    return res.status(404).json({ success: false, response: "Id is invalid" });
+  }
+
+  try {
+    const addKudos = await Quest.findByIdAndUpdate(id, update, options);
+
+    if (!addKudos) {
+      return res.status(404).json({
+        success: false,
+        message: "Can't add kudos, entry is invalid or it was deleted",
+      });
+    }
+    res.status(200).json(addKudos);
+  } catch (err) {
+    return res.status(500).json({
+      success: false,
+      message: "Couldn't add kudos, try again",
+      error: err.errors,
+    });
+  }
 });
 
 // TODO ---- PUNISHMENTS ----
@@ -170,87 +234,118 @@ app.post("/punishment/lock", (req, res) => {
 
 // TODO ---- QUESTS ----
 
-// FIXME add error handling // MUST ---- Quests default library (returns default tasks, categories, est time), can filter on one category and time <= N
+// FIXME ??? MUST ---- Quests default library (returns default tasks, categories, est time), can filter on one category and time <= N. Returns from hardcoded file
 app.get("/quests/library", (req, res) => {
   const { category, time } = req.query;
-  //console.log("category", category);
-  let filteredQuests = quests;
 
   //Test example: http://localhost:8080/quests/library/?category=cleaning&time=20
-  if (category) {
-    filteredQuests = filteredQuests.filter((item) => {
-      return item.category.some((word) => {
-        return word.toLowerCase() === category.toLowerCase();
-      });
-    });
-  }
-
-  if (time) {
-    filteredQuests = filteredQuests.filter((item) => {
-      return item.timeNeed <= Number(time);
-    });
-  }
-  res.json(filteredQuests);
-});
-
-// FIXME MUST --- User's quests (returns all tasks user saved to their list, both from library and user-created, with categories and est time; can filter on categories and time <= N) >>>>> only for auth users
-//Currently: only checks build-in library
-app.get("/user/:id/quests/", authentificateUser, async (req, res) => {
-  //const userQuests = await Quest.find().populate("createdBy");
-  //res.send(userQuests);
-  const user = await User.findById(req.params.id);
-  const quests = await Quest.find({
-    user: mongoose.Types.ObjectId.createFromHexString(user.id),
-  });
   try {
-    if (user) {
-      res.json(quests);
-    } else {
-      res.status(404).json({ error: "Oops, user not found" });
+    let filteredQuests = quests;
+
+    if (category) {
+      filteredQuests = filteredQuests.filter((item) => {
+        return item.category.some((word) => {
+          return word.toLowerCase() === category.toLowerCase();
+        });
+      });
     }
+
+    if (time) {
+      filteredQuests = filteredQuests.filter((item) => {
+        return item.timeNeed <= Number(time);
+      });
+    }
+    return res
+      .status(200)
+      .json({ success: true, response: filteredQuests, message: "Success" });
   } catch (err) {
-    res.status(400).json({ error: "Invalid user ID" });
+    return res
+      .status(500)
+      .json({ success: false, response: [], message: err.errors });
   }
 });
 
-// FIXME MUST ---- User's done quests /user/:id/quests/done/true
+// FIXME ?? MUST ----- Returns all user's quests, can filter on category and time <= N) >>>>> only for auth users.
+// Returns from database ---------
+app.get("/quests/all", authentificateUser, async (req, res) => {
+  let { category, time } = req.query;
+  const query = { createdBy: req.user._id };
+
+  if (category) {
+    category = category.toLowerCase();
+    query.category = category;
+  }
+  if (time) {
+    time = Number(time);
+    query.timeNeeded = { $lte: time };
+  }
+
+  try {
+    const filteredQuests = await Quest.find(query).populate("createdBy");
+
+    if (!filteredQuests.length) {
+      return res.status(404).json({
+        success: false,
+        response: [],
+        message: "Couldn't find any quests with these filters",
+      });
+    }
+    return res
+      .status(200)
+      .json({ success: true, response: filteredQuests, message: "Success" });
+  } catch (err) {
+    return res
+      .status(500)
+      .json({ success: false, response: [], mesasage: err.errors });
+  }
+});
+
+// FIXME add auth and error handling MUST ---- User's done quests /quests/done/true
 app.get("quests/done/:done", (req, res) => {
   const done = req.params.done;
   const questsDone = quests.filter((item) => item.done === done);
   res.json(questsDone);
 });
 
-// FIXME add randomizing, add looking through all database update error handling // MUST ---- User's daily random(!) quest >>>>> only for auth users // "/user/:userId/quests/:questId"
-//NOW: only finds one from in-build library
-app.get("/quests/:id", authentificateUser, (req, res) => {
-  //res.send("My one random quest of the day");
+// FIXME add randomizing, add looking through all users quests(added from library to users database)
+// MUST ---- User's daily random(!) quest >>>>> only for auth users // "/user/:userId/quests/:questId"
+//NOW: only finds one from general database
+app.get("/quests/:id", authentificateUser, async (req, res) => {
   const { id } = req.params;
 
   try {
-    const dailyQuest = quests.find((item) => item._id === id);
-
+    // const libraryQuests = quests.find((item) => item._id === id);
+    const dailyQuest = await Quest.findById(id); //from database
     if (!dailyQuest) {
-      return res.status(404).json({ error: `Quest with ${id} is not found` });
+      return res.status(404).json({
+        success: false,
+        respons: null,
+        error: `Quest with ${id} is not found`,
+      });
     }
 
-    res.json(dailyQuest);
+    res.json({ success: true, response: dailyQuest });
   } catch (err) {
-    res.status(400).json({ error: `Something went wrong, ${id} is not valid` });
+    res.status(500).json({
+      success: false,
+      response: null,
+      error: `Something went wrong, ${id} is not valid`,
+    });
   }
 });
 
 // FIXME MUST ---- User's Rewards Collection >>>>> only for auth users
-app.get("user/:id/rewards", (req, res) => {
+app.get("/rewards", (req, res) => {
   res.send("Your reward is here");
 });
 
 // FIXME MUST ---- Streaks >>>>> only for auth users
-app.get("user/:id/streaks", (req, res) => {
+app.get("/streaks", (req, res) => {
   console.log("Your streak");
 });
 
 // FIXME NICE+ ---- Quests history >>>>>> only for auth users
-app.get("user/:id/quests/history", (req, res) => {
+app.get("/quests/history", (req, res) => {
   console.log("Shows how much user have done before");
 });
 
@@ -359,9 +454,8 @@ app.patch("/profile/:id/settings", (req, res) => {
 });
 
 // FIXME NICE+ ---- Edit one quest >>>>> only for authorised users for their list
-app.patch("/quests/:id", (req, res) => {
-  console.log("delete test");
-});
+
+// ------ PATCH ENDPOINTS -----
 
 // Start the server
 app.listen(port, () => {
