@@ -7,6 +7,7 @@ import { User } from "./schemas";
 import quests from "./quests.json";
 import bcrypt from "bcrypt-nodejs";
 import { authentificateUser } from "./authMiddleware";
+import "dotenv/config";
 
 const mongoUrl = process.env.MONGO_URL || "mongodb://localhost/final-project";
 mongoose.connect(mongoUrl);
@@ -18,7 +19,7 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-//Middleware to handle error at service availability before running anything else
+// ---- Middleware to handle error at service availability before running anything else
 app.use((req, res, next) => {
   if (mongoose.connection.readyState === 1) {
     next();
@@ -36,6 +37,7 @@ app.get("/", (req, res) => {
     message: "List of all endpoints",
     endpoints: endpoints,
   }); // FIXME delete res.json before prod!
+  console.log("OUR ENV VAR", process.env.OUR_VAR);
 });
 
 // TODO ---- POST ENDPOINTS ----
@@ -311,23 +313,25 @@ app.delete("/user/:id", (req, res) => {
 // TODO ---- QUESTS ----
 
 // FIXME MUST ---- Delete one quest >>>>> only for authorised users for their list
-app.delete("/quests/:id", (req, res) => {
+app.delete("/quests/:id", async (req, res) => {
   //console.log("delete test");
   const { id } = req.params;
 
+  if (!mongoose.Types.ObjectId.isValid(id)) {
+    return res.status(404).json({
+      error: `Couldn't find the quest with id ${id}, check if it is valid.`,
+    });
+  }
+
   try {
-    const quest = quests.find((item) => item._id === id);
+    const quest = await Quest.findByIdAndDelete(id).exec();
     if (!quest) {
       return res
         .status(404)
         .json({ error: `Couldn't find and delete quest with id ${id}` });
     }
 
-    const allQuest = quests.filter((item) => item._id != id);
-
-    quests = allQuest;
-
-    res.json(quest);
+    res.status(200).json({ message: "Quest was successfully deleted" });
   } catch (err) {
     res.status(400).json({ error: `Something went wrong, ${id} is not valid` });
   }
