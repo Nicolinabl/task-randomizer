@@ -1,8 +1,9 @@
-import { Navbar } from '../components/Navbar'
-import { Header } from '../components/Header'
-import styled from 'styled-components'
-import { CreateQuest } from '../components/CreateQuest'
-import { QuestLibrary } from '../components/QuestLibrary'
+import { Navbar } from "../components/Navbar";
+import { Header } from "../components/Header";
+import styled from "styled-components";
+import { CreateQuest } from "../components/CreateQuest";
+import { QuestLibrary } from "../components/QuestLibrary";
+import { apiUrl } from "../../api";
 
 export const Home = () => {
   return (
@@ -18,14 +19,14 @@ export const Home = () => {
       </Div>
       <QuestLibrary />
     </>
-  )
-}
+  );
+};
 
 const Div = styled.div`
   display: flex;
   background-color: var(--accent-color);
   margin: 10px;
   justify-content: center;
-`
+`;
 
-// TODO: This is home page for logged out user. Decide what to keep there. Simplify? 
+// TODO: This is home page for logged out user. Decide what to keep there. Simplify?

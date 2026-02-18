@@ -1,12 +1,12 @@
-import { Navbar } from '../components/Navbar'
-import { Header } from '../components/Header'
-import styled from 'styled-components'
-import { CreateQuest } from '../components/CreateQuest'
-import { QuestLibrary } from '../components/QuestLibrary'
-import { Avatar } from '../components/Avatar'
-import { Strike } from '../components/StrikeDisplay'
-import { Link } from 'react-router-dom'
-import { QuestList } from '../components/QuestList'
+import { Navbar } from "../components/Navbar";
+import { Header } from "../components/Header";
+import styled from "styled-components";
+import { CreateQuest } from "../components/CreateQuest";
+import { QuestLibrary } from "../components/QuestLibrary";
+import { Avatar } from "../components/Avatar";
+import { Strike } from "../components/StrikeDisplay";
+import { Link } from "react-router-dom";
+import { QuestList } from "../components/QuestList";
 
 export const UserProfile = () => {
   return (
@@ -24,12 +24,12 @@ export const UserProfile = () => {
       <QuestLibrary />
       {/* NOTE: hide add quest + list of quests by default? Only show when user clicks button?  */}
     </>
-  )
-}
+  );
+};
 
 const Div = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
-`
+`;

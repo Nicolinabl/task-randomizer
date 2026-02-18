@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "description": "Server part of final project",
   "scripts": {
-    "start": "nodemon server.js --exec babel-node",
+    "start": "node server.js --exec babel-node",
     "dev": "nodemon server.js --exec babel-node",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
