@@ -6,6 +6,7 @@ import { QuestLibrary } from '../components/QuestLibrary'
 import { Avatar } from '../components/Avatar'
 import { Strike } from '../components/StrikeDisplay'
 import { Link } from 'react-router-dom'
+import { QuestList } from '../components/QuestList'
 
 export const UserProfile = () => {
   return (
@@ -19,6 +20,7 @@ export const UserProfile = () => {
         {/* TODO: modal for getting quest of the day */}
       </Div>
       <CreateQuest />
+      <QuestList />
       <QuestLibrary />
       {/* NOTE: hide add quest + list of quests by default? Only show when user clicks button?  */}
     </>
