@@ -1,5 +1,18 @@
+import { QuestCard } from '../components/cards/QuestCard'
+import { Navbar } from '../components/Navbar'
+
 export const FriendFeed = () => {
   return (
-    <h1>Friend feed page</h1>
+    <>
+      <Navbar />
+      <h2>My friends finished quests</h2>
+      <form>
+        <label>
+          Add friend:
+          <input type="search" placeholder="Search 🔎"/>
+        </label>
+      </form>
+      <QuestCard />
+    </>
   )
 }

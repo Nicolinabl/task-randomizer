@@ -3,18 +3,30 @@ import styled from 'styled-components'
 export const CreateQuest = () => {
   return (
     <Form>
-      <fieldset>Create new quest
-        <input type="text" />
-        <input type="text" />
-        <input type="text" />
+      <Label>
+        Create new quest
+        <input type="text" placeholder='Text input' />
+        
+        <select name="category" id="QuestCategory" >
+          <option value="">Select a category</option>
+        </select>
+
+        <select name="time" id="QuestTime" >
+          <option value="">Time needed</option>
+        </select>
+
         <button type="submit">Add a quest</button>
-      </fieldset>
+      </Label>
     </Form>
   )
 }
 
 const Form = styled.form`
+  margin: 10px;
+  background-color: var(--accent-color)
+`
+
+const Label = styled.label`
   display: flex;
   flex-direction: column;
-  margin: 5px;
 `

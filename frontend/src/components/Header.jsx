@@ -22,7 +22,7 @@ export const Header = () => {
 const Div = styled.div`
   display: flex;
   background-color: var(--secondary-color);
-  margin: 5px 8px;
+  margin: 5px 10px;
 `
 
 const P = styled.p`

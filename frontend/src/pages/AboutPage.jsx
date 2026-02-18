@@ -1,5 +1,11 @@
+import { Navbar } from '../components/Navbar'
+
 export const About = () => {
   return (
-    <h1>About page</h1>
+    <>
+      <Navbar />
+      <p>What does the app do</p>
+      <p>How to get started</p>
+    </>
   )
 }

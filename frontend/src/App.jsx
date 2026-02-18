@@ -7,6 +7,7 @@ import { Rewards } from './pages/RewardPage'
 import { UserProfile } from './pages/UserProfilePage'
 import { Login } from './pages/LoginPage'
 import { GlobalStyle } from './styles/GlobalStyles'
+import { Signup } from './pages/SignupPage'
 
 export const App = () => {
 
@@ -21,7 +22,9 @@ export const App = () => {
         <Route path="/rewards" element={<Rewards />} />
         <Route path="/profile" element={<UserProfile />} />
         <Route path="/login" element={<Login />} />
+        <Route path="/signup" element={<Signup />} />
       </Routes>
     </>
   );
 };
+

@@ -1,6 +1,10 @@
 import { createGlobalStyle } from 'styled-components'
 
 export const GlobalStyle = createGlobalStyle`
+  * {
+    box-sizing: border-box;
+  }
+
   :root {
     --main-bg-color: #FFFFFF;
     --main-text-color: #000000;
@@ -8,4 +12,16 @@ export const GlobalStyle = createGlobalStyle`
     --secondary-color: #ECECEC;
     --accent-color: #F7F7F7;
   }
+
+  #root {
+    max-width: 500px;
+    width: 100%;
+  }
+
+  body {
+    margin: 0;
+    display: flex;
+    justify-content: center;
+  }
 `
+
