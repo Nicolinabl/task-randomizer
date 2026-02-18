@@ -134,8 +134,9 @@ app.post("/login", async (req, res) => {
 // TODO ---- QUESTS ----
 
 // FIXME Update to auth authorized users, add error handling or redirecting for not authorized // MUST --- Create a quest >>>>> only for auth users
-app.post("/quests", async (req, res) => {
+app.post("/quests", authentificateUser, async (req, res) => {
   const { message, timeNeeded, category, deadline } = req.body;
+  //console.log("createdBy:", req.user?.id);
 
   try {
     const quest = await new Quest({
@@ -143,10 +144,11 @@ app.post("/quests", async (req, res) => {
       timeNeeded,
       category,
       deadline,
+      createdBy: req.user._id,
     }).save();
     res.status(201).json(quest);
   } catch (err) {
-    res.status(400).json({
+    res.status(500).json({
       message: "Couldn't save quest, please try again",
       error: err.errors,
     });
@@ -159,12 +161,12 @@ app.post("/quests/library/add", (req, res) => {
 });
 
 // FIXME MUST ---- Complete a quest >>>>> only for auth users
-app.post("quests/:id/complete", (req, res) => {
+app.post("/quests/:id/complete", (req, res) => {
   console.log("Task is done");
 });
 
 //FIXME NICE+ ---- User completes task too fast confirmation >>>>> only for auth users
-app.post("quests/:id/confirm-complete", (req, res) => {
+app.post("/quests/:id/confirm-complete", (req, res) => {
   console.log("Do not cheat, ok?");
 });
 
@@ -174,12 +176,12 @@ app.post("/quests/random", (req, res) => {
 });
 
 // FIXME MUST ---- ??? is it post? Re-try to get a new quest >>>>> only for auth users
-app.post("quests/random/:sessionId/retry", (req, res) => {
+app.post("/quests/random/:sessionId/retry", (req, res) => {
   console.log("re-try");
 });
 
 // FIXME EXTRA ---- Add actual time >>>>> only for auth users
-app.post("quests/:id/add-time", (req, res) => {
+app.post("/quests/:id/add-time", (req, res) => {
   console.log("Add actual time");
 });
 
@@ -296,12 +298,12 @@ app.get("/quests/all", authentificateUser, async (req, res) => {
   } catch (err) {
     return res
       .status(500)
-      .json({ success: false, response: [], mesasage: err.errors });
+      .json({ success: false, response: [], message: err.errors });
   }
 });
 
 // FIXME add auth and error handling MUST ---- User's done quests /quests/done/true
-app.get("quests/done/:done", (req, res) => {
+app.get("/quests/done/:done", (req, res) => {
   const done = req.params.done;
   const questsDone = quests.filter((item) => item.done === done);
   res.json(questsDone);
