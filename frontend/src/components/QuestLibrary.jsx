@@ -14,4 +14,3 @@ export const QuestLibrary = () => {
   )
 }
 
-// TODO  Decide: QuestLibrary hardcoded as list at the moment. Keep that way? Or create Library task card and map over?

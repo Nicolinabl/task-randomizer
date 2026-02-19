@@ -34,7 +34,7 @@ export const CreateQuest = () => {
         body: JSON.stringify({ 
           message, 
           timeNeeded: Number(timeNeeded), 
-          category: [] 
+          category: [category] 
         })
      })
   
@@ -108,3 +108,5 @@ const Label = styled.label`
   display: flex;
   flex-direction: column;
 `
+
+// TODO: Add authentication check - redirect to login if no accessToken

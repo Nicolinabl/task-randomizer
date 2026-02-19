@@ -47,6 +47,10 @@ export const SignupForm = () => {
       localStorage.setItem('accessToken', data.accessToken)
       // Store the user ID
       localStorage.setItem('userId', data.id)
+      // Store username
+      localStorage.setItem('userName', name)
+      // store email
+      localStorage.setItem('userEmail', email)
 
       // Clear the form inputs
         setName('')

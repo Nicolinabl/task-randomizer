@@ -1,4 +1,3 @@
-import { Navbar } from "../components/Navbar";
 import { Header } from "../components/Header";
 import styled from "styled-components";
 import { CreateQuest } from "../components/CreateQuest";
@@ -8,19 +7,21 @@ import { Strike } from "../components/StrikeDisplay";
 import { Link } from "react-router-dom";
 import { QuestList } from "../components/QuestList";
 
-export const UserProfile = () => {
+export const UserProfile = ({ user }) => {
+  
   return (
     <>
-      <Navbar />
       <Header />
       <Div>
         <Strike />
         <Avatar />
+        {user && <p>Hello, {user.email}!</p>}
         <Link to="/quests">Get quest of the day</Link>
         {/* TODO: modal for getting quest of the day */}
       </Div>
       <CreateQuest />
       <QuestList />
+      {/* TODO: use socket.io to update questlist in real time without having to refresh page? */}
       <QuestLibrary />
       {/* NOTE: hide add quest + list of quests by default? Only show when user clicks button?  */}
     </>
@@ -34,4 +35,4 @@ const Div = styled.div`
   align-items: center;
 `;
 
-// TODO: Only show this page after login
+// FIXME: change what content is showed depending on logged in or logged out user
