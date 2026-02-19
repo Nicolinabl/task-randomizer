@@ -66,6 +66,7 @@ export const LoginForm = () => {
         <h4>Welcome Back! Log in now:</h4>
         <label>
           Username
+          {/* TODO: remove username, not needed for login */}
           <input type="text" placeholder="username" onChange={event => setName(event.target.value)}/>
         </label>
         <label>
