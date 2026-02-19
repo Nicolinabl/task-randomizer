@@ -1,7 +1,14 @@
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import styled from 'styled-components'
 
-export const Navbar = () => {
+export const Navbar = ({ onLogout }) => {
+  const navigate = useNavigate()
+
+  const handleLogoutClick = () => {
+    onLogout()  // Call the logout function
+    navigate('/')  // Redirect to homepage
+  }
+
   return (
     <>
       <Nav>
@@ -10,7 +17,7 @@ export const Navbar = () => {
         <StyledLink to='/feed'>Friends</StyledLink>
         <StyledLink to='/about'>About</StyledLink>
         <StyledLink to='/login'>Log in</StyledLink>
-        <button>Log out</button>
+        <button onClick={handleLogoutClick}>Log out</button>
       </Nav>
     </>
   )
@@ -26,4 +33,4 @@ const Nav = styled.nav`
 const StyledLink = styled(Link)`
   text-decoration: none;
 `
-// TODO: decide: Should navbar be hamburger menu on phone size?
+// TODO: change to hamburger on small screens
