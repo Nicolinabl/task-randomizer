@@ -470,8 +470,33 @@ app.get("/friends/:name", async (req, res) => {
 // TODO ---- USER ----
 
 // FIXME MUST ---- Delete user >>>> only for auth user
-app.delete("/user/:id", (req, res) => {
-  console.log("auth by id and delete user");
+app.delete("/users/:id", authentificateUser, async (req, res) => {
+  //console.log("auth by id and delete user");
+  const { id } = req.params;
+  if (!mongoose.Types.ObjectId.isValid(id)) {
+    return res
+      .status(404)
+      .json({ success: false, message: `Couldn't find user with id ${id}` });
+  }
+
+  try {
+    const user = await User.findByIdAndDelete(id);
+    if (!user) {
+      return res.status(404).json({
+        succes: false,
+        message: `User with id ${id} doesn't exist or was permanently deleted`,
+      });
+    }
+    return res.status(200).json({
+      succes: true,
+      response: [user.email, user.name],
+      message: "User was permanently deleted",
+    });
+  } catch (err) {
+    return res
+      .status(500)
+      .json({ succes: false, message: "Server error", error: err.message });
+  }
 });
 
 // TODO ---- QUESTS ----
