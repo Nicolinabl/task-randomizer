@@ -1,12 +1,13 @@
 import mongoose from "mongoose";
 import crypto from "crypto";
 import bcrypt from "bcrypt-nodejs";
+import { timeStamp } from "console";
 
 const mongoUrl = process.env.MONGO_URL || "mongodb://localhost/final-project";
 mongoose.connect(mongoUrl);
 mongoose.Promise = Promise;
 
-// FIXME MUST ---- Quest ----
+// FIXME ??add smth else MUST ---- User's Quest Model ----
 
 const questSchema = new mongoose.Schema(
   {
@@ -39,6 +40,11 @@ const questSchema = new mongoose.Schema(
       default: false,
     },
 
+    doneAt: {
+      type: Date,
+      default: null,
+    },
+
     createdBy: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",
@@ -50,7 +56,7 @@ const questSchema = new mongoose.Schema(
 
 export const Quest = mongoose.model("Quest", questSchema);
 
-// FIXME MUST ---- User ----
+// FIXME add smth else?? MUST ---- User Model ----
 
 const userSchema = new mongoose.Schema(
   {
@@ -66,6 +72,7 @@ const userSchema = new mongoose.Schema(
       type: String,
       required: true,
       unique: true,
+      lowercase: true,
     },
 
     password: {
@@ -93,7 +100,10 @@ const userSchema = new mongoose.Schema(
       type: Date,
     },
 
-    moodUrl: String,
+    moodUrl: {
+      type: String,
+      default: "https://static.productionready.io/images/smiley-cyrus.jpg",
+    },
 
     accessToken: {
       type: String,
@@ -106,7 +116,37 @@ const userSchema = new mongoose.Schema(
 
 export const User = mongoose.model("User", userSchema);
 
-// TODO ---- Session ----
+// ---- Library Quest Model -----
+
+const libraryQuest = new mongoose.Schema(
+  {
+    message: {
+      type: String,
+      required: true,
+      minLength: 2,
+    },
+
+    timeNeeded: {
+      type: Number,
+      require: true,
+    },
+
+    category: [
+      {
+        type: String,
+        lowercase: true,
+        trim: true,
+      },
+    ],
+  },
+
+  { timestamps: true },
+);
+
+export const LibraryQuest = mongoose.model("LibraryQuest", libraryQuest);
+
+// ???---- Session ----
 // Schema to randomize and sessions?
 
-// TODO ???NICE+ ---- Friends -----
+// ???NICE+ ---- Friends -----
+//When adding a friend?

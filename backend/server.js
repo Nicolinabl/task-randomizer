@@ -1,9 +1,10 @@
-import express, { json } from "express";
+import express, { json, response } from "express";
 import cors from "cors";
 import mongoose from "mongoose";
 import listEndpoints from "express-list-endpoints";
-import { Quest } from "./schemas";
+import { FriendQuest, Quest } from "./schemas";
 import { User } from "./schemas";
+import { LibraryQuest } from "./schemas";
 import quests from "./quests.json";
 import bcrypt from "bcrypt-nodejs";
 import { authentificateUser } from "./authMiddleware";
@@ -16,20 +17,11 @@ app.use(cors());
 app.use(express.json());
 
 const mongoUrl = process.env.MONGO_URL || "mongodb://localhost/final-project";
+
+console.log("Starting server... With Mongo URL:", mongoUrl);
+
 mongoose.connect(mongoUrl);
 mongoose.Promise = Promise;
-
-//seeding of DB, OBS! only if =true
-if (process.env.RESET_FB) {
-  const seedDatabase = async () => {
-    await Quest.deleteMany(); //this will delete everything we have in database
-
-    quests.forEach((quest) => {
-      new Quest(quest).save();
-    });
-  };
-  seedDatabase();
-}
 
 // ---- Middleware to handle error at service availability before running anything else
 app.use((req, res, next) => {
@@ -44,7 +36,7 @@ app.use((req, res, next) => {
 
 app.get("/", (req, res) => {
   const endpoints = listEndpoints(app);
-  console.log({ endpoints: endpoints });
+  //console.log({ endpoints: endpoints });
   res.json({
     message: "List of all endpoints",
     endpoints: endpoints,
@@ -54,7 +46,7 @@ app.get("/", (req, res) => {
 
 // TODO ---- POST ENDPOINTS ----
 
-// TODO ---- USER ----
+// DONE---- USER ----
 
 // MUST ---- Register new user ----
 app.post("/signup", async (req, res) => {
@@ -133,7 +125,7 @@ app.post("/login", async (req, res) => {
 
 // TODO ---- QUESTS ----
 
-// FIXME Update to auth authorized users, add error handling or redirecting for not authorized // MUST --- Create a quest >>>>> only for auth users
+// FIXME redirecting for not authorized (EXTRA functionality) // MUST --- Create a quest >>>>> only for auth users
 app.post("/quests", authentificateUser, async (req, res) => {
   const { message, timeNeeded, category, deadline } = req.body;
   //console.log("createdBy:", req.user?.id);
@@ -153,6 +145,33 @@ app.post("/quests", authentificateUser, async (req, res) => {
       error: err.errors,
     });
   }
+});
+
+// TODO ---- Duplicates a single quest from library to authenticated user's quest lits -------
+//Add from database: id=single quest id
+app.post("/quests/library/:id/add", (req, res) => {
+  const { message, timeNeeded, category } = req.query;
+  const { id } = req.params;
+  const addToUser = { createdBy: req.user._id };
+
+  //Get template ID from req.params
+  //Check if it’s a valid MongoDB ObjectId??
+  //Query database for that template
+  //If not found → return 404
+
+  /* You are manually constructing a new object for UserTask.
+
+Add:
+
+createdBy → req.user.id
+
+done → default false
+
+timestamps → automatic via schema
+
+Important concept:
+
+You are creating a NEW document, not cloning raw database data. */
 });
 
 // FIXME MUST ---- Add quest from default library to user's list  >>>>> only for auth users
@@ -236,27 +255,53 @@ app.post("/punishment/lock", (req, res) => {
 
 // TODO ---- QUESTS ----
 
-// FIXME ??? MUST ---- Quests default library (returns default tasks, categories, est time), can filter on one category and time <= N. Returns from hardcoded file
-app.get("/quests/library", (req, res) => {
-  const { category, time } = req.query;
+// FIXME MUST ---- Display Tasks from Library, OBS! Doesn't requie authentication(returns default tasks, categories, est time) -----
+//Test example: http://localhost:8080/quests/library/?category=cleaning&time=20, can filter on one category and time <= N.
+// TODO Functinality:
+// DONE Steps: 1. Library tasks don't require authentiacte to fetch
+// DONE 2. Are stored separately from user-created tasks
+//TODO 3. Allowed to duplicate each item for authenticated user by CREATING a new tasks
+//DONE 4. Stays untouched in database, therefore needs to be separated in Schema: defaultTask, userTask
+// DONE 5. Default tasks (libraryQuest) don't have "createdBy" field
+// DONE 6. Default tasks schema: message, timeNeeded, category.
+//TODO 6. After it is duplicated to users quests, shows also "done", allows to change category, timeNeeded, etc.
 
-  //Test example: http://localhost:8080/quests/library/?category=cleaning&time=20
+//Steps for creating in-build library of tasks with "see and add button" each:
+//1. Seed the database with tasks with pre-filled {message, timeNeeded, category}
+//2. Add "duplicate" functionality on backend: require authentication, validate template ID exists, allow copying of the 3 fields. In route, 1. Attach your authMiddleware, 2. Ensure it sets req.user.id
+//3. With duplicating, automatically pass {message, timeNeeded, category} to user's field, and add "timestamp" and "createdBy" by default as when user creates a task from scratch. Use deconstruction:
+//const newTask = new UserTask({
+//message: template.message,
+//timeNeeded: template.timeNeeded,
+//category: template.category,
+//createdBy: req.user._id
+//})
+//4.Add errorhandling on BE: 1. User not authenticated, 2.template not found, catch error in DB.
+//5. Give user feedback on FE (errors and success)
+//6. Display newly added task in user's list
+
+app.get("/quests/library", async (req, res) => {
+  let { category, time } = req.query;
+  const query = { category, time };
+
+  if (category) {
+    query.category = category.toLowerCase();
+  }
+  if (time) {
+    query.timeNeeded = { $lte: time };
+  }
+
   try {
-    let filteredQuests = quests;
+    const filteredQuests = await LibraryQuest.find(query);
 
-    if (category) {
-      filteredQuests = filteredQuests.filter((item) => {
-        return item.category.some((word) => {
-          return word.toLowerCase() === category.toLowerCase();
-        });
+    if (!filteredQuests.length) {
+      return res.status(404).json({
+        success: false,
+        response: [],
+        message: "Couldn't find quests with this filters",
       });
     }
 
-    if (time) {
-      filteredQuests = filteredQuests.filter((item) => {
-        return item.timeNeed <= Number(time);
-      });
-    }
     return res
       .status(200)
       .json({ success: true, response: filteredQuests, message: "Success" });
@@ -267,8 +312,7 @@ app.get("/quests/library", (req, res) => {
   }
 });
 
-// FIXME ?? MUST ----- Returns all user's quests, can filter on category and time <= N) >>>>> only for auth users.
-// Returns from database ---------
+// MUST ----- Returns all user's quests, can filter on category and time <= N) >>>>> only for auth users.
 app.get("/quests/all", authentificateUser, async (req, res) => {
   let { category, time } = req.query;
   const query = { createdBy: req.user._id };
@@ -351,8 +395,6 @@ app.get("/quests/history", (req, res) => {
   console.log("Shows how much user have done before");
 });
 
-// TODO ---- MAIN PAGES ----
-
 // TODO ---- USER ----
 // FIXME ---- Smiley state of mood ---- >>>> only for auth users, returns sad/happy/delighted avatars
 app.get("/user/:id/state", (req, res) => {
@@ -368,22 +410,47 @@ app.get("/profile/:id", (req, res) => {
 
 // TODO ---- FRIENDS ----
 
-// FIXME MUST ---- Friends Feed page (alt: any other users feed?) >>>>> only for auth users( if it's a friends page, otherwise for everybody?)
-app.get("/friends", (req, res) => {
-  res.json([
-    {
-      name: "Jane",
-      quest: "Dust your books",
-      kudos: "5",
-      doneAt: "2026-02-15",
-    },
-    {
-      name: "John",
-      quest: "Clean the kitchen",
-      kudos: "38",
-      doneAt: "2026-02-15",
-    },
-  ]);
+// FIXME (add friends only to filter) MUST ---- Friends Feed page >>>>> only for auth users( if it's a friends page, otherwise for everybody?)
+// What it does:
+// - req auth,
+// - fetches done quests from other users
+// - sorts them by done date (desc)
+// - excludes current users quests
+// - populates users info
+app.get("/friends", authentificateUser, async (req, res) => {
+  const { _id: userId } = req.user;
+
+  //building query to find all quests made by other users with filter:
+  const query = Quest.find({
+    done: true,
+    doneAt: { $ne: null },
+    createdBy: { $ne: userId },
+  })
+    .sort({ doneAt: "desc" })
+    .limit(20);
+
+  try {
+    //returning all friends quests filtered with query, and populating only fields we need
+    const friendsQuests = await query
+      .populate({ path: "createdBy", select: "name moodUrl" })
+      .select("message category timeNeeded doneAt createdBy");
+
+    //console.log(`quests: ${friendsQuests}`);
+    if (!friendsQuests.length) {
+      return res.status(404).json({
+        success: false,
+        response: [],
+        message: "Couldn't find any completed quests",
+      });
+    }
+    return res.status(200).json(friendsQuests);
+  } catch (err) {
+    return res.status(500).json({
+      success: false,
+      message: "Server error, couldn't fetch friends quests",
+      error: err.message,
+    });
+  }
 });
 
 // FIXME NICE+ ---- Find a friend bi ID page
@@ -409,7 +476,7 @@ app.delete("/user/:id", (req, res) => {
 
 // TODO ---- QUESTS ----
 
-// FIXME MUST ---- Delete one quest >>>>> only for authorised users for their list
+// FIXME add auth for users MUST ---- Delete one quest >>>>> only for authorised users for their list
 app.delete("/quests/:id", async (req, res) => {
   //console.log("delete test");
   const { id } = req.params;
@@ -455,7 +522,7 @@ app.patch("/profile/:id/settings", (req, res) => {
   console.log("edit profile");
 });
 
-// FIXME NICE+ ---- Edit one quest >>>>> only for authorised users for their list
+// FIXME EXTRA ---- Edit one quest (Message, time, deadline, categories) >>>>> only for authorised users for their list
 
 // ------ PATCH ENDPOINTS -----
 
