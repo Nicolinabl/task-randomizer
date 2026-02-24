@@ -160,11 +160,6 @@ app.post("/quests/library/add", (req, res) => {
   console.log("Add quest from default library to user's list");
 });
 
-// FIXME MUST ---- Complete a quest >>>>> only for auth users
-app.post("/quests/:id/complete", (req, res) => {
-  console.log("Task is done");
-});
-
 //FIXME NICE+ ---- User completes task too fast confirmation >>>>> only for auth users
 app.post("/quests/:id/confirm-complete", (req, res) => {
   console.log("Do not cheat, ok?");
@@ -449,6 +444,37 @@ app.delete("/friends/:id", (req, res) => {
 // TODO ---- PUT ENDPOINTS ----
 
 // TODO ---- PATCH ENDPOINTS ----
+
+// FIXME: merge and test when deployed ---- Complete a quest >>>>> only for auth users
+app.patch("/quests/:id/complete", authentificateUser, async (req, res) => {
+  // get quest id from the url
+  const { id } = req.params;
+
+  // get the done value (true or false), this will be sent from the frontend when quest is checked or not
+  const { done } = req.body; 
+
+  // check if the id is valid
+  if (!mongoose.Types.ObjectId.isValid(id)) {
+    return res.status(404).json({ success: false, message: "Invalid quest ID" });
+  }
+
+  try {
+    // Find the quest in the database and update its done field
+    const quest = await Quest.findOneAndUpdate(
+      { _id: id, createdBy: req.user._id }, // ensures user can only update their own quests
+      { done },
+      { new: true, runValidators: true }
+    );
+
+    if (!quest) {
+      return res.status(404).json({ success: false, message: "Quest not found or unauthorized" });
+    }
+
+    res.status(200).json({ success: true, response: quest });
+  } catch (err) {
+    res.status(500).json({ success: false, message: "Something went wrong", errors: err.errors });
+  }
+});
 
 // FIXME EXTRA ---- Edit profile >>>>> only for authorised users for their own profiles(toggle easy/hard mode, change password?)
 app.patch("/profile/:id/settings", (req, res) => {
