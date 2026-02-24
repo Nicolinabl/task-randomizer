@@ -14,6 +14,9 @@ import { apiUrl } from "../api";
 export const App = () => {
   const [data, setData] = useState(null);
 
+  const user = JSON.parse(localStorage.getItem("user"));
+  const accessToken = () => (user ? { Authorization: user.accessToken } : {});
+
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -35,7 +38,10 @@ export const App = () => {
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/about" element={<About />} />
-        <Route path="/feed" element={<FriendFeed />} />
+        <Route
+          path="/feed"
+          element={<FriendFeed accessToken={accessToken} />}
+        />
         <Route path="/quests" element={<Quests />} />
         <Route path="/rewards" element={<Rewards />} />
         <Route path="/profile" element={<UserProfile />} />

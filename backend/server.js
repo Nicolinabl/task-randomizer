@@ -174,11 +174,6 @@ Important concept:
 You are creating a NEW document, not cloning raw database data. */
 });
 
-// FIXME MUST ---- Add quest from default library to user's list  >>>>> only for auth users
-app.post("/quests/library/add", (req, res) => {
-  console.log("Add quest from default library to user's list");
-});
-
 // FIXME MUST ---- Complete a quest >>>>> only for auth users
 app.post("/quests/:id/complete", (req, res) => {
   console.log("Task is done");
@@ -212,25 +207,34 @@ app.post("/quests/:id/repeat");
 
 // ---- FRIENDS ----
 // FIXME add auth MUST --- Give kudos >>>>> only for auth users
-app.post("/friends/:postid/kudos", async (req, res) => {
+app.post("/quests/:id/kudos", authentificateUser, async (req, res) => {
   //console.log("Give kudos");
-  const update = { $inc: { kudos: 1 } };
-  const options = { new: true, runValidators: true };
+  const { id } = req.params;
+  const userId = req.user._id;
 
   if (!mongoose.Types.ObjectId.isValid(id)) {
-    return res.status(404).json({ success: false, response: "Id is invalid" });
+    return res
+      .status(404)
+      .json({ success: false, response: "Quest id is invalid" });
   }
 
   try {
-    const addKudos = await Quest.findByIdAndUpdate(id, update, options);
+    const update = { $inc: { kudos: 1 }, $push: { kudosByUser: userId } };
+    const options = { new: true, runValidators: true };
+
+    const addKudos = await Quest.findByIdAndUpdate(
+      { _id: id, kudosByUser: { $ne: userId } },
+      update,
+      options,
+    );
 
     if (!addKudos) {
-      return res.status(404).json({
-        success: false,
-        message: "Can't add kudos, entry is invalid or it was deleted",
+      return res.status(400).json({
+        succes: false,
+        message: "Can't give cudos more than once to the same quest",
       });
     }
-    res.status(200).json(addKudos);
+    return res.status(200).json(addKudos);
   } catch (err) {
     return res.status(500).json({
       success: false,
@@ -426,7 +430,7 @@ app.get("/friends", authentificateUser, async (req, res) => {
     doneAt: { $ne: null },
     createdBy: { $ne: userId },
   })
-    .sort({ doneAt: "desc" })
+    .sort({ doneAt: -1 })
     .limit(20);
 
   try {
@@ -437,10 +441,10 @@ app.get("/friends", authentificateUser, async (req, res) => {
 
     //console.log(`quests: ${friendsQuests}`);
     if (!friendsQuests.length) {
-      return res.status(404).json({
-        success: false,
+      return res.status(200).json({
+        success: true,
         response: [],
-        message: "Couldn't find any completed quests",
+        message: "Nobody completed quests yet",
       });
     }
     return res.status(200).json(friendsQuests);

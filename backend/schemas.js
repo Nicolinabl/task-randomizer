@@ -49,6 +49,16 @@ const questSchema = new mongoose.Schema(
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",
     },
+
+    kudos: {
+      type: Number,
+      default: 0,
+    },
+
+    kudosByUser: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
+    },
   },
 
   { timestamps: true },
