@@ -4,7 +4,6 @@ import mongoose from "mongoose";
 import listEndpoints from "express-list-endpoints";
 import { Quest } from "./schemas";
 import { User } from "./schemas";
-import schemas from './schemas.js'
 import quests from "./quests.json";
 import bcrypt from "bcrypt-nodejs";
 import { authentificateUser } from "./authMiddleware";
@@ -462,7 +461,7 @@ app.patch("/quests/:id/complete", authentificateUser, async (req, res) => {
   try {
     // Find the quest in the database and update its done field
     const quest = await Quest.findOneAndUpdate(
-      { id: _id, createdBy: req.user._id }, // ensures user can only update their own quests
+      { _id: id, createdBy: req.user._id }, // ensures user can only update their own quests
       { done },
       { new: true, runValidators: true }
     );
