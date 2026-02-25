@@ -2,6 +2,7 @@
   "name": "project-final-backend",
   "version": "1.0.0",
   "description": "Server part of final project",
+  "type": "module",
   "scripts": {
     "start": "node server.js --exec babel-node",
     "dev": "nodemon server.js --exec babel-node",
