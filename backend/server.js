@@ -5,7 +5,7 @@ import listEndpoints from "express-list-endpoints";
 import { authentificateUser } from "./authMiddleware.js";
 import "dotenv/config";
 import userController from "./controllers/userController.js";
-import QuestController from "./controllers/questController.js";
+import questController from "./controllers/questController.js";
 import friendController from "./controllers/friend.controller.js";
 
 const port = process.env.PORT || 8080;
@@ -69,58 +69,58 @@ app.patch("/profile/settings", authentificateUser, userController.updateUser);
 
 // TODO ---- QUESTS ----
 // --- Create a quest >>>>> only for auth users -----
-app.post("/quests", authentificateUser, QuestController.createQuestUnAuth);
+app.post("/quests", authentificateUser, questController.createQuestUnAuth);
 
 // FIXME add auth MUST --- Give kudos >>>>> Doesn't prevent from liking more than once - why??
-app.post("/quests/:id/kudos", authentificateUser, QuestController.giveKudos);
+app.post("/quests/:id/kudos", authentificateUser, questController.giveKudos);
 
 // ---- Display Tasks from Library, OBS! Doesn't requie authentication(returns default tasks with categories and estimated time) ---- //Test example: http://localhost:8080/quests/library/?category=cleaning&time=20, can filter on one category and time <= N
-app.get("/quests/library", QuestController.showDefaultQuests);
+app.get("/quests/library", questController.showDefaultQuests);
 
 // ----- Returns all user's quests, can filter on category and time <= N) >>>>> only for auth users.
-app.get("/quests/all", authentificateUser, QuestController.showUserQuests);
+app.get("/quests/all", authentificateUser, questController.showUserQuests);
 
 // FIXME MUST---- Duplicates a quest from library >>> only for auth users -------
 app.post(
   "/quests/library/:id/add",
   authentificateUser,
-  QuestController.duplicateQuest,
+  questController.duplicateQuest,
 );
 
 // FIXME ------ Check quest as done ----- >>> for auth users
 app.patch(
   "/quests/:id/complete",
   authentificateUser,
-  QuestController.checkQuestDone,
+  questController.checkQuestDone,
 );
 
 // FIXME add auth for users MUST ---- Delete one quest >>>>> only for authorised users for their list
-app.delete("/quests/:id", QuestController.deleteQuest);
+app.delete("/quests/:id", questController.deleteQuest);
 
 // FIXME add query, error handling MUST ---- User's done quests /quests/done/true
 app.get(
   "/quests/done?done=true",
   authentificateUser,
-  QuestController.filterUserQuests,
+  questController.filterUserQuests,
 );
 
 // FIXME add randomizing, add looking through all users quests(added from library to users database)
 // MUST ---- User's daily random(!) quest >>>>> only for auth users // "/user/:userId/quests/:questId"
 //NOW: only finds one from general database
-app.get("/quests/:id", authentificateUser, QuestController.getRandomQuest);
+app.get("/quests/:id", authentificateUser, questController.getRandomQuest);
 
 // FIXME NICE+ ---- Quests history >>>>>> only for auth users
 app.get(
   "/quests/history",
   authentificateUser,
-  QuestController.showQuestHistory,
+  questController.showQuestHistory,
 );
 
 // EXTRA ---- DELETE more than 1 quest at a time >>>>> only for authorised users for their list
 app.delete(
   "/quests/delete/more",
   authentificateUser,
-  QuestController.deleteManyQuests,
+  questController.deleteManyQuests,
 );
 
 // EXTRA ---- Edit one quest (Message, time, deadline, categories) >>>>> only for authorised users for their list
