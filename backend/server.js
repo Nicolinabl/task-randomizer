@@ -206,7 +206,7 @@ app.post("/quests/skip");
 app.post("/quests/:id/repeat");
 
 // ---- FRIENDS ----
-// FIXME add auth MUST --- Give kudos >>>>> only for auth users
+// FIXME add auth MUST --- Give kudos >>>>> Doesn't prevent from liking more than once - why??
 app.post("/quests/:id/kudos", authentificateUser, async (req, res) => {
   //console.log("Give kudos");
   const { id } = req.params;
@@ -545,6 +545,52 @@ app.delete("/friends/:id", (req, res) => {
 // TODO ---- PUT ENDPOINTS ----
 
 // TODO ---- PATCH ENDPOINTS ----
+
+// TODO ----- QUEST -------
+// FIXME ------ Check quest as done -----
+app.patch("/quests/:id/complete", authentificateUser, async (req, res) => {
+  // get quest id from the url
+  const { id } = req.params; // get the done value (true or false), this will be sent from the frontend when quest is checked or not
+
+  const { done } = req.body; // check if the id is valid
+
+  const updateData = { done, doneAt: done ? new Date() : null };
+
+  if (typeof done !== "Boolean") {
+    return res
+      .status(400)
+      .json({ succes: false, message: "Invalid type of data" });
+  }
+
+  if (!mongoose.Types.ObjectId.isValid(id)) {
+    return res
+      .status(404)
+      .json({ success: false, message: "Invalid quest ID" });
+  }
+
+  try {
+    // Find the quest in the database and update its done field
+    const quest = await Quest.findOneAndUpdate(
+      { _id: id, createdBy: req.user._id }, // ensures user can only update their own quests
+      updateData,
+      { new: true, runValidators: true },
+    );
+
+    if (!quest) {
+      return res
+        .status(404)
+        .json({ success: false, message: "Quest not found or unauthorized" });
+    }
+
+    res.status(200).json({ success: true, response: quest });
+  } catch (err) {
+    res.status(500).json({
+      success: false,
+      message: "Something went wrong",
+      errors: err.errors,
+    });
+  }
+});
 
 // FIXME EXTRA ---- Edit profile >>>>> only for authorised users for their own profiles(toggle easy/hard mode, change password?)
 app.patch("/profile/:id/settings", (req, res) => {

@@ -15,7 +15,8 @@ export const FriendQuestCard = ({
   isNew,
 }) => {
   const [kudosCount, setKudosCount] = useState(kudos || 0);
-
+  console.log(createdBy);
+  //conditional check?
   const handleClick = () => {
     setKudosCount((prev) => prev + 1);
 
