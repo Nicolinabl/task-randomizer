@@ -458,11 +458,20 @@ app.patch("/quests/:id/complete", authentificateUser, async (req, res) => {
     return res.status(404).json({ success: false, message: "Invalid quest ID" });
   }
 
+  const updateData = {
+    done,
+    doneAt: done ? new Date() : null,
+    };
+
+    if(typeof done!== "boolean") {
+      return res.status(400).json({success: false, message: "Invalid type"})
+    }
+
   try {
     // Find the quest in the database and update its done field
     const quest = await Quest.findOneAndUpdate(
       { _id: id, createdBy: req.user._id }, // ensures user can only update their own quests
-      { done },
+      updateData,
       { new: true, runValidators: true }
     );
 
