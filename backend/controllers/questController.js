@@ -3,7 +3,7 @@ import mongoose from "mongoose";
 import { Quest } from "../schemas.js";
 
 import { LibraryQuest } from "../schemas.js";
-import quests from "../quests.json";
+//import quests from "../quests.json";
 
 import "dotenv/config";
 
