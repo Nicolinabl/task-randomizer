@@ -57,6 +57,29 @@ export const QuestList = () => {
     }
   }
 
+  const handleChecked = async (questId, event) => {
+    console.log('questId:', questId)
+    console.log('done:', event.target.checked)
+    try {
+      const accessToken = localStorage.getItem('accessToken')
+
+      const response = await fetch(apiUrl + `/quests/${questId}/complete`, {
+        method: 'PATCH',
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": accessToken
+        },
+        body: JSON.stringify({ done: event.target.checked })
+      })
+      if (!response.ok) {
+        throw new Error('Failed to check quest as done')
+      }
+
+    } catch (error) {
+      console.error('Error checking quest:', error)
+    }
+  }
+
   return (
     <>
       <p>Your quests:</p>
@@ -67,7 +90,9 @@ export const QuestList = () => {
           message={quest.message}
           category={quest.category}
           timeNeeded={quest.timeNeeded}
+          done={quest.done}
           onDelete={handleDelete}
+          handleChecked={handleChecked}
         />
       ))}
     </>

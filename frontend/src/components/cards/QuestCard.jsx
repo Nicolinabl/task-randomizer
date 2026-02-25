@@ -1,6 +1,6 @@
 import styled from 'styled-components'
 
-export const QuestCard = ({ message, category, timeNeeded, onDelete, id }) => {
+export const QuestCard = ({ message, category, timeNeeded, onDelete, id, handleChecked, done }) => {
   return (
     <Div>
       <div>
@@ -10,6 +10,13 @@ export const QuestCard = ({ message, category, timeNeeded, onDelete, id }) => {
         <p>Category: {category}</p>
         <p>Time: {timeNeeded} min</p>
         <button onClick={() => onDelete(id)}>Delete</button>
+        <input 
+          type="checkbox" 
+          checked={done}
+          onChange={(event) => {
+          console.log(event)
+          handleChecked(id, event)
+        }}/>      
       </div>
     </Div>
   )
