@@ -7,6 +7,8 @@ import quests from "./quests.json";
 import bcrypt from "bcrypt-nodejs";
 import { authentificateUser } from "./authMiddleware";
 import "dotenv/config";
+import { createServer } from 'http';
+import { Server } from 'socket.io'
 
 const port = process.env.PORT || 8080;
 const app = express();
@@ -17,6 +19,19 @@ app.use(express.json());
 const mongoUrl = process.env.MONGO_URL || "mongodb://localhost/final-project";
 mongoose.connect(mongoUrl);
 mongoose.Promise = Promise;
+
+const httpServer = createServer(app);
+const io = new Server(httpServer, {
+  cors: {
+    origin: "*", 
+    methods: ["GET", "POST"]
+  }
+});
+
+io.on("connection", (socket) => {
+  console.log("Client connected:", socket.id);
+  socket.on("disconnect", () => console.log("Client disconnected:", socket.id));
+});
 
 //seeding of DB, OBS! only if =true
 if (process.env.RESET_FB) {
@@ -145,6 +160,9 @@ app.post("/quests", authentificateUser, async (req, res) => {
       deadline,
       createdBy: req.user._id,
     }).save();
+
+    io.emit("questCreated", quest);
+
     res.status(201).json(quest);
   } catch (err) {
     res.status(500).json({
@@ -527,7 +545,12 @@ app.patch("/profile/:id/settings", (req, res) => {
 
 // ------ PATCH ENDPOINTS -----
 
-// Start the server
-app.listen(port, () => {
+// Start the server (old version before socket)
+// app.listen(port, () => {
+//   console.log(`Server running on http://localhost:${port}`);
+// });
+
+// start the server (with socket)
+httpServer.listen(port, () => {
   console.log(`Server running on http://localhost:${port}`);
 });
