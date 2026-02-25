@@ -1,10 +1,8 @@
-import { Navbar } from "../components/Navbar"
 import styled from 'styled-components'
 
 export const Quests = () => {
   return (
     <>
-      <Navbar />
         <Form>
           <h3>Get ready for your quest of the day!</h3>
           <Label>

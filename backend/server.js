@@ -2,9 +2,7 @@ import express, { json, response } from "express";
 import cors from "cors";
 import mongoose from "mongoose";
 import listEndpoints from "express-list-endpoints";
-import { FriendQuest, Quest } from "./schemas";
-import { User } from "./schemas";
-import { LibraryQuest } from "./schemas";
+import { Quest, User } from "./schemas.js";
 import quests from "./quests.json";
 import bcrypt from "bcrypt-nodejs";
 import { authentificateUser } from "./authMiddleware";
@@ -172,11 +170,6 @@ timestamps → automatic via schema
 Important concept:
 
 You are creating a NEW document, not cloning raw database data. */
-});
-
-// FIXME MUST ---- Complete a quest >>>>> only for auth users
-app.post("/quests/:id/complete", (req, res) => {
-  console.log("Task is done");
 });
 
 //FIXME NICE+ ---- User completes task too fast confirmation >>>>> only for auth users
@@ -545,6 +538,80 @@ app.delete("/friends/:id", (req, res) => {
 // TODO ---- PUT ENDPOINTS ----
 
 // TODO ---- PATCH ENDPOINTS ----
+
+// FIXME: merge and test when deployed ---- Complete a quest >>>>> only for auth users
+// app.patch("/quests/:id/complete", authentificateUser, async (req, res) => {
+//   // get quest id from the url
+//   const { id } = req.params;
+
+//   // get the done value (true or false), this will be sent from the frontend when quest is checked or not
+//   const { done } = req.body; 
+
+//   // check if the id is valid
+//   if (!mongoose.Types.ObjectId.isValid(id)) {
+//     return res.status(404).json({ success: false, message: "Invalid quest ID" });
+//   }
+
+//   const updateData = {
+//     done,
+//     doneAt: done ? new Date() : null,
+//     };
+
+//     if(typeof done!== "boolean") {
+//       return res.status(400).json({success: false, message: "Invalid type"})
+//     }
+
+//   try {
+//     // Find the quest in the database and update its done field
+//     const quest = await Quest.findOneAndUpdate(
+//       { _id: id, createdBy: req.user._id }, // ensures user can only update their own quests
+//       updateData,
+//       { new: true, runValidators: true }
+//     );
+
+//     if (!quest) {
+//       return res.status(404).json({ success: false, message: "Quest not found or unauthorized" });
+//     }
+
+//     res.status(200).json({ success: true, response: quest });
+//   } catch (err) {
+//     res.status(500).json({ success: false, message: "Something went wrong", errors: err.errors });
+//   }
+// });
+
+app.patch("/quests/:id/complete", async (req, res) => {
+  const { id } = req.params;
+  const { done } = req.body; 
+
+  if (!mongoose.Types.ObjectId.isValid(id)) {
+    return res.status(404).json({ success: false, message: "Invalid quest ID" });
+  }
+
+  const updateData = {
+    done,
+    doneAt: done ? new Date() : null,
+  };
+
+  if(typeof done !== "boolean") {
+    return res.status(400).json({success: false, message: "Invalid type"})
+  }
+
+  try {
+    const quest = await Quest.findByIdAndUpdate(
+      id,
+      updateData,
+      { new: true, runValidators: true }
+    );
+
+    if (!quest) {
+      return res.status(404).json({ success: false, message: "Quest not found" });
+    }
+
+    res.status(200).json({ success: true, response: quest });
+  } catch (err) {
+    res.status(500).json({ success: false, message: "Something went wrong", errors: err.errors });
+  }
+});
 
 // FIXME EXTRA ---- Edit profile >>>>> only for authorised users for their own profiles(toggle easy/hard mode, change password?)
 app.patch("/profile/:id/settings", (req, res) => {

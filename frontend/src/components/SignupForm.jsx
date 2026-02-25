@@ -47,6 +47,10 @@ export const SignupForm = () => {
       localStorage.setItem('accessToken', data.accessToken)
       // Store the user ID
       localStorage.setItem('userId', data.id)
+      // Store username
+      localStorage.setItem('userName', name)
+      // store email
+      localStorage.setItem('userEmail', email)
 
       // Clear the form inputs
         setName('')
@@ -92,3 +96,4 @@ const Form = styled.form`
 `
 
 // TODO: This is only basic form and step 1/2. Add step 2 (add code sent to email to verify)
+// TODO: when user signed up, also log in
