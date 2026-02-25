@@ -10,13 +10,16 @@ import { GlobalStyle } from "./styles/GlobalStyles";
 import { Signup } from "./pages/SignupPage";
 import { useEffect, useState } from "react";
 import { apiUrl } from "../api";
+import { Navbar } from "./components/Navbar";
 
 export const App = () => {
+  const [user, setUser] = useState(null)
   const [data, setData] = useState(null);
 
   const user = JSON.parse(localStorage.getItem("user"));
   const accessToken = () => (user ? { Authorization: user.accessToken } : {});
 
+  // TODO remove?
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -32,9 +35,34 @@ export const App = () => {
     fetchData();
   }, []);
 
+  useEffect(() => {
+    const accessToken = localStorage.getItem('accessToken')
+    const userId = localStorage.getItem('userId')
+    const userEmail = localStorage.getItem('userEmail')
+    const userName = localStorage.getItem('userName')
+
+    if (accessToken && userId) {
+      setUser({ 
+        accessToken, 
+        userId, 
+        email: userEmail, 
+        name: userName 
+      })
+    }
+  }, []) 
+
+  const handleLogout = () => {
+    setUser(null)
+    localStorage.removeItem('accessToken')
+    localStorage.removeItem('userId')
+    localStorage.removeItem('userEmail')
+    localStorage.removeItem('userName')
+  }
+
   return (
     <>
       <GlobalStyle />
+      <Navbar onLogout={handleLogout} />
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/about" element={<About />} />
@@ -44,7 +72,7 @@ export const App = () => {
         />
         <Route path="/quests" element={<Quests />} />
         <Route path="/rewards" element={<Rewards />} />
-        <Route path="/profile" element={<UserProfile />} />
+        <Route path="/profile" element={<UserProfile user={user}/>} />
         <Route path="/login" element={<Login />} />
         <Route path="/signup" element={<Signup />} />
       </Routes>

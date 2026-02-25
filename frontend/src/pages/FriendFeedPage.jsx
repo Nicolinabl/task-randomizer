@@ -55,7 +55,6 @@ export const FriendFeed = ({ accessToken }) => {
     // pass params from login and register forms to an authentication component to then add authentication after H2
     // smth like {!user ? (<Authentification onAuthSuccess = {handleAuth}>)}
     <>
-      <Navbar />
       <h2>My friends finished quests</h2>
 
       <form>

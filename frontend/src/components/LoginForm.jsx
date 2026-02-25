@@ -45,6 +45,8 @@ export const LoginForm = () => {
         localStorage.setItem('accessToken', data.accessToken)
         // Store the user ID
         localStorage.setItem('userId', data.id)
+        // store user email
+        localStorage.setItem('userEmail', email)
 
         // Clear the form inputs
         setName('')
@@ -64,10 +66,10 @@ export const LoginForm = () => {
     <>
       <Form onSubmit={handleSubmit}>
         <h4>Welcome Back! Log in now:</h4>
-        <label>
+        {/* <label>
           Username
           <input type="text" placeholder="username" onChange={event => setName(event.target.value)}/>
-        </label>
+        </label> */}
         <label>
           email
           <input type="email" placeholder="email" onChange={event => setEmail(event.target.value)}/>

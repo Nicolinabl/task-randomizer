@@ -1,15 +1,22 @@
 import styled from 'styled-components'
 
-export const QuestCard = () => {
+export const QuestCard = ({ message, category, timeNeeded, onDelete, id, handleChecked, done }) => {
   return (
     <Div>
       <div>
-        <h4>Name</h4>
+        <h4>{message}</h4>
       </div>
       <div>
-        <p>Task:</p>
-        <p>Time spent:</p>
-        <p>Kudos: 🙌</p>
+        <p>Category: {category}</p>
+        <p>Time: {timeNeeded} min</p>
+        <button onClick={() => onDelete(id)}>Delete</button>
+        <input 
+          type="checkbox" 
+          checked={done}
+          onChange={(event) => {
+          console.log(event)
+          handleChecked(id, event)
+        }}/>      
       </div>
     </Div>
   )

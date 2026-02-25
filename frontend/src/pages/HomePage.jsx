@@ -1,4 +1,3 @@
-import { Navbar } from "../components/Navbar";
 import { Header } from "../components/Header";
 import styled from "styled-components";
 import { CreateQuest } from "../components/CreateQuest";
@@ -8,7 +7,6 @@ import { apiUrl } from "../../api";
 export const Home = () => {
   return (
     <>
-      <Navbar />
       <Header />
       <Div>
         <p>Motivational things</p>
