@@ -1,4 +1,4 @@
-import { User } from "./schemas";
+import { User } from "./schemas.js";
 
 // FIXME - add error handling, put accesstoken req into variable
 export const authentificateUser = async (req, res, next) => {

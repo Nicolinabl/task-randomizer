@@ -2,11 +2,11 @@ import express from "express";
 import cors from "cors";
 import mongoose from "mongoose";
 import listEndpoints from "express-list-endpoints";
-import { authentificateUser } from "./authMiddleware";
+import { authentificateUser } from "./authMiddleware.js";
 import "dotenv/config";
-import userController from "./controllers/userController";
-import QuestController from "./controllers/QuestController";
-import friendController from "./controllers/friend.controller";
+import userController from "./controllers/userController.js";
+import QuestController from "./controllers/questController.js";
+import friendController from "./controllers/friend.controller.js";
 
 const port = process.env.PORT || 8080;
 const app = express();

@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
-import { Quest } from "../schemas";
-import { User } from "../schemas";
+import { Quest } from "../schemas.js";
+import { User } from "../schemas.js";
 
 import "dotenv/config";
 

@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
 
-import { User } from "../schemas";
+import { User } from "../schemas.js";
 
 import bcrypt from "bcrypt-nodejs";
 
