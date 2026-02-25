@@ -1,7 +1,9 @@
-import { apiUrl } from "../../api";
+import { apiUrl, socketUrl } from "../../api";
+import { io } from 'socket.io-client'
 import styled from 'styled-components'
 import { useState, useEffect } from 'react'
 import { QuestCard } from "./cards/QuestCard";
+
 
 export const QuestList = () => {
   const [quests, setQuests] = useState([])
@@ -32,6 +34,17 @@ export const QuestList = () => {
     }
 
     getQuests()
+  }, [])
+
+  // socket
+  useEffect(() => {
+    const socket = io(socketUrl)
+
+    socket.on('questCreated', (newQuest) => {
+      setQuests((prev) => [...prev, newQuest])
+    })
+
+    return () => socket.disconnect()
   }, [])
 
   // Delete quests
