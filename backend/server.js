@@ -446,14 +446,49 @@ app.delete("/friends/:id", (req, res) => {
 // TODO ---- PATCH ENDPOINTS ----
 
 // FIXME: merge and test when deployed ---- Complete a quest >>>>> only for auth users
-app.patch("/quests/:id/complete", authentificateUser, async (req, res) => {
-  // get quest id from the url
-  const { id } = req.params;
+// app.patch("/quests/:id/complete", authentificateUser, async (req, res) => {
+//   // get quest id from the url
+//   const { id } = req.params;
 
-  // get the done value (true or false), this will be sent from the frontend when quest is checked or not
+//   // get the done value (true or false), this will be sent from the frontend when quest is checked or not
+//   const { done } = req.body; 
+
+//   // check if the id is valid
+//   if (!mongoose.Types.ObjectId.isValid(id)) {
+//     return res.status(404).json({ success: false, message: "Invalid quest ID" });
+//   }
+
+//   const updateData = {
+//     done,
+//     doneAt: done ? new Date() : null,
+//     };
+
+//     if(typeof done!== "boolean") {
+//       return res.status(400).json({success: false, message: "Invalid type"})
+//     }
+
+//   try {
+//     // Find the quest in the database and update its done field
+//     const quest = await Quest.findOneAndUpdate(
+//       { _id: id, createdBy: req.user._id }, // ensures user can only update their own quests
+//       updateData,
+//       { new: true, runValidators: true }
+//     );
+
+//     if (!quest) {
+//       return res.status(404).json({ success: false, message: "Quest not found or unauthorized" });
+//     }
+
+//     res.status(200).json({ success: true, response: quest });
+//   } catch (err) {
+//     res.status(500).json({ success: false, message: "Something went wrong", errors: err.errors });
+//   }
+// });
+
+app.patch("/quests/:id/complete", async (req, res) => {
+  const { id } = req.params;
   const { done } = req.body; 
 
-  // check if the id is valid
   if (!mongoose.Types.ObjectId.isValid(id)) {
     return res.status(404).json({ success: false, message: "Invalid quest ID" });
   }
@@ -461,22 +496,21 @@ app.patch("/quests/:id/complete", authentificateUser, async (req, res) => {
   const updateData = {
     done,
     doneAt: done ? new Date() : null,
-    };
+  };
 
-    if(typeof done!== "boolean") {
-      return res.status(400).json({success: false, message: "Invalid type"})
-    }
+  if(typeof done !== "boolean") {
+    return res.status(400).json({success: false, message: "Invalid type"})
+  }
 
   try {
-    // Find the quest in the database and update its done field
-    const quest = await Quest.findOneAndUpdate(
-      { _id: id, createdBy: req.user._id }, // ensures user can only update their own quests
+    const quest = await Quest.findByIdAndUpdate(
+      id,
       updateData,
       { new: true, runValidators: true }
     );
 
     if (!quest) {
-      return res.status(404).json({ success: false, message: "Quest not found or unauthorized" });
+      return res.status(404).json({ success: false, message: "Quest not found" });
     }
 
     res.status(200).json({ success: true, response: quest });
