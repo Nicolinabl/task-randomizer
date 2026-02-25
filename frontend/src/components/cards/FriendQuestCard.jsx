@@ -1,7 +1,6 @@
 import styled, { keyframes } from "styled-components";
 import { useState, useEffect } from "react";
 import { apiUrl } from "../../../api";
-import { data } from "react-router-dom";
 
 export const FriendQuestCard = ({
   id,
@@ -15,7 +14,7 @@ export const FriendQuestCard = ({
   isNew,
 }) => {
   const [kudosCount, setKudosCount] = useState(kudos || 0);
-  console.log(createdBy);
+
   //conditional check?
   const handleClick = () => {
     setKudosCount((prev) => prev + 1);
