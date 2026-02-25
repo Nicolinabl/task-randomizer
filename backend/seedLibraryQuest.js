@@ -48,6 +48,8 @@ const defaultLibrary = [
 ];
 
 const seedDatabase = async () => {
+  console.log("Old library cleared.");
+
   try {
     // 1. Connect to MongoDB
     await mongoose.connect(
@@ -57,7 +59,6 @@ const seedDatabase = async () => {
 
     // 2. Clear existing default tasks (prevents duplicates if you run this twice)
     await DefaultTask.deleteMany({});
-    console.log("Old library cleared.");
 
     // 3. Insert the new tasks
     await DefaultTask.insertMany(defaultLibrary);
