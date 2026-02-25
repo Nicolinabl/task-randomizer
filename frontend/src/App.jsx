@@ -16,6 +16,9 @@ export const App = () => {
   const [user, setUser] = useState(null)
   const [data, setData] = useState(null);
 
+  const user = JSON.parse(localStorage.getItem("user"));
+  const accessToken = () => (user ? { Authorization: user.accessToken } : {});
+
   // TODO remove?
   useEffect(() => {
     const fetchData = async () => {
@@ -63,7 +66,10 @@ export const App = () => {
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/about" element={<About />} />
-        <Route path="/feed" element={<FriendFeed />} />
+        <Route
+          path="/feed"
+          element={<FriendFeed accessToken={accessToken} />}
+        />
         <Route path="/quests" element={<Quests />} />
         <Route path="/rewards" element={<Rewards />} />
         <Route path="/profile" element={<UserProfile user={user}/>} />
