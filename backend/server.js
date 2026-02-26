@@ -6,7 +6,8 @@ import { authentificateUser } from "./authMiddleware.js";
 import "dotenv/config";
 import userController from "./controllers/userController.js";
 import questController from "./controllers/questController.js";
-import friendController from "./controllers/friend.controller.js";
+import friendController from "./controllers/friendController.js";
+import { seedDatabase } from "./seedLibraryQuest.js";
 
 const port = process.env.PORT || 8080;
 const app = express();
