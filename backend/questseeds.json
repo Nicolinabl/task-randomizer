@@ -1,47 +1,47 @@
 [
   {
     "message": "Clean kitchen sink",
-    "timeNeed": 10,
+    "timeNeeded": 10,
     "category": ["Cleaning", "Kitchen"]
   },
   {
     "message": "Unload washing machine",
-    "timeNeed": 15,
+    "timeNeeded": 15,
     "category": ["Washing", "Clothes"]
   },
   {
     "message": "Clean the toilet",
-    "timeNeed": 18,
+    "timeNeeded": 18,
     "category": ["Cleaning", "Bathroom"]
   },
   {
     "message": "Put things at their places from the work table",
-    "timeNeed": 12,
+    "timeNeeded": 12,
     "category": ["Cleaning", "Home office"]
   },
   {
     "message": "Put clothes in the closet or in laundry",
-    "timeNeed": 8,
+    "timeNeeded": 8,
     "category": ["Washing", "Clothes", "Cleaning"]
   },
   {
     "message": "Dust one room",
-    "timeNeed": 15,
+    "timeNeeded": 15,
     "category": ["Cleaning", "House"]
   },
   {
     "message": "Load washing machine one time",
-    "timeNeed": 15,
+    "timeNeeded": 15,
     "category": ["Washing", "Clothes"]
   },
   {
     "message": "Water the plants",
-    "timeNeed": 5,
+    "timeNeeded": 5,
     "category": ["Plants", "House"]
   },
   {
     "message": "Clean one pair of shoes",
-    "timeNeed": 12,
+    "timeNeeded": 12,
     "category": ["Clothes", "Cleaning", "Wardrobe"]
   }
 ]
