@@ -149,4 +149,6 @@ app.delete("/friends/:id", friendController.removeFriend);
 // Start the server
 app.listen(port, () => {
   console.log(`Server running on http://localhost:${port}`);
+  seedDatabase();
+  console.log("Run the seedDatabase");
 });
