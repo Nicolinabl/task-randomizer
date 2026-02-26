@@ -167,12 +167,15 @@ const getRandomQuest = async (req, res) => {
   }
 };
 
-//  ----- Duplicates a single quest from library to user's quest lits -------
-//id=quest id, requires authentication from user
+//  ----- Duplicate a quest from library to authenticated user's quest lits -------
+//id= quest id //requires auth
 
 const duplicateQuest = async (req, res) => {
   try {
+    //const { query } = req.createdBy;
+    //const { message, timeNeeded, category } = req.params;
     const { id } = req.params;
+    //const addToUser = { createdBy: req.user._id };
 
     if (!mongoose.Types.ObjectId.isValid(id)) {
       return res
