@@ -28,10 +28,11 @@ export const FriendFeed = ({ accessToken }) => {
   useEffect(() => {
     //add error handling
     setLoading(true);
-    fetch(apiUrl + "/friends", {
+    console.log("I'll make the request with this token", accessToken);
+    fetch(apiUrl + "/feed/quests", {
       headers: {
         "Content-Type": "application/json",
-        ...accessToken(),
+        Authorization: accessToken,
       },
     })
       .then((res) => {
@@ -63,20 +64,21 @@ export const FriendFeed = ({ accessToken }) => {
           <input type="search" placeholder="Search username 🔎" />
         </label>
       </form>
-      {friendsQuests.map((quest, index) => (
-        <FriendQuestCard
-          key={quest._id}
-          id={quest._id}
-          createdBy={quest.createdBy}
-          category={quest.category}
-          message={quest.message}
-          timeNeeded={quest.timeNeeded}
-          doneAt={quest.doneAt}
-          kudos={quest.kudos}
-          accessToken={accessToken}
-          isNew={index === 0}
-        />
-      ))}
+      {friendsQuests.length &&
+        friendsQuests.map((quest, index) => (
+          <FriendQuestCard
+            key={quest._id}
+            id={quest._id}
+            createdBy={quest.createdBy}
+            category={quest.category}
+            message={quest.message}
+            timeNeeded={quest.timeNeeded}
+            doneAt={quest.doneAt}
+            kudos={quest.kudos}
+            accessToken={accessToken} // Props drilling
+            isNew={index === 0}
+          />
+        ))}
     </>
   );
 };

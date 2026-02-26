@@ -13,46 +13,11 @@ import { apiUrl } from "../api";
 import { Navbar } from "./components/Navbar";
 
 export const App = () => {
-  const [user, setUser] = useState(null)
-  const [data, setData] = useState(null);
+  // TODO This could be a reactive state (`useState`) that loads this value as default, but has a `set` function that other components, like Login could use to update it only when it should really be modified
+  const accessToken = localStorage.getItem("accessToken");
 
-  const user = JSON.parse(localStorage.getItem("user"));
-  const accessToken = () => (user ? { Authorization: user.accessToken } : {});
-
-  // TODO remove?
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await fetch(apiUrl);
-        const data = await response.json();
-        console.log("API Response:", data);
-        setData(data);
-      } catch (err) {
-        console.error("Error:", err);
-      }
-    };
-
-    fetchData();
-  }, []);
-
-  useEffect(() => {
-    const accessToken = localStorage.getItem('accessToken')
-    const userId = localStorage.getItem('userId')
-    const userEmail = localStorage.getItem('userEmail')
-    const userName = localStorage.getItem('userName')
-
-    if (accessToken && userId) {
-      setUser({ 
-        accessToken, 
-        userId, 
-        email: userEmail, 
-        name: userName 
-      })
-    }
-  }, []) 
 
   const handleLogout = () => {
-    setUser(null)
     localStorage.removeItem('accessToken')
     localStorage.removeItem('userId')
     localStorage.removeItem('userEmail')
@@ -72,7 +37,8 @@ export const App = () => {
         />
         <Route path="/quests" element={<Quests />} />
         <Route path="/rewards" element={<Rewards />} />
-        <Route path="/profile" element={<UserProfile user={user}/>} />
+        {/** TODO This is commented because I deleted the `user` variable. I think all the user-data related code should be reorganized, maybe the UserProfile component could load it's own data  */}
+        {/* <Route path="/profile" element={<UserProfile user={user} />} /> */}
         <Route path="/login" element={<Login />} />
         <Route path="/signup" element={<Signup />} />
       </Routes>

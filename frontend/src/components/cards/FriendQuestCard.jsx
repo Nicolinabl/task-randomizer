@@ -21,7 +21,7 @@ export const FriendQuestCard = ({
 
     fetch(apiUrl + `/quests/${id}/kudos`, {
       method: "POST",
-      headers: { "Content-Type": "application/json", ...accessToken() },
+      headers: { "Content-Type": "application/json", 'Authorization': accessToken },
     })
       .then((res) => res.json())
       .then((data) => {
