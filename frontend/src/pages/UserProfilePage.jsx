@@ -6,8 +6,11 @@ import { Avatar } from "../components/Avatar";
 import { Strike } from "../components/StrikeDisplay";
 import { Link } from "react-router-dom";
 import { QuestList } from "../components/QuestList";
+import { useUserStore } from "../stores/useUserStore";
 
-export const UserProfile = ({ user }) => {
+export const UserProfile = ( ) => {
+  const user = useUserStore(state => state.user)
+  
   return (
     <>
       {!user && (

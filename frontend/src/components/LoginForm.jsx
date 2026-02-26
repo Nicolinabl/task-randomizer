@@ -2,10 +2,11 @@ import styled from 'styled-components'
 import { Link, useNavigate } from 'react-router-dom'
 import { useEffect, useState } from 'react'
 import { apiUrl } from '../../api'
+import { useUserStore } from '../stores/useUserStore'
 
 export const LoginForm = () => {
     // State variables to store form input values
-    const [name, setName] = useState('')
+    // const [name, setName] = useState('')
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
   
@@ -14,6 +15,9 @@ export const LoginForm = () => {
   
     // Hook to navigate to different routes
     const navigate = useNavigate()
+
+    // Grabs login action from store
+    const login = useUserStore((state) => state.login)
   
     // When form is submitted, this function runs
     const handleSubmit = async (event) => {
@@ -27,7 +31,7 @@ export const LoginForm = () => {
           headers: {
             'Content-Type': 'application/json',
           },
-          body: JSON.stringify({ name, email, password })
+          body: JSON.stringify({ email, password })
         })
   
         const data = await response.json()
@@ -40,16 +44,22 @@ export const LoginForm = () => {
         }
   
         console.log('Login successful:', data)
+
+        login({
+          accessToken: data.accessToken,
+          userId: data.id,
+          email: email,
+          name: data.name // check what the API actually returns here
+        })
   
         // Store the access token in browser's localStorage for future requests
-        localStorage.setItem('accessToken', data.accessToken)
+        // localStorage.setItem('accessToken', data.accessToken)
         // Store the user ID
-        localStorage.setItem('userId', data.id)
+        // localStorage.setItem('userId', data.id)
         // store user email
-        localStorage.setItem('userEmail', email)
+        // localStorage.setItem('userEmail', email)
 
         // Clear the form inputs
-        setName('')
         setEmail('')
         setPassword('')
   
