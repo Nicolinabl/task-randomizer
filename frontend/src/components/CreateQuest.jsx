@@ -1,6 +1,7 @@
 import styled from 'styled-components'
 import { useState } from 'react'
-import { apiUrl } from '../../api'
+// import { apiUrl } from '../../api'
+import { useQuestStore } from '../stores/useQuestStore'
 
 // component for creating quest
 export const CreateQuest = () => {
@@ -10,51 +11,25 @@ export const CreateQuest = () => {
   const [category, setCategory] = useState('')
   const [error, setError] = useState(null)
 
+  const createQuest = useQuestStore((state) => state.createQuest)
+
   // Handle form submission
   const handleSubmit =  async (event) => {
     event.preventDefault()
     setError(null)
 
-    // get the users accesstoken from localStorage (saved during login/signup)
-    const accessToken = localStorage.getItem('accessToken')
+    const result = await createQuest(message, timeNeeded, category)
 
-    if (!accessToken) {
-      setError('You must be logged in to create a quest')
+    if (!result.success) {
+      setError(result.error)
       return
     }
-
-    try {
-       // POST request for creating a new quest
-      const response = await fetch(apiUrl + '/quests', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': accessToken
-        },
-        body: JSON.stringify({ 
-          message, 
-          timeNeeded: Number(timeNeeded), 
-          category: [category] 
-        })
-     })
-  
-    const data = await response.json()
-    
-    if (!response.ok) {
-      setError(data.message || 'Failed to create quest')
-      return
-    }
-
-    console.log('Quest created:', data)
 
     // After form i submitted, clear the input field
     setMessage('')
     setTimeNeeded('')
     setCategory('')
-  } catch (error) {
-    console.error('Error:', error)
-    setError('Something went wrong. Please try again.')
-  }
+
 }
 
   return (
