@@ -75,13 +75,14 @@ app.post("/quests", authentificateUser, questController.createQuestUnAuth);
 // FIXME add auth MUST --- Give kudos >>>>> Doesn't prevent from liking more than once - why??
 app.post("/quests/:id/kudos", authentificateUser, questController.giveKudos);
 
-// ---- Display Tasks from Library, OBS! Doesn't requie authentication(returns default tasks with categories and estimated time) ---- //Test example: http://localhost:8080/quests/library/?category=cleaning&time=20, can filter on one category and time <= N
+// ---- Show All Quests from Library, (OBS! Doesn't requie authentication, filters on category and time <=N -----
+//Test example: http://localhost:8080/quests/library/?category=cleaning&time=20
 app.get("/quests/library", questController.showDefaultQuests);
 
 // ----- Returns all user's quests, can filter on category and time <= N) >>>>> only for auth users.
 app.get("/quests/all", authentificateUser, questController.showUserQuests);
 
-// FIXME MUST---- Duplicates a quest from library >>> only for auth users -------
+// ---- Duplicates a quest from library >>> only for auth users -------
 app.post(
   "/quests/library/:id/add",
   authentificateUser,
