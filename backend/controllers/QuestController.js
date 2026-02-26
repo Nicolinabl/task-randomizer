@@ -3,7 +3,7 @@ import mongoose from "mongoose";
 import { Quest } from "../schemas.js";
 
 import { LibraryQuest } from "../schemas.js";
-//import quests from "../quests.json";
+import quests from "../quests.json";
 
 import "dotenv/config";
 
@@ -70,20 +70,21 @@ const giveKudos = async (req, res) => {
   }
 };
 
-// FIXME MUST ---- Display Tasks from Library, OBS! Doesn't requie authentication(returns default tasks with categories and estimated time) -----
-//Test example: http://localhost:8080/quests/library/?category=cleaning&time=20, can filter on one category and time <= N
+// ---- Show All Quests from Library, (OBS! Doesn't requie authentication, filters on category and time <=N -----
+//Test example: http://localhost:8080/quests/library/?category=cleaning&time=20
 const showDefaultQuests = async (req, res) => {
-  let { category, time } = req.query;
-  const query = { category, time };
-
-  if (category) {
-    query.category = category.toLowerCase();
-  }
-  if (time) {
-    query.timeNeeded = { $lte: time };
-  }
-
   try {
+    let { category, time } = req.query;
+    //const query = { category, time };
+    const query = {};
+
+    if (category) {
+      query.category = category.toLowerCase();
+    }
+    if (time) {
+      query.timeNeeded = { $lte: Number(time) };
+    }
+
     const filteredQuests = await LibraryQuest.find(query);
 
     if (!filteredQuests.length) {
@@ -98,9 +99,7 @@ const showDefaultQuests = async (req, res) => {
       .status(200)
       .json({ success: true, response: filteredQuests, message: "Success" });
   } catch (err) {
-    return res
-      .status(500)
-      .json({ success: false, response: [], message: err.errors });
+    return res.status(500).json({ success: false, message: err.errors });
   }
 };
 
@@ -167,31 +166,8 @@ const getRandomQuest = async (req, res) => {
   }
 };
 
-// TODO ---- DUPLICATE QUEST FROM LIBRARY
-//  ----- Duplicates a single quest from library to authenticated user's quest lits -------
-//Add from database: id=single quest id //ADD AUTH
-// FIXME Functinality:
-// DONE Steps: 1. Library tasks don't require authentiacte to fetch
-// DONE 2. Are stored separately from user-created tasks
-//FIXME 3. Allowed to duplicate each item for authenticated user by CREATING a new tasks
-//DONE 4. Stays untouched in database, therefore needs to be separated in Schema: defaultTask, userTask
-// DONE 5. Default tasks (libraryQuest) don't have "createdBy" field
-// DONE 6. Default tasks schema: message, timeNeeded, category.
-//FIXME 6. After it is duplicated to users quests, shows also "done", allows to change category, timeNeeded, etc.
-
-//Steps for creating in-build library of tasks with "see and add button" each:
-//1. Seed the database with tasks with pre-filled {message, timeNeeded, category}
-//2. Add "duplicate" functionality on backend: require authentication, validate template ID exists, allow copying of the 3 fields. In route, 1. Attach your authMiddleware, 2. Ensure it sets req.user.id
-//3. With duplicating, automatically pass {message, timeNeeded, category} to user's field, and add "timestamp" and "createdBy" by default as when user creates a task from scratch. Use deconstruction:
-//const newTask = new UserTask({
-//message: template.message,
-//timeNeeded: template.timeNeeded,
-//category: template.category,
-//createdBy: req.user._id
-//})
-//4.Add errorhandling on BE: 1. User not authenticated, 2.template not found, catch error in DB.
-//5. Give user feedback on FE (errors and success)
-//6. Display newly added task in user's list
+//  ----- Duplicates a single quest from library to user's quest lits -------
+//id=quest id, requires authentication from user
 
 const duplicateQuest = async (req, res) => {
   try {
