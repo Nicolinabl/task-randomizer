@@ -12,6 +12,7 @@ import { useEffect, useState } from "react";
 import { apiUrl } from "../api";
 import { Navbar } from "./components/Navbar";
 import { useUserStore } from './stores/useUserStore'
+import { GiveUp } from './pages/GiveUpPage'
 
 export const App = () => {
   const { getUser, logout } = useUserStore()
@@ -56,6 +57,7 @@ export const App = () => {
         <Route path="/profile" element={<UserProfile />} />
         <Route path="/login" element={<Login />} />
         <Route path="/signup" element={<Signup />} />
+        <Route path="/giveup" element={<GiveUp />} />
       </Routes>
     </>
   );
