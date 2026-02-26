@@ -13,7 +13,7 @@ import { apiUrl } from "../api";
 import { Navbar } from "./components/Navbar";
 
 export const App = () => {
-  const [user, setUser] = useState(null)
+  // const [user, setUser] = useState(null)
   const [data, setData] = useState(null);
 
   // TODO remove?
