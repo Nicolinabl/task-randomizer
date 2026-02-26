@@ -13,22 +13,29 @@ export const UserProfile = ( ) => {
   
   return (
     <>
-      <Header />
-      <Div>
-        <Strike />
-        <Avatar />
-        {user && <p>Hello, {user.email}!</p>}
-        <Link to="/quests">Get quest of the day</Link>
-        {/* TODO: modal for getting quest of the day */}
-      </Div>
-      <CreateQuest />
-      <QuestList />
-      {/* TODO: use socket.io to update questlist in real time without having to refresh page? */}
-      <QuestLibrary />
-      {/* NOTE: hide add quest + list of quests by default? Only show when user clicks button?  */}
+      {!user && (
+        <p>Log in to see your profile</p>
+      )}
+
+      {user && (
+        <>
+          <Header />
+
+          <Div>
+            <Strike />
+            <Avatar />
+            <p>Hello, {user.email}!</p>
+            <Link to="/quests">Get quest of the day</Link>
+          </Div>
+
+          <CreateQuest />
+          <QuestList />
+          <QuestLibrary />
+        </>
+      )}
     </>
-  );
-};
+  )
+}
 
 const Div = styled.div`
   display: flex;
