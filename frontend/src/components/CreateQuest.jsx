@@ -18,6 +18,15 @@ export const CreateQuest = () => {
     event.preventDefault()
     setError(null)
 
+    if (!message.trim()) {
+      setError('You need to add a quest')
+      return
+    }
+
+    if (!timeNeeded) {
+      setError('You need to add time needed')
+    }
+
     const result = await createQuest(message, timeNeeded, category)
 
     if (!result.success) {
@@ -34,18 +43,16 @@ export const CreateQuest = () => {
 
   return (
     <Form onSubmit={handleSubmit}>
+      <h2>Create new quest</h2>
       <Label>
-        Create new quest
-
-        {error && <p>{error}</p>}
-
+        What do you need to do?
         <input 
           type="text" 
-          placeholder='What do you need to do?' 
+          placeholder='Quest' 
           value={message} 
           onChange={(event) => setMessage(event.target.value)}/>
         
-        <select 
+        {/* <select 
           name="category" 
           value={category}
           onChange={(event) => setCategory(event.target.value)}
@@ -55,18 +62,21 @@ export const CreateQuest = () => {
           <option value="exercise">Exercise</option>
           <option value="work">Work</option>
           <option value="personal">Personal</option>
-        </select>
+        </select> */}
+        {/* NOTE: category commented out for now. Not used currently */}
 
-        <select 
-          name="time"  
-          value={timeNeeded} 
-          onChange={(event) => setTimeNeeded(event.target.value)} 
-        >
-          <option value="10">10 min</option>
-          <option value="20">20 min</option>
-          <option value="30">30 min</option>
-          <option value="60">1 hour</option>
-        </select>
+        <label>
+          How many minutes will it take you?
+          <input 
+            name="time" 
+            type='number'
+            placeholder='Time needed' 
+            value={timeNeeded} 
+            onChange={(event) => setTimeNeeded(event.target.value)} 
+          />
+        </label>
+
+        {error && <p>{error}</p>}
 
         <button type="submit">Add a quest</button>
       </Label>
