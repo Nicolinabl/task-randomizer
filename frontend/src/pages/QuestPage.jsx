@@ -2,7 +2,6 @@ import styled from 'styled-components'
 import { useQuestStore } from '../stores/useQuestStore'
 import { useUserStore } from '../stores/useUserStore'
 import { useState } from 'react'
-import { QuestCard } from '../components/cards/QuestCard'
 import { Link } from 'react-router-dom'
 
 export const Quests = () => {
@@ -53,9 +52,12 @@ const Form = styled.form`
   display: flex;
   flex-direction: column;
   background-color: var(--primary-color);
+  max-height: 280px;
+  max-width: 350px;
   margin: 10px;
   border-radius: 12px;
   padding: 10px;
+  border: 2px solid #B594FF;
 `
 
 const Label = styled.label`

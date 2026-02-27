@@ -9,9 +9,9 @@ export const GlobalStyle = createGlobalStyle`
   :root {
     --main-bg-color: #FFF1F9;
     --main-text-color: #000000;
-    --primary-color: #FFFFFF;
-    --secondary-color: #FFFFFF;
-    --accent-color: #FFFFFF;
+    --primary-color: #FFF4CA;
+    --secondary-color: #DAFFE6;
+    --accent-color: #F497B4;
   }
 
   #root {
