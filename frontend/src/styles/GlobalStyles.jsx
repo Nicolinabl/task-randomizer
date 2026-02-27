@@ -3,14 +3,15 @@ import { createGlobalStyle } from 'styled-components'
 export const GlobalStyle = createGlobalStyle`
   * {
     box-sizing: border-box;
+    background-color: var(--main-bg-color); 
   }
 
   :root {
-    --main-bg-color: #FFFFFF;
+    --main-bg-color: #FFF1F9;
     --main-text-color: #000000;
-    --primary-color: #D9D9D9;
-    --secondary-color: #ECECEC;
-    --accent-color: #F7F7F7;
+    --primary-color: #FFF4CA;
+    --secondary-color: #DAFFE6;
+    --accent-color: #F497B4;
   }
 
   #root {
