@@ -26,7 +26,7 @@ const [randomQuest, setRandomQuest] = useState(null)
           <h3>Get ready for your quest of the day!</h3>
           <Label>
             How much time do you have today?
-           <input 
+           <Input 
             type="number"
             value={timeAvailable}
             onChange={(event) => setTimeAvailable(event.target.value)}
@@ -57,7 +57,7 @@ const Form = styled.form`
   margin: 10px;
   border-radius: 12px;
   padding: 10px;
-  border: 2px solid #B594FF;
+  border: 2px solid var(--accent-color);
 `
 
 const Label = styled.label`
@@ -71,4 +71,8 @@ const Div = styled.div`
   background-color: var(--primary-color);
   margin: 10px;
   border-radius: 12px;
+`
+
+const Input = styled.input`
+  background-color: #FFFFFF;
 `

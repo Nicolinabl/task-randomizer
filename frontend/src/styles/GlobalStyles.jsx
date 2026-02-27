@@ -2,8 +2,7 @@ import { createGlobalStyle } from 'styled-components'
 
 export const GlobalStyle = createGlobalStyle`
   * {
-    box-sizing: border-box;
-    background-color: var(--main-bg-color); 
+    box-sizing: border-box; 
   }
 
   :root {
@@ -23,6 +22,7 @@ export const GlobalStyle = createGlobalStyle`
     margin: 0;
     display: flex;
     justify-content: center;
+    background-color: var(--main-bg-color);
   }
 `
 
