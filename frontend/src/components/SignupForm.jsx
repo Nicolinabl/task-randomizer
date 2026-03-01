@@ -68,7 +68,7 @@ export const SignupForm = () => {
 
   return (
     <Form onSubmit={handleSubmit}>
-      <h4>Sign up here</h4>
+      <h2>Sign up here</h2>
       <label>
         Username
         <input type="text" placeholder="username" onChange={event => setName(event.target.value)}/>
