@@ -8,6 +8,8 @@ import userController from "./controllers/userController.js";
 import questController from "./controllers/questController.js";
 import friendController from "./controllers/friendController.js";
 import { seedDatabase } from "./seedLibraryQuest.js";
+import { Server } from 'socket.io'
+import { createServer } from 'http'
 
 const port = process.env.PORT || 8080;
 const app = express();
@@ -148,9 +150,32 @@ app.get("/friends/:name", authentificateUser, friendController.findUserdByName);
 // FIXME NICE+ ---- Delete a friend >>>>> only for authorised users for their feed
 app.delete("/friends/:id", friendController.removeFriend);
 
-// Start the server
-app.listen(port, () => {
-  console.log(`Server running on http://localhost:${port}`);
-  seedDatabase();
-  console.log("Run the seedDatabase");
-});
+// Start the server OLD BEFORE SOCKET
+// app.listen(port, () => {
+//   console.log(`Server running on http://localhost:${port}`);
+//   seedDatabase();
+//   console.log("Run the seedDatabase");
+// });
+
+// Start the server NEW WITH SOCKET
+const httpServer = createServer(app)
+const io = new Server(httpServer, {
+  cors: { origin: '*' }
+})
+
+io.on('connection', (socket) => {
+  console.log('User connected:', socket.id)
+
+  socket.on('message', (message) => {
+    io.emit('message', message) // broadcast to everyone
+  })
+
+  socket.on('disconnect', () => {
+    console.log('User disconnected:', socket.id)
+  })
+})
+
+httpServer.listen(port, () => {
+  console.log(`Server running on http://localhost:${port}`)
+  seedDatabase()
+})
