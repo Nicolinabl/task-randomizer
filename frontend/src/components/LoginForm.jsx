@@ -24,6 +24,15 @@ export const LoginForm = () => {
       event.preventDefault()
       setError(null)
 
+      if(!email.trim()) {
+        setError('Please enter an email adress')
+        return
+      }
+
+      if(!password.trim()) {
+        setError('Please enter a password')
+      }
+
       try {
         // send post request to signup endpoint with user data
         const response = await fetch(apiUrl + '/login', {
@@ -39,7 +48,13 @@ export const LoginForm = () => {
   
         // check if response is unsuccessful
         if (!response.ok) {
-          setError(data.message)
+          if (response.status === 401) {
+            setError('Incorrect email or password')
+          } else if (response.status === 404) {
+            setError ('No account found with that email')
+          } else {
+            setError(data.message || 'Login failed. Please try again')
+          }
           return
         }
   
@@ -88,6 +103,7 @@ export const LoginForm = () => {
           Password
           <input type="password" placeholder="password" onChange={event => setPassword(event.target.value)}/>
         </label>
+        {error && <p>{error}</p>}
         <button type="submit">Log in</button>
         <Link to="/signup">Not a user? Sign up</Link>
       </Form>
