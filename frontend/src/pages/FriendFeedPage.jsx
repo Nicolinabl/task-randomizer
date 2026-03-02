@@ -56,7 +56,6 @@ export const FriendFeed = ({ accessToken }) => {
     // smth like {!user ? (<Authentification onAuthSuccess = {handleAuth}>)}
     <>
       <h2>My friends finished quests</h2>
-
       <form>
         <label>
           Find a friend:
