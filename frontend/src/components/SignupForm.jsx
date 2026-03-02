@@ -2,7 +2,7 @@ import styled from 'styled-components'
 import { Link, useNavigate } from 'react-router-dom'
 import { useEffect, useState } from 'react'
 import { apiUrl } from '../../api'
-
+import { useUserStore } from '../stores/useUserStore'
 
 
 export const SignupForm = () => {
@@ -17,10 +17,32 @@ export const SignupForm = () => {
   // Hook to navigate to different routes
   const navigate = useNavigate()
 
+  const login = useUserStore((state) => state.login)
+
   // When form is submitted, this function runs
   const handleSubmit = async (event) => {
     event.preventDefault()
     setError(null)
+
+    if (!name.trim()) {
+      setError('Please enter a username.')
+      return
+    }
+  
+    if (!email.trim()) {
+      setError('Please enter your email.')
+      return
+    }
+  
+    if (!password.trim()) {
+      setError('Please enter a password.')
+      return
+    }
+  
+    if (password.length < 8) {
+      setError('Password must be at least 8 characters.')
+      return
+    }
 
     try {
       // send post request to signup endpoint with user data
@@ -37,20 +59,32 @@ export const SignupForm = () => {
 
       // check if response is unsuccessful
       if (!response.ok) {
-        setError(data.message)
+        if (response.status === 409) {
+          setError('An account with that email already exists.')
+        } else {
+          setError(data.message || 'Signup failed. Please try again.')
+        }
         return
-      }
+      } 
 
       console.log('Signup successful:', data)
 
-      // Store the access token in browser's localStorage for future requests
-      localStorage.setItem('accessToken', data.accessToken)
-      // Store the user ID
-      localStorage.setItem('userId', data.id)
-      // Store username
-      localStorage.setItem('userName', name)
-      // store email
-      localStorage.setItem('userEmail', email)
+      // // Store the access token in browser's localStorage for future requests
+      // localStorage.setItem('accessToken', data.accessToken)
+      // // Store the user ID
+      // localStorage.setItem('userId', data.id)
+      // // Store username
+      // localStorage.setItem('userName', name)
+      // // store email
+      // localStorage.setItem('userEmail', email)
+
+      // on signup also login
+      login({
+        accessToken: data.accessToken,
+        userId: data.id,
+        email: email,
+        name: name
+      })
 
       // Clear the form inputs
         setName('')
@@ -81,6 +115,7 @@ export const SignupForm = () => {
         Password
         <input type="password" placeholder="password" onChange={event => setPassword(event.target.value)}/>
       </label>
+      {error && <p>{error}</p>}
       <button type="submit">Sign up</button>
       <Link to="/login">I already have an account</Link>
     </Form>
