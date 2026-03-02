@@ -163,37 +163,30 @@ const userStreak = async (req, res) => {
     }
     //console.log(completedQuests);
     let streak = 0;
-    let today = new Date();
-    today.setHours(0, 0, 0, 0);
+    let today = new Date().setHours(0, 0, 0, 0);
     //console.log(today);
     let checkDate = today;
     //console.log(checkDate);
 
     for (let i = 0; i < completedQuests.length; i++) {
       let lastQuest = completedQuests[i];
-      let questDate = new Date(lastQuest.doneAt);
-      questDate.setHours(0, 0, 0, 0);
-      console.log(questDate);
-      //let lastQuestDate = lastQuest.doneAt;
+      let lastQuestDate = new Date(lastQuest.doneAt).setHours(0, 0, 0, 0);
       //console.log(lastQuestDate);
 
-      if (checkDate - questDate === 1) {
-      }
-      if (checkDate - questDate === 0) {
-        //quest checked today
-        streak++;
-        checkDate.setDate.apply(currentDate.getDate() - 1);
-      } else {
-        //Streak broken
+      if (checkDate - lastQuestDate > 86400000) {
+        //number is over one day in milisec, streak broken
         break;
       }
-      return (checkDate = lastQuestDate);
-      //keep as is
+      if (
+        checkDate - lastQuestDate === 86400000 ||
+        lastQuestDate === checkDate
+      ) {
+        streak++;
+        checkDate -= 86400000;
+        console.log(checkDate);
+      }
+      //console.log(checkDate - lastQuestDate);
     }
-
-    //if (checkDate - previousStreakDate >= -3600){ return increment streakCount+1}
-    //if (checkDate - previousStreakDate < -3600) {return streakCount=0}
-    //const streakDifference = lastDay - today;
 
     return res.status(200).json({ success: true, response: streak });
   } catch (err) {
