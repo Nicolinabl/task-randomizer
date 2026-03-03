@@ -46,7 +46,7 @@ export const CreateQuest = () => {
       <h2>Create new quest</h2>
       <Label>
         What do you need to do?
-        <input 
+        <Input 
           type="text" 
           placeholder='Quest' 
           value={message} 
@@ -67,7 +67,7 @@ export const CreateQuest = () => {
 
         <label>
           How many minutes will it take you?
-          <input 
+          <Input 
             name="time" 
             type='number'
             placeholder='Time needed' 
@@ -78,7 +78,7 @@ export const CreateQuest = () => {
 
         {error && <p>{error}</p>}
 
-        <button type="submit">Add a quest</button>
+        <Button type="submit">Add new quest</Button>
       </Label>
     </Form>
   )
@@ -86,12 +86,40 @@ export const CreateQuest = () => {
 
 const Form = styled.form`
   margin: 10px;
-  background-color: var(--accent-color)
+  padding: 16px;
+  border-radius: 12px;
+  border: 2px solid #B594FF;
+  background: #FFF;
+  box-shadow: 2px 4px 4px 0 #DBDBDB;
 `
 
 const Label = styled.label`
   display: flex;
   flex-direction: column;
+`
+
+const Input = styled.input`
+  border: none;
+  border-radius: 12px;
+  padding: 15px 16px 14px 16px;
+  background: #F4F0FF;
+  margin: 16px 0;
+  width: 100%;
+`
+
+const Button = styled.button`
+  display: flex;
+  width: 315px;
+  height: 54px;
+  padding: 8px 16px;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  border-radius: 12px;
+  border: 1px solid #1D30CE;
+  background: #866DEB;
+  box-shadow: 2px 4px 4px 0 rgba(139, 139, 139, 0.30);
+  color: white;
 `
 
 // TODO: Add authentication check - redirect to login if no accessToken
