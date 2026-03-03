@@ -24,7 +24,7 @@ const HeaderWrapper = styled.div`
   width: 100%;
   max-width: 800px;
 
-  margin: 24px 20px;
+  margin: 24px auto;
   padding: 16px 16px;
 
   box-sizing: border-box;
