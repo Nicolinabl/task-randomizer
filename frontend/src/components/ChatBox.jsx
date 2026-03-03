@@ -13,7 +13,6 @@ export const ChatBox = () => {
 
   useEffect(() => {
     // Listen for incoming messages
-    // CONTINUE FROM HERE
     socket.on('message', (message) => {
       setMessages((prev) => [...prev, message])
     })
@@ -21,11 +20,28 @@ export const ChatBox = () => {
     return () => socket.off('message') // cleanup on unmount
   }, [])
 
+  const handleSubmit = (event) => {
+    event.preventDefault()
+    if (input) {
+      socket.emit('message', input)
+      setInput('')
+    }
+  }
+
   return (
     <>
-      <ul></ul>
-      <form>
-        <input autoComplete="off" /><button>Send</button>
+      <ul>
+        {messages.map((message, index) => (
+          <li key={index}>{message}</li>
+        ))}
+      </ul>
+      <form onSubmit={handleSubmit}>
+        <input 
+          autoComplete="off"
+          value={input}
+          onChange={(event) => setInput(event.target.value)} 
+        />
+        <button>Send</button>
       </form>
     </>
   )
