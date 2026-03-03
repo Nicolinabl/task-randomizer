@@ -5,6 +5,7 @@ import { Quest, User } from "../schemas.js";
 import bcrypt from "bcrypt-nodejs";
 
 import "dotenv/config";
+import { response } from "express";
 
 // ---- All user routes ----
 
@@ -136,18 +137,6 @@ const userRewards = async (req, res) => {
 // FIXME MUST ---- Streaks >>>>> only for auth users
 const userStreak = async (req, res) => {
   //console.log("Your streak");
-  // DONE query DB for completed tasks, get an array
-  // DONE Sort desc by "doneAt" (-1 in mongoose)
-  // DONE itirate over array with "for" loop
-  // DONE check when was the last one done(date, hour, min, sec, ms)
-  // DONE check todays date
-  //Normalize both times to midnight (00:00:00:00)
-  //The most recent task shoud be from yesterday (local time doneAt: from 0:0:0:0 to 23:59:59:59)
-  //If the quest is done before that interval, => setStreakCount(0)
-  //OR:
-  // check if the difference between the last doneAt and todaysDate
-  //make last doneAt and todaysDate into comparible types that can be subsctracted one from another
-  //compare last doneAt to today's date (doneAt - today) >3600, then => setStreakCount(0)
 
   try {
     const completedQuests = await Quest.find({ done: true }).sort({
@@ -183,7 +172,7 @@ const userStreak = async (req, res) => {
       ) {
         streak++;
         checkDate -= 86400000;
-        console.log(checkDate);
+        //console.log(checkDate);
       }
       //console.log(checkDate - lastQuestDate);
     }
