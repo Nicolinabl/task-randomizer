@@ -15,10 +15,21 @@ const HeaderWrapper = styled.div`
   border-radius: 12px;
   background: var(--background-light-purple);
   box-shadow: 2px 4px 4px 0 #dbdbdb;
-  width: 100vw;
-  height: fit-content;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+
   gap: 8px;
+  width: 100%;
+  max-width: 800px;
+
   margin: 24px 20px;
   padding: 16px 16px;
+
   box-sizing: border-box;
+
+  @media (min-width: 768px) {
+    margin: 24px auto;
+  }
 `;

@@ -8,14 +8,12 @@ import { Link } from "react-router-dom";
 import { QuestList } from "../components/QuestList";
 import { useUserStore } from "../stores/useUserStore";
 
-export const UserProfile = ( ) => {
-  const user = useUserStore(state => state.user)
-  
+export const UserProfile = () => {
+  const user = useUserStore((state) => state.user);
+
   return (
     <>
-      {!user && (
-        <p>Log in to see your profile</p>
-      )}
+      {!user && <p>Log in to see your profile</p>}
 
       {user && (
         <>
@@ -34,8 +32,8 @@ export const UserProfile = ( ) => {
         </>
       )}
     </>
-  )
-}
+  );
+};
 
 const Div = styled.div`
   display: flex;
