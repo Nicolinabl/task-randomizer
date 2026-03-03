@@ -35,6 +35,12 @@ const [state, dispatch] = useReducer(reducer, initialState)
 
   const handleSubmit = async (e) => {
     e.preventDefault()
+
+    if (!state.timeAvailable) {
+      dispatch({ type: 'noMatch', message:'Please enter how many minutes you have available'})
+      return
+    }
+
     const freshQuests = await fetchQuests()
 
     if (freshQuests.length === 0) {
@@ -64,26 +70,27 @@ const [state, dispatch] = useReducer(reducer, initialState)
     <>
       {!state.randomQuest && (
         <Form onSubmit={handleSubmit}>
-          <h3>Get ready for your quest of the day!</h3>
+          <h2>Let's do this!!</h2>
           <Label>
             How much time do you have today?
            <Input 
             type="number"
             value={state.timeAvailable}
             onChange={(event) => dispatch({ type: 'setTime', time: event.target.value })}
+            placeholder='Minutes'
             />
             {state.noMatch && <p>{state.noMatch}</p>}
           </Label>
-          <button type="submit">Get quest</button>
+          <Button type="submit">Get quest</Button>
         </Form>
       )}
         {state.randomQuest && 
           <Div>
-            <p>Ok {user.email}, here is your quest of the day: </p>
+            <h2>Ok {user.email}, here is your quest of the day: </h2>
             <p>{state.randomQuest.message}</p> 
             <p>Will take about {state.randomQuest.timeNeeded} min</p>
-            <button>complete</button>  
-            <Link to='/giveup'>Please don't! You can at least try</Link>   
+            <input type='checkbox' />   
+            <Link to='/giveup'>Give up</Link>   
           </Div>
         }
     </>
@@ -100,6 +107,7 @@ const Form = styled.form`
   border-radius: 12px;
   padding: 10px;
   border: 2px solid var(--accent-color);
+  text-align: center;
 `
 
 const Label = styled.label`
@@ -108,13 +116,48 @@ const Label = styled.label`
 `
 
 const Div = styled.div`
-  display: flex;
-  flex-direction: column;
-  background-color: var(--primary-color);
-  margin: 10px;
-  border-radius: 12px;
+    display: flex;
+    flex-direction: column;
+    background-color: var(--primary-color);
+    max-height: 280px;
+    max-width: 350px;
+    margin: 10px;
+    border-radius: 12px;
+    padding: 10px;
+    border: 2px solid var(--accent-color);
+    text-align: center;
 `
 
 const Input = styled.input`
   background-color: #FFFFFF;
+  display: flex;
+  height: 52px;
+  padding: 15px 16px 14px 16px;
+  align-items: center;
+  gap: 10px;
+  align-self: stretch;
+  border-radius: 12px;
+  border: none;
+  margin-top: 16px;
+`
+
+const Button = styled.button`
+  display: flex;
+  height: 54px;
+  padding: 8px 16px;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  flex-shrink: 0;
+  align-self: stretch;
+  border-radius: 12px;
+  border: 2px solid #E9628C;
+  background: #F497B4;
+  box-shadow: 2px 4px 4px 0 rgba(139, 139, 139, 0.30);
+  margin: 16px 0;
+  cursor: pointer;
+
+  &:hover {
+    transform: scale(1.1)
+  }
 `
