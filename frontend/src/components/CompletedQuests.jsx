@@ -2,7 +2,7 @@ import { useQuestStore } from "../stores/useQuestStore"
 import { QuestCard } from "./cards/QuestCard"
 
 export const CompletedQuests = () => {
-  const { quests, completeQuest } = useQuestStore()
+  const { quests, completeQuest, deleteQuest } = useQuestStore()
 
   const completed = quests.filter(quest => quest.done === true)
 
@@ -16,6 +16,7 @@ export const CompletedQuests = () => {
             message={quest.message}
             done={quest.done}
             handleChecked={completeQuest}
+            onDelete={deleteQuest}
           />
       ))}
     </>
