@@ -11,35 +11,19 @@ import { Signup } from "./pages/SignupPage";
 import { useEffect, useState } from "react";
 import { apiUrl } from "../api";
 import { Navbar } from "./components/Navbar";
-import { useUserStore } from './stores/useUserStore'
-import { GiveUp } from './pages/GiveUpPage'
+import { useUserStore } from "./stores/useUserStore";
+import { GiveUp } from "./pages/GiveUpPage";
 
 export const App = () => {
-  const { getUser, logout } = useUserStore()
+  const { getUser, logout } = useUserStore();
 
   // call getUser function on app mount (in userStore)
   useEffect(() => {
-    getUser()
-  }, [])
+    getUser();
+  }, []);
 
   const user = JSON.parse(localStorage.getItem("user"));
   const accessToken = () => (user ? { Authorization: user.accessToken } : {});
-
-  // TODO remove?
-  // useEffect(() => {
-  //   const fetchData = async () => {
-  //     try {
-  //       const response = await fetch(apiUrl);
-  //       const data = await response.json();
-  //       console.log("API Response:", data);
-  //       setData(data);
-  //     } catch (err) {
-  //       console.error("Error:", err);
-  //     }
-  //   };
-
-  //   fetchData();
-  // }, []);
 
   return (
     <>
