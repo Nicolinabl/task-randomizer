@@ -7,6 +7,7 @@ import { Strike } from "../components/StrikeDisplay";
 import { Link } from "react-router-dom";
 import { QuestList } from "../components/QuestList";
 import { useUserStore } from "../stores/useUserStore";
+import { CompletedQuests } from '../components/CompletedQuests'
 
 export const UserProfile = () => {
   const user = useUserStore((state) => state.user);
@@ -29,6 +30,7 @@ export const UserProfile = () => {
           <CreateQuest />
           <QuestList />
           <QuestLibrary />
+          <CompletedQuests />
         </>
       )}
     </PageWrapper>
