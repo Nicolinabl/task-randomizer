@@ -59,7 +59,7 @@ app.get("/user/:id/state", authentificateUser, userController.userMood);
 // FIXME MUST ---- User's Rewards Collection >>>>> only for auth users
 app.get("/rewards", authentificateUser, userController.userRewards);
 
-// FIXME MUST ---- Streaks >>>>> only for auth users
+// WORKING ON IT-MONDAY MUST ---- Streaks >>>>> only for auth users
 app.get("/streaks", authentificateUser, userController.userStreak);
 
 // FIXME Nice+ ---- User page (shows: current strike, settings, log out, delete user, bonus points, profile picture state, user library) >>>>> only for auth users
@@ -89,7 +89,7 @@ app.post(
   questController.duplicateQuest,
 );
 
-// FIXME ------ Check quest as done ----- >>> for auth users
+// ------ Check quest as done ----- >>> for auth users, check that they only can check as done their own quests!
 app.patch(
   "/quests/:id/complete",
   authentificateUser,

@@ -1,10 +1,11 @@
 import mongoose from "mongoose";
 
-import { User } from "../schemas.js";
+import { Quest, User } from "../schemas.js";
 
 import bcrypt from "bcrypt-nodejs";
 
 import "dotenv/config";
+import { response } from "express";
 
 // ---- All user routes ----
 
@@ -135,7 +136,55 @@ const userRewards = async (req, res) => {
 
 // FIXME MUST ---- Streaks >>>>> only for auth users
 const userStreak = async (req, res) => {
-  console.log("Your streak");
+  //console.log("Your streak");
+
+  try {
+    const completedQuests = await Quest.find({ done: true }).sort({
+      doneAt: -1,
+    });
+
+    if (completedQuests.length === 0) {
+      return res.status(204).json({
+        succes: true,
+        message: "There are no completed quests yet",
+        streak: 0,
+      });
+    }
+    //console.log(completedQuests);
+    let streak = 0;
+    let today = new Date().setHours(0, 0, 0, 0);
+    //console.log(today);
+    let checkDate = today;
+    //console.log(checkDate);
+
+    for (let i = 0; i < completedQuests.length; i++) {
+      let lastQuest = completedQuests[i];
+      let lastQuestDate = new Date(lastQuest.doneAt).setHours(0, 0, 0, 0);
+      //console.log(lastQuestDate);
+
+      if (checkDate - lastQuestDate > 86400000) {
+        //number is over one day in milisec, streak broken
+        break;
+      }
+      if (
+        checkDate - lastQuestDate === 86400000 ||
+        lastQuestDate === checkDate
+      ) {
+        streak++;
+        checkDate -= 86400000;
+        //console.log(checkDate);
+      }
+      //console.log(checkDate - lastQuestDate);
+    }
+
+    return res.status(200).json({ success: true, response: streak });
+  } catch (err) {
+    return res.status(500).json({
+      succes: false,
+      message: "Somethng went wrong at the server",
+      error: err.errors,
+    });
+  }
 };
 
 // FIXME Nice+ ---- User page (shows: current strike, settings, log out, delete user, bonus points, profile picture state, user library) >>>>> only for auth users

@@ -222,7 +222,9 @@ const checkQuestDone = async (req, res) => {
 
   const updateData = { done, doneAt: done ? new Date() : null };
 
-  if (typeof done !== "Boolean") {
+  if (typeof done !== "boolean") {
+    //console.log(typeof done);
+    //console.log(done);
     return res
       .status(400)
       .json({ succes: false, message: "Invalid type of data" });
