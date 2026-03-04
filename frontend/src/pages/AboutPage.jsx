@@ -1,10 +1,14 @@
 import styled from 'styled-components'
+import { Home } from './HomePage'
+import { useUserStore } from '../stores/useUserStore'
 
 export const About = () => {
+  const { user } = useUserStore()
+
   return (
     <PageWrapper>
-      <p>What does the app do</p>
-      <p>How to get started</p>
+      {!user && <p>Log in to access the app</p>}
+      {user && <Home />}
     </PageWrapper>
   );
 };
