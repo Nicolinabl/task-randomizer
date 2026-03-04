@@ -46,7 +46,7 @@ export const App = () => {
       <GlobalStyle />
       <Navbar onLogout={logout} />
       <Routes>
-        <Route path="/" element={<Home />} />
+        <Route path="/" element={<UserProfile />} />
         <Route path="/about" element={<About />} />
         <Route
           path="/feed"
@@ -54,7 +54,6 @@ export const App = () => {
         />
         <Route path="/quests" element={<Quests />} />
         <Route path="/rewards" element={<Rewards />} />
-        <Route path="/profile" element={<UserProfile />} />
         <Route path="/login" element={<Login />} />
         <Route path="/signup" element={<Signup />} />
         <Route path="/giveup" element={<GiveUp />} />
