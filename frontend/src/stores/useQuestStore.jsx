@@ -3,7 +3,9 @@ import { apiUrl } from '../../api'
 import { useUserStore } from './useUserStore'
 
 export const useQuestStore = create((set) => ({
+  // Initial state
   quests: [],
+  libraryQuests: [],
   error: null,
   isLoading: false,
 
@@ -84,6 +86,7 @@ export const useQuestStore = create((set) => ({
     }
   },
 
+  // Check quest as complete
   completeQuest: async (questId, done) => {
     const accessToken = useUserStore.getState().user?.accessToken
     try {
@@ -104,8 +107,22 @@ export const useQuestStore = create((set) => ({
     } catch (err) {
       console.error('Error completing quest:', err)
     }
+  },
+
+  // Fetch quests from questLibrary
+  fetchLibraryQuests: async () => {
+    try {
+      const response = await fetch(apiUrl + '/quests/library')
+      const data = await response.json()
+      set({ libraryQuests: data.response })
+    } catch (error) {
+      console.error(error)
+    }
   }
+
 }))
+
+
 
 
 
