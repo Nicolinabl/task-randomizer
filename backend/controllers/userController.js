@@ -9,7 +9,7 @@ import { response } from "express";
 
 // ---- All user routes ----
 
-// ---- Register new user ----
+//✅ ---- Register new user ----
 const registerUser = async (req, res) => {
   try {
     const { name, email, password } = req.body;
@@ -55,7 +55,7 @@ const registerUser = async (req, res) => {
   }
 };
 
-// ---- Login with existing user ----
+//✅ ---- Login with existing user ----
 const loginUser = async (req, res) => {
   const { email, password } = req.body;
   const user = await User.findOne({ email }); //retrieving from database by email, should be unique
@@ -121,11 +121,94 @@ const updateUser = async (req, res) => {
 
 // TODO ---- AVATAR&MOOD STATE -----
 
-// FIXME ---- Smiley state of mood ---- >>>> only for auth users, returns sad/happy/delighted avatars
-const userMood = async (req, res) => {
-  /* console.log("this is your mode"); */
-  res.send("User mood");
-};
+// TODO ---- Smiley state of mood ---- >>>> only for auth users, returns sad/happy/delighted avatars
+//Dicebar library
+/* const userMood = async (req, res) => {
+  try {
+    //map streak range
+    //add conditions for each length(0, 1-10, over 10 days)
+    const avatarSad = createAvatar(avataaarsNeutral, {
+      backgroundColor: [
+        "f8d25c",
+        "fd9841",
+        "b6e3f4",
+        "c0aede",
+        "d1d4f9",
+        "ffd5dc",
+      ],
+      eyebrows: [
+        "angry",
+        "angryNatural",
+        "frownNatural",
+        "sadConcerned",
+        "sadConcernedNatural",
+        "unibrowNatural",
+        "upDown",
+        "upDownNatural",
+        "flatNatural",
+        "raisedExcited",
+        "raisedExcitedNatural",
+        "default",
+        "defaultNatural",
+      ],
+      eyes: [
+        "closed",
+        "cry",
+        "eyeRoll",
+        "side",
+        "squint",
+        "surprised",
+        "xDizzy",
+      ],
+      mouth: [
+        "concerned",
+        "disbelief",
+        "grimace",
+        "sad",
+        "screamOpen",
+        "serious",
+        "tongue",
+        "vomit",
+      ],
+      seed: [
+        "Aidan",
+        "Valentina",
+        "Brian",
+        "Robert",
+        "Jameson",
+        "Ryan",
+        "Christopher",
+        "Amaya",
+        "Easton",
+        "Liliana",
+        "Ryker",
+        "Jessica",
+        "Sarah",
+        "George",
+        "Katherine",
+        "Oliver",
+        "Emery",
+        "Sawyer",
+        "Jocelyn",
+      ],
+      randomizeIds: true, // - used for randomizing multiple avatars on the same page, needed at friends feed page
+      // ... other options
+    });
+
+    // ... options
+    //https://api.dicebear.com/9.x/avataaars-neutral/svg?mouth=concerned,default,disbelief
+
+    const svg = avatarSad.toString();
+
+    return res.status(200).json({ response: svg });
+  } catch (err) {
+    return res.status(500).json({
+      succes: false,
+      message: "Something went wrong at the server",
+      error: err.errors,
+    });
+  }
+}; */
 
 // TODO ----- REWARDS&STRIKES ------
 
@@ -210,7 +293,7 @@ export default {
   loginUser,
   deleteUser,
   updateUser,
-  userMood,
+  //userMood,
   userRewards,
   userStreak,
   profileSettings,
