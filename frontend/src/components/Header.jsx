@@ -1,12 +1,15 @@
 import styled from "styled-components";
 import HeartIcon from "../icons/HeartIcon";
+import { Streak } from "./StreakDisplay";
 
 export const Header = () => {
   return (
     <HeaderWrapper>
       <h1>Welcome to XxxxXXX</h1>
+      <Streak />
       <HeartIcon></HeartIcon>
       <icon-svg></icon-svg>
+
       <p>Never spend energy on choosing your chores again</p>
     </HeaderWrapper>
   );

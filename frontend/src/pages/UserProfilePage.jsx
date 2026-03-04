@@ -3,7 +3,7 @@ import styled from "styled-components";
 import { CreateQuest } from "../components/CreateQuest";
 import { QuestLibrary } from "../components/QuestLibrary";
 import { Avatar } from "../components/Avatar";
-import { Strike } from "../components/StrikeDisplay";
+//import { Strike } from "../components/StrikeDisplay";
 import { Link } from "react-router-dom";
 import { QuestList } from "../components/QuestList";
 import { useUserStore } from "../stores/useUserStore";
@@ -22,7 +22,7 @@ export const UserProfile = () => {
           <Header />
 
           <Div>
-            <Strike />
+            {/* <Strike /> */}
             <Avatar />
             <p>Hello, {user.email}!</p>
             <Link to="/quests">Get quest of the day</Link>
