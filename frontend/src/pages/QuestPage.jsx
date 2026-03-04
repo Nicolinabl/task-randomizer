@@ -2,24 +2,28 @@ import styled from 'styled-components'
 import { useQuestStore } from '../stores/useQuestStore'
 import { useUserStore } from '../stores/useUserStore'
 import { useReducer } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 
-// Defines initial state, replaces multiple useState calls
+// Defines initial state in one object instead of three separate useState calls
 const initialState = {
   timeAvailable: '',
   randomQuest: null,
   noMatch: ''
 }
 
-// Reducer function. Decides how state should change based on the action. Takes the current state and an action, and returns the new state
+// Reducer function. "When this action happens -> update state" 
 const reducer = (state, action) => {
   const { type } = action
 
   if (type === 'setTime') {
+    // when user types in input, update timeAvailable
     return { ...state, timeAvailable: action.time }
   } else if (type === 'setQuest') {
+    // when a quest is found, save it
     return { ...state, randomQuest: action.quest }
   } else if (type === 'noMatch') {
+    // when something goes wrong, save the error message
+    // ...state "keep everything else the same, just change this one thing"
     return { ...state, noMatch: action.message }
   } else {
     return state
@@ -27,15 +31,30 @@ const reducer = (state, action) => {
 }
 
 export const Quests = () => {
-const { fetchQuests } = useQuestStore()
+const { fetchQuests, completeQuest, quests } = useQuestStore()
 const { user } = useUserStore()
+const navigate = useNavigate()
 
 // state = current state object, dispatch = function to trigger state changes
 const [state, dispatch] = useReducer(reducer, initialState)
+// state = the current values of timeAvailable, randomQuest, noMatch
+// dispatch = the function you call to trigger a state change
+
+// Get the live version of the quest from the store so checkbox stays in sync
+const currentQuest = quests.find(quest => quest._id === state.randomQuest?._id)
+
+const handleComplete = async (id, checked) => {
+  await completeQuest(id, checked)
+  if (checked) {
+    alert('Great work! 🎉')
+    navigate('/')
+  }
+}
 
   const handleSubmit = async (e) => {
     e.preventDefault()
 
+    // dispatch actions: instead of doing setTimeAvailable('30)
     if (!state.timeAvailable) {
       dispatch({ type: 'noMatch', message:'Please enter how many minutes you have available'})
       return
@@ -89,7 +108,11 @@ const [state, dispatch] = useReducer(reducer, initialState)
             <h2>Ok {user.email}, here is your quest of the day: </h2>
             <p>{state.randomQuest.message}</p> 
             <p>Will take about {state.randomQuest.timeNeeded} min</p>
-            <input type='checkbox' />   
+            <input 
+              type='checkbox'
+              checked={currentQuest?.done || false}
+              onChange={(event) => handleComplete(state.randomQuest._id, event.target.checked)}
+            />   
             <Link to='/giveup'>Give up</Link>   
           </Div>
         }
@@ -161,3 +184,4 @@ const Button = styled.button`
     transform: scale(1.1)
   }
 `
+// user does something → dispatch is called → reducer runs and returns new state → component re-renders with new state.
