@@ -3,14 +3,16 @@ import styled from 'styled-components';
 import { useEffect } from 'react';
 import { QuestCard } from './cards/QuestCard';
 import { useQuestStore } from '../stores/useQuestStore';
+import { useUserStore } from '../stores/useUserStore';
 
 
 export const QuestList = () => {
   const { quests, error, isLoading, fetchQuests, deleteQuest, completeQuest } = useQuestStore()
+  const { user } = useUserStore()  
 
   useEffect(() => {
     fetchQuests()
-  }, [])
+  }, [user])
 
   if (isLoading) return <p>Loading quests...</p>
   if (error) return <p>{error}</p>

@@ -3,7 +3,7 @@ import { Link, useNavigate } from 'react-router-dom'
 import { useEffect, useState } from 'react'
 import { apiUrl } from '../../api'
 import { useUserStore } from '../stores/useUserStore'
-
+import { useQuestStore } from '../stores/useQuestStore'
 
 export const SignupForm = () => {
   // State variables to store form input values
@@ -18,6 +18,7 @@ export const SignupForm = () => {
   const navigate = useNavigate()
 
   const login = useUserStore((state) => state.login)
+  const fetchQuests = useQuestStore((state) => state.fetchQuests)
 
   // When form is submitted, this function runs
   const handleSubmit = async (event) => {
@@ -86,13 +87,14 @@ export const SignupForm = () => {
         name: name
       })
 
+      // When signed up successfully and quests are fetched -> redirect to profile page
+      await fetchQuests(data.accessToken)
+      navigate('/')
+
       // Clear the form inputs
         setName('')
         setEmail('')
         setPassword('')
-
-      // When signed up successfully -> redirect to profile page
-      navigate('/')
 
     } catch (error) {
       console.error('Error:', error)
