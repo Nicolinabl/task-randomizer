@@ -1,6 +1,7 @@
 import styled, { keyframes } from "styled-components";
 import { useState, useEffect } from "react";
 import { apiUrl } from "../../../api";
+import { useUserStore } from "../../stores/useUserStore";
 
 export const FriendQuestCard = ({
   id,
@@ -10,9 +11,9 @@ export const FriendQuestCard = ({
   timeNeeded,
   doneAt,
   kudos,
-  accessToken,
   isNew,
 }) => {
+  const { user } = useUserStore()
   const [kudosCount, setKudosCount] = useState(kudos || 0);
 
   //conditional check?
@@ -21,17 +22,19 @@ export const FriendQuestCard = ({
 
     fetch(apiUrl + `/quests/${id}/kudos`, {
       method: "POST",
-      headers: { "Content-Type": "application/json", ...accessToken() },
+      headers: { "Content-Type": "application/json", 'Authorization': user?.accessToken },
     })
       .then((res) => res.json())
       .then((data) => {
         if (data.success) {
           setKudosCount(data.response.kudos);
         } else {
+          setKudosCount((prev) => prev - 1)
           alert(data.message);
         }
       })
       .catch(() => {
+        setKudosCount((prev) => prev - 1)
         alert("Couldn't add kudos");
       });
   };
@@ -39,8 +42,8 @@ export const FriendQuestCard = ({
   return (
     <MainWrapper isNew={isNew}>
       <Cardheader>
-        <Name>{createdBy.name}</Name>
-        <Avatar src={createdBy.moodUrl} alt={createdBy.name} />
+        <Name>{createdBy.name || 'User'}</Name>
+        <Avatar src={createdBy.moodUrl} alt={createdBy.name || 'User'} />
       </Cardheader>
       <QuestInfoWrapper>
         <Quest>{message}</Quest>

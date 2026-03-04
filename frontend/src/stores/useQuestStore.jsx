@@ -10,8 +10,8 @@ export const useQuestStore = create((set) => ({
   isLoading: false,
 
   // fetch all quests for the logged in user
-  fetchQuests: async () => {
-    const accessToken = useUserStore.getState().user?.accessToken;
+  fetchQuests: async (token) => {
+    const accessToken = token || useUserStore.getState().user?.accessToken
 
     if (!accessToken) return [];
 
