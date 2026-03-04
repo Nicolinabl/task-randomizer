@@ -6,7 +6,7 @@ export const GiveUp = () => {
     <Div>
       <h2>please dont, you can at least start! 🥲</h2>
       <StyledLink to="/quests"><Button>Ok, fine... take me back</Button></StyledLink>
-      <Link to="/profile">Give up</Link>
+      <Link to="/">Give up</Link>
     </Div>
   )
 }

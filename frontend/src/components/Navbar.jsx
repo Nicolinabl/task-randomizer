@@ -31,9 +31,9 @@ export const Navbar = ({ onLogout }) => {
         <StyledLink to="/" onClick={() => isOpen(false)}>
           Home
         </StyledLink>
-        <StyledLink to="/profile" onClick={() => isOpen(false)}>
+        {/* <StyledLink to="/profile" onClick={() => isOpen(false)}>
           Profile
-        </StyledLink>
+        </StyledLink> */}
         <StyledLink to="/feed" onClick={() => isOpen(false)}>
           Friends
         </StyledLink>

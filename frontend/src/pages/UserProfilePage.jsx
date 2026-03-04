@@ -8,13 +8,14 @@ import { Link } from "react-router-dom";
 import { QuestList } from "../components/QuestList";
 import { useUserStore } from "../stores/useUserStore";
 import { CompletedQuests } from '../components/CompletedQuests'
+import { Home } from "./HomePage";
 
 export const UserProfile = () => {
   const user = useUserStore((state) => state.user);
 
   return (
     <PageWrapper>
-      {!user && <p>Log in to see your profile</p>}
+      {!user && <Home />}
 
       {user && (
         <>

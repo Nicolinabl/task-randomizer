@@ -92,7 +92,7 @@ export const SignupForm = () => {
         setPassword('')
 
       // When signed up successfully -> redirect to profile page
-      navigate('/profile')
+      navigate('/')
 
     } catch (error) {
       console.error('Error:', error)
