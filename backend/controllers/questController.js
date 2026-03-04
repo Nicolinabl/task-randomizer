@@ -6,6 +6,7 @@ import { LibraryQuest } from "../schemas.js";
 import quests from "../quests.json";
 
 import "dotenv/config";
+import { response } from "express";
 
 // ---- All Quest routes: ----
 

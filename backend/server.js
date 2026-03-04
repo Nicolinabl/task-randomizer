@@ -44,22 +44,22 @@ app.get("/", (req, res) => {
 });
 
 // TODO ---- USER ENDPOINTS ----
-// ---- Register new user ----
+//✅ ---- Register new user ----
 app.post("/signup", userController.registerUser);
 
-//---- Login with existing user ----
+//✅---- Login with existing user ----
 app.post("/login", userController.loginUser);
 
 // FIXME only user with the same id can delete itself // MUST ---- Delete user -----
 app.delete("/users/:id", authentificateUser, userController.deleteUser);
 
 // FIXME MUST---- Smiley state of mood ---- >>>> only for auth users, returns sad/happy/delighted avatars
-app.get("/user/:id/state", authentificateUser, userController.userMood);
+/* app.get("/user/mood", authentificateUser, userController.userMood); */
 
 // FIXME MUST ---- User's Rewards Collection >>>>> only for auth users
 app.get("/rewards", authentificateUser, userController.userRewards);
 
-// WORKING ON IT-MONDAY MUST ---- Streaks >>>>> only for auth users
+// ✅ MUST ---- Streaks >>>>> only for auth users
 app.get("/streaks", authentificateUser, userController.userStreak);
 
 // FIXME Nice+ ---- User page (shows: current strike, settings, log out, delete user, bonus points, profile picture state, user library) >>>>> only for auth users
@@ -75,28 +75,28 @@ app.post("/quests", authentificateUser, questController.createQuestUnAuth);
 // FIXME add auth MUST --- Give kudos >>>>> Doesn't prevent from liking more than once - why??
 app.post("/quests/:id/kudos", authentificateUser, questController.giveKudos);
 
-// ---- Show All Quests from Library, (OBS! Doesn't requie authentication, filters on category and time <=N -----
+// ✅ ---- Show All Quests from Library, (OBS! Doesn't requie authentication, filters on category and time <=N -----
 //Test example: http://localhost:8080/quests/library/?category=cleaning&time=20
 app.get("/quests/library", questController.showDefaultQuests);
 
-// ----- Returns all user's quests, can filter on category and time <= N) >>>>> only for auth users.
+// ✅ ----- Returns all user's quests, can filter on category and time <= N) >>>>> only for auth users.
 app.get("/quests/all", authentificateUser, questController.showUserQuests);
 
-// ---- Duplicates a quest from library >>> only for auth users -------
+// ✅ ---- Duplicates a quest from library >>> only for auth users -------
 app.post(
   "/quests/library/:id/add",
   authentificateUser,
   questController.duplicateQuest,
 );
 
-// ------ Check quest as done ----- >>> for auth users, check that they only can check as done their own quests!
+// ✅ ------ Check quest as done ----- >>> for auth users, check that they only can check as done their own quests!
 app.patch(
   "/quests/:id/complete",
   authentificateUser,
   questController.checkQuestDone,
 );
 
-// FIXME add auth for users MUST ---- Delete one quest >>>>> only for authorised users for their list
+//  ✅ add auth for users MUST ---- Delete one quest >>>>> only for authorised users for their list
 app.delete("/quests/:id", questController.deleteQuest);
 
 // FIXME add query, error handling MUST ---- User's done quests /quests/done/true
@@ -139,14 +139,16 @@ app.delete(
 // - populates users info
 app.get("/feed/quests", authentificateUser, friendController.getFriendsFeed);
 
-// FIXME add errorhandling NICE+ ---- Find a friend by ID ------
+// FIXME add errorhandling ---- Find a friend by ID ------
 app.get("/friends/:id", authentificateUser, friendController.findUserById);
 
-// TODO add params, add errorhandling NICE+ ---- Find a friend by Name ------
+// TODO add params, add errorhandling ---- Find a friend by Name ------
 app.get("/friends/:name", authentificateUser, friendController.findUserdByName);
 
 // FIXME NICE+ ---- Delete a friend >>>>> only for authorised users for their feed
 app.delete("/friends/:id", friendController.removeFriend);
+
+// -------------------------------------------
 
 // Start the server
 app.listen(port, () => {
