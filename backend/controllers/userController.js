@@ -131,12 +131,15 @@ const userStreak = async (req, res) => {
   //console.log("Your streak");
 
   try {
-    const completedQuests = await Quest.find({ done: true }).sort({
+    const completedQuests = await Quest.find({
+      createdBy: req.user._id,
+      done: true,
+    }).sort({
       doneAt: -1,
     });
 
     if (completedQuests.length === 0) {
-      return res.status(204).json({
+      return res.status(200).json({
         succes: true,
         message: "There are no completed quests yet",
         streak: 0,
