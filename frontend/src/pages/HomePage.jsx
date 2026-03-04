@@ -6,7 +6,7 @@ import { apiUrl } from "../../api";
 
 export const Home = () => {
   return (
-    <>
+    <PageWrapper>
       <Header />
       <Div>
         <p>Motivational things</p>
@@ -16,14 +16,21 @@ export const Home = () => {
         <p>Motivational things</p>
       </Div>
       <QuestLibrary />
-    </>
+    </PageWrapper>
   );
 };
+
+const PageWrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 0 20px;
+`;
 
 const Div = styled.div`
   display: flex;
   background-color: var(--accent-color);
-  margin: 10px;
   justify-content: center;
 `;
 

@@ -113,7 +113,7 @@ const Form = styled.form`
 const Label = styled.label`
   display: flex;
   flex-direction: column;
-`
+`;
 
 const Div = styled.div`
     display: flex;

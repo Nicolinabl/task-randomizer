@@ -1,8 +1,9 @@
-import { createGlobalStyle } from 'styled-components'
+import { createGlobalStyle } from "styled-components";
 
 export const GlobalStyle = createGlobalStyle`
   * {
     box-sizing: border-box; 
+    margin: 0px;
   }
 
   :root {
@@ -11,6 +12,7 @@ export const GlobalStyle = createGlobalStyle`
     --primary-color: #FFF4CA;
     --secondary-color: #DAFFE6;
     --accent-color: #F497B4;
+    --background-light-purple: #F4F0FF;
   }
 
   #root {
@@ -52,11 +54,11 @@ export const GlobalStyle = createGlobalStyle`
 
   p {
     font-family: "Roboto", sans-serif;
-    font-size: 12px;
+    font-size: 16px;
     font-style: normal;
     font-weight: 400;
     line-height: normal;
+    text-wrap: pretty;
   }
 
-`
-
+`;
