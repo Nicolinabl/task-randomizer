@@ -10,9 +10,16 @@ export const QuestCard = ({ message, category, timeNeeded, onDelete, id, handleC
           onChange={(event) => {
           console.log(event)
           handleChecked(id, event.target.checked)
-        }}/>      
-      </div>
-    </Div>
+          }}
+        />      
+        <div>
+          <P>{message}</P>
+          {/* <p>Category: {category}</p> */}
+          <TimeP>{timeNeeded} min</TimeP>
+        </div>
+      </Div>
+      <button onClick={() => onDelete(id)}>Delete</button>
+    </Container>
   )
 }
 
