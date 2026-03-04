@@ -34,13 +34,13 @@ export const QuestList = () => {
   )
 };
 
-const Div = styled.div`
-  display: flex;
-  flex-direction: column;
-  background-color: var(--primary-color);
-  margin: 10px;
-  border-radius: 12px;
-`
+// const Div = styled.div`
+//   display: flex;
+//   flex-direction: column;
+//   background-color: var(--primary-color);
+//   margin: 10px;
+//   border-radius: 12px;
+// `
 
 // 1. GET request from api to get all quests quests/all
 // 2. map over quests, for each quest create a display of message, time and catagory

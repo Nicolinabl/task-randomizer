@@ -3,7 +3,9 @@ import { apiUrl } from '../../api'
 import { useUserStore } from './useUserStore'
 
 export const useQuestStore = create((set) => ({
+  // Initial state
   quests: [],
+  libraryQuests: [],
   error: null,
   isLoading: false,
 
@@ -11,7 +13,7 @@ export const useQuestStore = create((set) => ({
   fetchQuests: async () => {
     const accessToken = useUserStore.getState().user?.accessToken
 
-    if (!accessToken) return
+    if (!accessToken) return []
 
     set({ isLoading: true, error: null })
 
@@ -23,12 +25,14 @@ export const useQuestStore = create((set) => ({
 
       if (!response.ok) {
         set({ error: data.message, isLoading: false })
-        return
+        return []
       }
 
       set({ quests: data.response, isLoading: false })
+      return data.response
     } catch (error) {
       set({ error: 'Something went wrong', isLoading: false })
+      return []
     }
   },
 
@@ -82,6 +86,7 @@ export const useQuestStore = create((set) => ({
     }
   },
 
+  // Check quest as complete
   completeQuest: async (questId, done) => {
     const accessToken = useUserStore.getState().user?.accessToken
     try {
@@ -102,8 +107,45 @@ export const useQuestStore = create((set) => ({
     } catch (err) {
       console.error('Error completing quest:', err)
     }
+  },
+
+  // Fetch quests from questLibrary
+  fetchLibraryQuests: async () => {
+    try {
+      const response = await fetch(apiUrl + '/quests/library')
+      const data = await response.json()
+      set({ libraryQuests: data.response })
+    } catch (error) {
+      console.error(error)
+    }
+  },
+
+  // Duplicate quests from library to personal questlist
+  duplicateQuest: async (questId) => {
+    const accessToken = useUserStore.getState().user?.accessToken
+    if (!accessToken) return
+  
+    try {
+      const response = await fetch(apiUrl + `/quests/library/${questId}/add`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': accessToken
+        }
+      })
+      const data = await response.json()
+      if (!response.ok) throw new Error('Failed to add quest')
+  
+      // Add the new quest to the user's quest list in the store
+      set((state) => ({ quests: [...state.quests, data.response] }))
+    } catch (err) {
+      console.error('Error adding quest from library:', err)
+    }
   }
+
 }))
+
+
 
 
 
