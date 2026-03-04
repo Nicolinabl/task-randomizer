@@ -1,0 +1,38 @@
+[
+  {
+    "message": "Clean kitchen sink",
+    "timeNeeded": 10
+  },
+  {
+    "message": "Unload washing machine",
+    "timeNeeded": 15
+  },
+  {
+    "message": "Clean the toilet",
+    "timeNeeded": 18
+  },
+  {
+    "message": "Put things at their places from the work table",
+    "timeNeeded": 12
+  },
+  {
+    "message": "Put clothes in the closet or in laundry",
+    "timeNeeded": 8
+  },
+  {
+    "message": "Dust one room",
+    "timeNeeded": 15
+  },
+  {
+    "message": "Load washing machine one time",
+    "timeNeeded": 15
+  },
+  {
+    "message": "Water the plants",
+    "timeNeeded": 5
+  },
+  {
+    "message": "Clean one pair of shoes",
+    "timeNeeded": 12
+  }
+]

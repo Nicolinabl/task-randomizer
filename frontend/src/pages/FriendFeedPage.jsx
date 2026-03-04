@@ -54,7 +54,7 @@ export const FriendFeed = ({ accessToken }) => {
   return (
     // pass params from login and register forms to an authentication component to then add authentication after H2
     // smth like {!user ? (<Authentification onAuthSuccess = {handleAuth}>)}
-    <>
+    <PageWrapper>
       <h2>My friends finished quests</h2>
 
       <form>
@@ -77,6 +77,16 @@ export const FriendFeed = ({ accessToken }) => {
           isNew={index === 0}
         />
       ))}
-    </>
+    </PageWrapper>
   );
 };
+
+//Styles
+
+const PageWrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 0 20px;
+`;

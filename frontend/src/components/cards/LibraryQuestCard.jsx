@@ -1,18 +1,17 @@
 import styled from 'styled-components'
 
-export const QuestCard = ({ message, category, timeNeeded, onDelete, id, handleChecked, done }) => {
+export const LibraryQuestCard = ({message, timeNeeded, category, onAdd, id}) => {
   return (
     <Container>
       <Div>
-        <input 
-          type="checkbox" 
-          checked={done}
-          onChange={(event) => {
-          console.log(event)
-          handleChecked(id, event.target.checked)
-        }}/>      
-      </div>
-    </Div>
+        <div>
+          <P>{message}</P>
+          {/* <p>Category: {category}</p> */}
+          <TimeP>{timeNeeded} min</TimeP>
+        </div>
+      </Div>
+      <button onClick={() => onAdd(id)}>+</button>
+    </Container>
   )
 }
 
@@ -50,6 +49,3 @@ const Div = styled.div`
   display: flex;
   gap: 5px;
 `
-
-// TODO hide/show list of tasks
-// TODO change delete button to icon

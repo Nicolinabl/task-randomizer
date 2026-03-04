@@ -1,14 +1,15 @@
 import mongoose from "mongoose";
 
-import { User } from "../schemas.js";
+import { Quest, User } from "../schemas.js";
 
 import bcrypt from "bcrypt-nodejs";
 
 import "dotenv/config";
+import { response } from "express";
 
 // ---- All user routes ----
 
-// ---- Register new user ----
+//✅ ---- Register new user ----
 const registerUser = async (req, res) => {
   try {
     const { name, email, password } = req.body;
@@ -54,7 +55,7 @@ const registerUser = async (req, res) => {
   }
 };
 
-// ---- Login with existing user ----
+//✅ ---- Login with existing user ----
 const loginUser = async (req, res) => {
   const { email, password } = req.body;
   const user = await User.findOne({ email }); //retrieving from database by email, should be unique
@@ -120,11 +121,94 @@ const updateUser = async (req, res) => {
 
 // TODO ---- AVATAR&MOOD STATE -----
 
-// FIXME ---- Smiley state of mood ---- >>>> only for auth users, returns sad/happy/delighted avatars
-const userMood = async (req, res) => {
-  /* console.log("this is your mode"); */
-  res.send("User mood");
-};
+// TODO ---- Smiley state of mood ---- >>>> only for auth users, returns sad/happy/delighted avatars
+//Dicebar library
+/* const userMood = async (req, res) => {
+  try {
+    //map streak range
+    //add conditions for each length(0, 1-10, over 10 days)
+    const avatarSad = createAvatar(avataaarsNeutral, {
+      backgroundColor: [
+        "f8d25c",
+        "fd9841",
+        "b6e3f4",
+        "c0aede",
+        "d1d4f9",
+        "ffd5dc",
+      ],
+      eyebrows: [
+        "angry",
+        "angryNatural",
+        "frownNatural",
+        "sadConcerned",
+        "sadConcernedNatural",
+        "unibrowNatural",
+        "upDown",
+        "upDownNatural",
+        "flatNatural",
+        "raisedExcited",
+        "raisedExcitedNatural",
+        "default",
+        "defaultNatural",
+      ],
+      eyes: [
+        "closed",
+        "cry",
+        "eyeRoll",
+        "side",
+        "squint",
+        "surprised",
+        "xDizzy",
+      ],
+      mouth: [
+        "concerned",
+        "disbelief",
+        "grimace",
+        "sad",
+        "screamOpen",
+        "serious",
+        "tongue",
+        "vomit",
+      ],
+      seed: [
+        "Aidan",
+        "Valentina",
+        "Brian",
+        "Robert",
+        "Jameson",
+        "Ryan",
+        "Christopher",
+        "Amaya",
+        "Easton",
+        "Liliana",
+        "Ryker",
+        "Jessica",
+        "Sarah",
+        "George",
+        "Katherine",
+        "Oliver",
+        "Emery",
+        "Sawyer",
+        "Jocelyn",
+      ],
+      randomizeIds: true, // - used for randomizing multiple avatars on the same page, needed at friends feed page
+      // ... other options
+    });
+
+    // ... options
+    //https://api.dicebear.com/9.x/avataaars-neutral/svg?mouth=concerned,default,disbelief
+
+    const svg = avatarSad.toString();
+
+    return res.status(200).json({ response: svg });
+  } catch (err) {
+    return res.status(500).json({
+      succes: false,
+      message: "Something went wrong at the server",
+      error: err.errors,
+    });
+  }
+}; */
 
 // TODO ----- REWARDS&STRIKES ------
 
@@ -135,7 +219,55 @@ const userRewards = async (req, res) => {
 
 // FIXME MUST ---- Streaks >>>>> only for auth users
 const userStreak = async (req, res) => {
-  console.log("Your streak");
+  //console.log("Your streak");
+
+  try {
+    const completedQuests = await Quest.find({ done: true }).sort({
+      doneAt: -1,
+    });
+
+    if (completedQuests.length === 0) {
+      return res.status(204).json({
+        succes: true,
+        message: "There are no completed quests yet",
+        streak: 0,
+      });
+    }
+    //console.log(completedQuests);
+    let streak = 0;
+    let today = new Date().setHours(0, 0, 0, 0);
+    //console.log(today);
+    let checkDate = today;
+    //console.log(checkDate);
+
+    for (let i = 0; i < completedQuests.length; i++) {
+      let lastQuest = completedQuests[i];
+      let lastQuestDate = new Date(lastQuest.doneAt).setHours(0, 0, 0, 0);
+      //console.log(lastQuestDate);
+
+      if (checkDate - lastQuestDate > 86400000) {
+        //number is over one day in milisec, streak broken
+        break;
+      }
+      if (
+        checkDate - lastQuestDate === 86400000 ||
+        lastQuestDate === checkDate
+      ) {
+        streak++;
+        checkDate -= 86400000;
+        //console.log(checkDate);
+      }
+      //console.log(checkDate - lastQuestDate);
+    }
+
+    return res.status(200).json({ success: true, response: streak });
+  } catch (err) {
+    return res.status(500).json({
+      succes: false,
+      message: "Somethng went wrong at the server",
+      error: err.errors,
+    });
+  }
 };
 
 // FIXME Nice+ ---- User page (shows: current strike, settings, log out, delete user, bonus points, profile picture state, user library) >>>>> only for auth users
@@ -161,7 +293,7 @@ export default {
   loginUser,
   deleteUser,
   updateUser,
-  userMood,
+  //userMood,
   userRewards,
   userStreak,
   profileSettings,
