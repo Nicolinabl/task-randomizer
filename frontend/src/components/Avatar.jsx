@@ -2,11 +2,33 @@
 import { createAvatar } from "@dicebear/core";
 import { avataaarsNeutral } from "@dicebear/collection";
 
-import { useMemo } from "react";
+import { useEffect, useState, useMemo } from "react";
 
 import styled from "styled-components";
+import { useUserStore } from "../stores/useUserStore";
+import { apiUrl } from "../../api";
 
-export const Avatar = ({ streak }) => {
+export const Avatar = () => {
+  const { user } = useUserStore();
+  const [streak, setStreak] = useState(0);
+
+  useEffect(() => {
+    if (!user?.accessToken) return;
+
+    const fetchStreak = async () => {
+      try {
+        const response = await fetch(`${apiUrl}/streaks`, {
+          headers: { Authorization: user.accessToken },
+        });
+        const data = await response.json();
+        if (response.ok && data.success) setStreak(data.response);
+      } catch (err) {
+        console.error("Error fetching streak:", err);
+      }
+    };
+    fetchStreak();
+  }, [user?.accessToken]);
+
   const streakNumber = Number(streak) || 0;
 
   const avatarUrl = useMemo(() => {
@@ -44,7 +66,7 @@ export const Avatar = ({ streak }) => {
           "vomit",
         ],
       };
-    } else if (streakNumber <= 10) {
+    } else if (streakNumber >= 1 && streakNumber <= 10) {
       //return avatarRandom = smiley
       moodVar = {
         eyebrows: [
