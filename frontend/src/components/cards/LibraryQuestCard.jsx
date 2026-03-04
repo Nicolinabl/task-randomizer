@@ -1,6 +1,6 @@
 import styled from 'styled-components'
 
-export const LibraryQuestCard = (message, timeNeeded, category) => {
+export const LibraryQuestCard = ({message, timeNeeded, category, onAdd, id}) => {
   return (
     <Container>
       <Div>
@@ -10,7 +10,7 @@ export const LibraryQuestCard = (message, timeNeeded, category) => {
           <TimeP>{timeNeeded} min</TimeP>
         </div>
       </Div>
-      <button>Add to my quests</button>
+      <button onClick={() => onAdd(id)}>+</button>
     </Container>
   )
 }

@@ -2,113 +2,34 @@ import { LibraryQuestCard } from "./cards/LibraryQuestCard"
 import { useEffect } from 'react'
 import { useQuestStore } from "../stores/useQuestStore"
 import styled from 'styled-components'
+import questLibrary from '../library.json'
 
 export const QuestLibrary = () => {
-  const { fetchLibraryQuests, libraryQuests } = useQuestStore()
+  const { fetchLibraryQuests, libraryQuests, duplicateQuest, createQuest } = useQuestStore()
 
-  useEffect(() => {
-    fetchLibraryQuests()
-  }, [])
+  const handleAdd = (quest) => {
+    createQuest(quest.message, quest.timeNeeded, quest.category)
+  }
 
   return (
     <>
       <h2>Library</h2>
-      <Container>
-        <Div>
-          <div>
-            <P>Clean kitchen sink</P>
-            {/* <p>Category: {category}</p> */}
-            <TimeP>10 min</TimeP>
-          </div>
-        </Div>
-        <button>+</button>
-      </Container>
-
-      <Container>
-        <Div>
-          <div>
-            <P>Unload washing machine</P>
-            {/* <p>Category: {category}</p> */}
-            <TimeP>15 min</TimeP>
-          </div>
-        </Div>
-        <button>+</button>
-      </Container>
-
-      <Container>
-        <Div>
-          <div>
-            <P>Clean the toilet</P>
-            {/* <p>Category: {category}</p> */}
-            <TimeP>18 min</TimeP>
-          </div>
-        </Div>
-        <button>+</button>
-      </Container>
-
-      <Container>
-        <Div>
-          <div>
-            <P>Put things at their places from the work table",
-            "timeNeeded</P>
-            {/* <p>Category: {category}</p> */}
-            <TimeP>12 min</TimeP>
-          </div>
-        </Div>
-        <button>+</button>
-      </Container>
-
-      <Container>
-        <Div>
-          <div>
-            <P>Put clothes in the closet or in laundry</P>
-            {/* <p>Category: {category}</p> */}
-            <TimeP>8 min</TimeP>
-          </div>
-        </Div>
-        <button>+</button>
-      </Container>
-
-      <Container>
-        <Div>
-          <div>
-            <P>Dust one room</P>
-            {/* <p>Category: {category}</p> */}
-            <TimeP>15 min</TimeP>
-          </div>
-        </Div>
-        <button>+</button>
-      </Container>
-
-      <Container>
-        <Div>
-          <div>
-            <P>Water the plants</P>
-            {/* <p>Category: {category}</p> */}
-            <TimeP>5 min</TimeP>
-          </div>
-        </Div>
-        <button>+</button>
-      </Container>
-
-
-
-
-
-      {/* {libraryQuests.map((libraryQuests) => (
-        <LibraryQuestCard 
-          key={libraryQuests._id}
-          message={libraryQuests.message}
-          timeNeeded={libraryQuests.timeNeeded}
+      {questLibrary.map((quest, index) => (
+        <LibraryQuestCard
+          key={index}
+          id={index}
+          message={quest.message}
+          timeNeeded={quest.timeNeeded}
+          category={quest.category}
+          onAdd={() => handleAdd(quest)}
         />
-      ))} */}
+      ))}
+
+
     </>
   )
 }
 
-// 1. get library quests from backend
-// 2. Styling
-// 3. frontend-backend connection (add library quest to library list)
 
 
 const Container = styled.div`

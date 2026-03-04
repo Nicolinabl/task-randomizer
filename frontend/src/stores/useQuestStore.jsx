@@ -118,6 +118,29 @@ export const useQuestStore = create((set) => ({
     } catch (error) {
       console.error(error)
     }
+  },
+
+  // Duplicate quests from library to personal questlist
+  duplicateQuest: async (questId) => {
+    const accessToken = useUserStore.getState().user?.accessToken
+    if (!accessToken) return
+  
+    try {
+      const response = await fetch(apiUrl + `/quests/library/${questId}/add`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': accessToken
+        }
+      })
+      const data = await response.json()
+      if (!response.ok) throw new Error('Failed to add quest')
+  
+      // Add the new quest to the user's quest list in the store
+      set((state) => ({ quests: [...state.quests, data.response] }))
+    } catch (err) {
+      console.error('Error adding quest from library:', err)
+    }
   }
 
 }))
