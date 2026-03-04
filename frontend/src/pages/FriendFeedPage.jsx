@@ -3,8 +3,10 @@ import { useState, useEffect } from "react";
 import { Navbar } from "../components/Navbar";
 import { FriendQuestCard } from "../components/cards/FriendQuestCard";
 import { apiUrl } from "../../api";
+import { useUserStore } from '../stores/useUserStore'
 
-export const FriendFeed = ({ accessToken }) => {
+export const FriendFeed = () => {
+  const { user } = useUserStore()  
   const [friendsQuests, setFriendsQuests] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -26,27 +28,29 @@ export const FriendFeed = ({ accessToken }) => {
   }; */
 
   useEffect(() => {
-    //add error handling
-    setLoading(true);
-    fetch(apiUrl + "/friends", {
-      headers: {
-        "Content-Type": "application/json",
-        ...accessToken(),
-      },
-    })
-      .then((res) => {
-        if (!res.ok) throw new Error("Couldn't fetch data");
-        return res.json();
-      })
-      .then((data) => {
-        setFriendsQuests(data);
-      })
-      .catch((err) => {
-        console.error(err);
-        setError("Coulndn't load friends quests");
-      })
-      .finally(() => setLoading(false));
-  }, []);
+    const fetchFeed = async () => {
+      try {
+        const response = await fetch(apiUrl + '/feed/quests', {
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': user?.accessToken
+          }
+        })
+
+        if (!response.ok) throw new Error("Couldn't fetch feed")
+
+        const data = await response.json()
+        setFriendsQuests(data)
+      } catch (err) {
+        setError("Couldn't load quests feed")
+        console.error(err)
+      } finally {
+        setLoading(false)
+      }
+    }
+
+    if (user) fetchFeed()
+  }, [user])
 
   if (loading) return <div>Loading feed...</div>;
   if (error) return <div>{error}</div>;
@@ -73,7 +77,6 @@ export const FriendFeed = ({ accessToken }) => {
           timeNeeded={quest.timeNeeded}
           doneAt={quest.doneAt}
           kudos={quest.kudos}
-          accessToken={accessToken}
           isNew={index === 0}
         />
       ))}
@@ -90,3 +93,25 @@ const PageWrapper = styled.div`
   align-items: center;
   padding: 0 20px;
 `;
+
+
+    // //add error handling
+    // setLoading(true);
+    // fetch(apiUrl + "/friends", {
+    //   headers: {
+    //     "Content-Type": "application/json",
+    //     ...accessToken(),
+    //   },
+    // })
+    //   .then((res) => {
+    //     if (!res.ok) throw new Error("Couldn't fetch data");
+    //     return res.json();
+    //   })
+    //   .then((data) => {
+    //     setFriendsQuests(data);
+    //   })
+    //   .catch((err) => {
+    //     console.error(err);
+    //     setError("Coulndn't load friends quests");
+    //   })
+    //   .finally(() => setLoading(false));
