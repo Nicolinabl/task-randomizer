@@ -37,7 +37,7 @@ export const Navbar = ({ onLogout }) => {
         <StyledLink to="/feed" onClick={() => isOpen(false)}>
           Friends
         </StyledLink>
-        <StyledLink to="/about" onClick={() => isOpen(false)}>
+        <StyledLink to="about" onClick={() => isOpen(false)}>
           About
         </StyledLink>
         <StyledLink to="/login" onClick={() => isOpen(false)}>
