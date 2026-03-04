@@ -11,7 +11,7 @@ export const useQuestStore = create((set) => ({
   fetchQuests: async () => {
     const accessToken = useUserStore.getState().user?.accessToken
 
-    if (!accessToken) return
+    if (!accessToken) return []
 
     set({ isLoading: true, error: null })
 
@@ -23,12 +23,14 @@ export const useQuestStore = create((set) => ({
 
       if (!response.ok) {
         set({ error: data.message, isLoading: false })
-        return
+        return []
       }
 
       set({ quests: data.response, isLoading: false })
+      return data.response
     } catch (error) {
       set({ error: 'Something went wrong', isLoading: false })
+      return []
     }
   },
 
