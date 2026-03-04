@@ -18,17 +18,19 @@ export const QuestList = () => {
   return (
     <>
       <p>Your quests:</p>
-      {quests.map((quest) => (
-        <QuestCard
-          key={quest._id}
-          id={quest._id}
-          message={quest.message}
-          category={quest.category}
-          timeNeeded={quest.timeNeeded}
-          done={quest.done}
-          onDelete={deleteQuest}
-          handleChecked={completeQuest}
-        />
+      {quests
+        .filter(quest => !quest.done)
+        .map((quest) => (
+          <QuestCard
+            key={quest._id}
+            id={quest._id}
+            message={quest.message}
+            category={quest.category}
+            timeNeeded={quest.timeNeeded}
+            done={quest.done}
+            onDelete={deleteQuest}
+            handleChecked={completeQuest}
+          />
       ))}
     </>
   )
