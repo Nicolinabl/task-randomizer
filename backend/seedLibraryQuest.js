@@ -1,5 +1,5 @@
 import mongoose from "mongoose";
-import { LibraryQuest, ServerMetadata } from "./schemas.js";
+import { LibraryQuest } from "./schemas.js";
 import questseeds from "./questseeds.json" with { type: "json" };
 
 //DONE ---- Seeding database with default tasks
