@@ -43,7 +43,7 @@ export const CreateQuest = () => {
 
   return (
     <Form onSubmit={handleSubmit}>
-      <h2>Create new quest</h2>
+      <h2>Add quest to list</h2>
       <Label>
         What do you need to do?
         <Input 

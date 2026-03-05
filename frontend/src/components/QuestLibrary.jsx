@@ -18,7 +18,7 @@ export const QuestLibrary = () => {
     <Container>
       <HeadingContainer>
         <HeartIcon />
-        <h2>Quest library:</h2>
+        <h2>Add from quest library:</h2>
         <Button onClick={() => setIsVisible(!isVisible)}>
           {isVisible ? 'Hide' : 'Show'}
         </Button>

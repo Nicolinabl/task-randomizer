@@ -1,11 +1,14 @@
 import styled from "styled-components";
 import HeartIcon from "../icons/HeartIcon";
 import { Streak } from "./StreakDisplay";
+import { useUserStore } from "../stores/useUserStore";
 
 export const Header = () => {
+  const { user } = useUserStore()
+
   return (
     <HeaderWrapper>
-      <h1>Welcome to XxxxXXX</h1>
+      <h1>Welcome {user.email}</h1>
       <p>Never spend energy on choosing your chores again</p>
       <Streak />
       <HeartIcon></HeartIcon>
