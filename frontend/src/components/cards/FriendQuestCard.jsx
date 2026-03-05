@@ -3,7 +3,6 @@ import { useState, useEffect } from "react";
 import { apiUrl } from "../../../api";
 import { useUserStore } from "../../stores/useUserStore";
 
-
 export const FriendQuestCard = ({
   id,
   message,
@@ -14,40 +13,64 @@ export const FriendQuestCard = ({
   kudos,
   isNew,
 }) => {
-  const { user } = useUserStore()
+  const { user } = useUserStore();
   const [kudosCount, setKudosCount] = useState(kudos || 0);
 
   //conditional check?
-  const handleClick = () => {
+  const handleClick = async () => {
     setKudosCount((prev) => prev + 1);
 
-    fetch(apiUrl + `/quests/${id}/kudos`, {
+    try {
+      const response = await fetch(apiUrl + `/quests/${id}/kudos`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: user?.accessToken,
+        },
+      });
+
+      const data = await response.json();
+
+      if (!response.ok || !data.success) {
+        throw new Error(data.message || "Couldn't add kudos");
+      }
+
+      setKudosCount(data.response.kudos);
+    } catch (err) {
+      setKudosCount((prev) => prev - 1);
+      console.error(err);
+    }
+
+    /* fetch(apiUrl + `/quests/${id}/kudos`, {
       method: "POST",
-      headers: { "Content-Type": "application/json", 'Authorization': user?.accessToken },
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: user?.accessToken,
+      },
     })
       .then((res) => res.json())
       .then((data) => {
         if (data.success) {
           setKudosCount(data.response.kudos);
         } else {
-          setKudosCount((prev) => prev - 1)
+          setKudosCount((prev) => prev - 1);
           alert(data.message);
         }
       })
       .catch(() => {
-        setKudosCount((prev) => prev - 1)
-        alert("Couldn't add kudos");
-      });
+        setKudosCount((prev) => prev - 1);
+        console.error("Couldn't add kudos");
+      }); */
   };
 
   return (
     <MainWrapper isNew={isNew}>
       <Cardheader>
-        <Name>{createdBy.name || 'User'}</Name>
+        <Name>{createdBy.name || "User"}</Name>
         {/* <Avatar src={createdBy.moodUrl} alt={createdBy.name || 'User'} /> */}
         <ActionWrapper>
-        <Button onClick={handleClick}>Kudos: {kudosCount}</Button>
-      </ActionWrapper>
+          <Button onClick={handleClick}>Kudos: {kudosCount}</Button>
+        </ActionWrapper>
       </Cardheader>
       <QuestInfoWrapper>
         <TopInfo>
@@ -87,12 +110,12 @@ const slideIn = keyframes`
 const MainWrapper = styled.div`
   display: flex;
   flex-direction: column;
-  background-color: #FFFFFF;
+  background-color: #ffffff;
   margin: 4px;
   padding: 12px 12px;
   border-radius: 12px;
   width: 100%;
-  border: 1px solid var(--accent-color)
+  border: 1px solid var(--accent-color);
 `;
 
 const Cardheader = styled.div`
@@ -169,9 +192,9 @@ const Button = styled.button`
   flex-shrink: 0;
   align-self: stretch;
   border-radius: 12px;
-  border: 2px solid #E9628C;
-  background: #F497B4;
-  box-shadow: 2px 4px 4px 0 rgba(139, 139, 139, 0.30);
+  border: 2px solid #e9628c;
+  background: #f497b4;
+  box-shadow: 2px 4px 4px 0 rgba(139, 139, 139, 0.3);
   cursor: pointer;
   font-family: "Pixelify Sans", sans-serif;
 
@@ -183,17 +206,17 @@ const Button = styled.button`
   }
 
   &:active {
-    background: #E48187;
+    background: #e48187;
   }
 `;
 
 const TopInfo = styled.div`
   display: flex;
   flex-direction: column;
-`
+`;
 
 const BottomRow = styled.div`
   display: flex;
   justify-content: flex-end;
   margin-top: 8px;
-  `
+`;

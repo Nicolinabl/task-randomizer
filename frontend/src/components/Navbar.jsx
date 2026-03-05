@@ -28,6 +28,7 @@ export const Navbar = ({ onLogout }) => {
           hideOutline={false}
         />
       </HamburgerWrapper>
+
       <NavMenu isOpen={isOpen}>
         <StyledLink to="/" onClick={() => setOpen(false)}>
           Home
@@ -81,6 +82,7 @@ const NavMenu = styled.div`
   display: ${({ isOpen }) => (isOpen ? "flex" : "none")};
   flex-direction: column;
   position: fixed;
+  z-index: 999;
   top: 0;
   left: 0;
   right: 0;
