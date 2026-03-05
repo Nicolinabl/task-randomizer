@@ -98,7 +98,7 @@ const currentQuest = quests.find(quest => quest._id === state.randomQuest?._id)
 
 
   return (
-    <>
+    <PageWrapper>
       {!state.randomQuest && (
         <Form onSubmit={handleSubmit}>
           <h2>Let's do this!!</h2>
@@ -117,7 +117,7 @@ const currentQuest = quests.find(quest => quest._id === state.randomQuest?._id)
       )}
         {state.randomQuest && 
           <Div>
-            <h2>Ok {user.email}, here is your quest of the day: </h2>
+            <h2>Ok {user.email?.split('@')[0]}, here is your quest of the day: </h2>
             <QuestDiv>
               <CompleteDiv> 
                 <Checkbox 
@@ -136,7 +136,7 @@ const currentQuest = quests.find(quest => quest._id === state.randomQuest?._id)
             
           </Div>
         }
-    </>
+    </PageWrapper>
   )
 }
 
@@ -193,11 +193,20 @@ const Button = styled.button`
   gap: 10px;
   border-radius: 12px;
   border: 1px solid #1D30CE;
-  background: #866DEB;
+  background: var(--medium-purple);
   box-shadow: 2px 4px 4px 0 rgba(139, 139, 139, 0.30);
   color: white;
   font-family: "Pixelify Sans", sans-serif;
   margin: 15px 0;
+  font-size: 20px;
+
+  &:hover {
+    background: var(--dark-purple)
+  }
+
+  &:active {
+    background: var(--accent-purple)
+  }
 `
 
 const QuestDiv = styled.div`
@@ -230,4 +239,12 @@ const TextDiv = styled.div`
   align-items: flex-start;
   text-align: left;
 `
+
+const PageWrapper = styled.main`
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 0 20px;
+`;
 // user does something → dispatch is called → reducer runs and returns new state → component re-renders with new state.

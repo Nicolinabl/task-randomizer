@@ -8,7 +8,7 @@ export const Header = () => {
 
   return (
     <HeaderWrapper>
-      <h1>Welcome {user.email}</h1>
+      <h1>Welcome {user.email?.split('@')[0]}</h1>
       <p>Never spend energy on choosing your chores again</p>
       <Streak />
       <HeartIcon></HeartIcon>
