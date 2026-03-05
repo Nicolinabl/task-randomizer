@@ -77,7 +77,7 @@ const HamburgerWrapper = styled.div`
 `;
 
 const NavMenu = styled.div`
-  background-color: var(--medium-pink);
+  background-color: var(--primary-color);
   display: ${({ isOpen }) => (isOpen ? "flex" : "none")};
   flex-direction: column;
   position: fixed;
