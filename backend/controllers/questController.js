@@ -196,7 +196,7 @@ const duplicateQuest = async (req, res) => {
     });
 
     return res.status(200).json({
-      succes: true,
+      success: true,
       response: questFromDefault,
       message: "Quest added to your list",
     });

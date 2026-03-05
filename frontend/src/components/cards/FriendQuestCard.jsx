@@ -26,7 +26,7 @@ export const FriendQuestCard = ({
     if (loading) return;
 
     setLoading(true);
-    setKudosCount((prev) => prev + 1);
+    //setKudosCount((prev) => prev + 1);
 
     try {
       const response = await fetch(apiUrl + `/quests/${id}/kudos`, {
@@ -47,7 +47,7 @@ export const FriendQuestCard = ({
 
       setKudosCount(data.response.kudos);
     } catch (err) {
-      setKudosCount((prev) => prev - 1);
+      //setKudosCount((prev) => prev - 1);
       console.error(err);
     } finally {
       setLoading(false);
