@@ -15,9 +15,17 @@ export const FriendQuestCard = ({
 }) => {
   const { user } = useUserStore();
   const [kudosCount, setKudosCount] = useState(kudos || 0);
+  const [loading, setLoading] = useState(false);
 
-  //conditional check?
+  useEffect(() => {
+    setKudosCount(kudos || 0);
+  }, [kudos]);
+
+  //conditional check
   const handleClick = async () => {
+    if (loading) return;
+
+    setLoading(true);
     setKudosCount((prev) => prev + 1);
 
     try {
@@ -30,46 +38,31 @@ export const FriendQuestCard = ({
       });
 
       const data = await response.json();
+      //console.log("STATUS:", response.status);
+      //console.log("DATA:", data);
 
       if (!response.ok || !data.success) {
-        throw new Error(data.message || "Couldn't add kudos");
+        throw new Error(data.message || "Failed to give kudos");
       }
 
       setKudosCount(data.response.kudos);
     } catch (err) {
       setKudosCount((prev) => prev - 1);
       console.error(err);
+    } finally {
+      setLoading(false);
     }
-
-    /* fetch(apiUrl + `/quests/${id}/kudos`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: user?.accessToken,
-      },
-    })
-      .then((res) => res.json())
-      .then((data) => {
-        if (data.success) {
-          setKudosCount(data.response.kudos);
-        } else {
-          setKudosCount((prev) => prev - 1);
-          alert(data.message);
-        }
-      })
-      .catch(() => {
-        setKudosCount((prev) => prev - 1);
-        console.error("Couldn't add kudos");
-      }); */
   };
 
   return (
-    <MainWrapper isNew={isNew}>
+    <MainWrapper $isNew={isNew}>
       <Cardheader>
         <Name>{createdBy.name || "User"}</Name>
         {/* <Avatar src={createdBy.moodUrl} alt={createdBy.name || 'User'} /> */}
         <ActionWrapper>
-          <Button onClick={handleClick}>Kudos: {kudosCount}</Button>
+          <Button onClick={handleClick} disabled={loading}>
+            Kudos: {kudosCount}
+          </Button>
         </ActionWrapper>
       </Cardheader>
       <QuestInfoWrapper>
