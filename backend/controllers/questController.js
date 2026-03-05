@@ -92,7 +92,7 @@ const showDefaultQuests = async (req, res) => {
       return res.status(404).json({
         success: false,
         response: [],
-        message: "Yay you have no quests!",
+        message: "No quests",
       });
     }
 
@@ -127,7 +127,7 @@ const showUserQuests = async (req, res) => {
       return res.status(404).json({
         success: false,
         response: [],
-        message: "Couldn't find any quests with these filters",
+        message: "No quests",
       });
     }
     return res
