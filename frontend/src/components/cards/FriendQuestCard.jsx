@@ -139,6 +139,16 @@ const Time = styled.div`
   font-weight: 400;
 `;
 
+const TimeP = styled.p`
+  font-family: Roboto;
+  font-size: 12px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: normal;
+  color: var(--medium-purple);
+  margin: 0;
+`;
+
 const Done = styled.div`
   font-size: 10px;
   font-weight: 400;

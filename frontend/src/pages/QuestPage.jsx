@@ -3,6 +3,7 @@ import { useQuestStore } from '../stores/useQuestStore'
 import { useUserStore } from '../stores/useUserStore'
 import { useReducer } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
+import { Checkbox } from '../components/Checkbox'
 
 // Defines initial state in one object instead of three separate useState calls
 const initialState = {
@@ -67,8 +68,16 @@ const handleComplete = async (id, checked) => {
       return
     }
 
+    // Filter out already completed quests first
+    const notDone = freshQuests.filter(quest => !quest.done)
+
+    if (notDone.length === 0) {
+      dispatch({ type: 'noMatch', message: 'You have no quests left to do!' })
+      return
+    }
+
     // Filter quests. Show only quests under chosen time frame
-    const filtered = freshQuests.filter(quest => quest.timeNeeded <= Number(state.timeAvailable))
+    const filtered = notDone.filter(quest => quest.timeNeeded <= Number(state.timeAvailable))
 
     if (filtered.length === 0) {
       dispatch({ type: 'noMatch', message: `No quests under ${state.timeAvailable} minutes` })
@@ -106,14 +115,22 @@ const handleComplete = async (id, checked) => {
         {state.randomQuest && 
           <Div>
             <h2>Ok {user.email}, here is your quest of the day: </h2>
-            <p>{state.randomQuest.message}</p> 
-            <p>Will take about {state.randomQuest.timeNeeded} min</p>
-            <input 
-              type='checkbox'
-              checked={currentQuest?.done || false}
-              onChange={(event) => handleComplete(state.randomQuest._id, event.target.checked)}
-            />   
-            <Link to='/giveup'>Give up</Link>   
+            <QuestDiv>
+              <CompleteDiv> 
+                <Checkbox 
+                  type='checkbox'
+                  checked={currentQuest?.done || false}
+                  onChange={(event) => handleComplete(state.randomQuest._id, event.target.checked)}
+                />  
+              </CompleteDiv> 
+              <TextDiv>
+                <P>{state.randomQuest.message}</P> 
+                <TimeP>{state.randomQuest.timeNeeded} min</TimeP>
+              </TextDiv>
+            </QuestDiv>
+            
+              <Link to='/giveup'>Give up</Link>  
+            
           </Div>
         }
     </>
@@ -123,13 +140,13 @@ const handleComplete = async (id, checked) => {
 const Form = styled.form`
   display: flex;
   flex-direction: column;
-  background-color: var(--primary-color);
+  background-color: var(--main-white);
   max-height: 280px;
   max-width: 350px;
   margin: 10px;
   border-radius: 12px;
   padding: 10px;
-  border: 2px solid var(--accent-color);
+  border: 2px solid #B594FF;
   text-align: center;
 `
 
@@ -141,18 +158,18 @@ const Label = styled.label`
 const Div = styled.div`
     display: flex;
     flex-direction: column;
-    background-color: var(--primary-color);
+    background-color: #FFFFFF;
     max-height: 280px;
     max-width: 350px;
     margin: 10px;
     border-radius: 12px;
     padding: 10px;
-    border: 2px solid var(--accent-color);
+    border: 2px solid #B594FF;
     text-align: center;
 `
 
 const Input = styled.input`
-  background-color: #FFFFFF;
+  background-color: var(--background-light-purple);
   display: flex;
   height: 52px;
   padding: 15px 16px 14px 16px;
@@ -171,17 +188,43 @@ const Button = styled.button`
   justify-content: center;
   align-items: center;
   gap: 10px;
-  flex-shrink: 0;
-  align-self: stretch;
   border-radius: 12px;
-  border: 2px solid #E9628C;
-  background: #F497B4;
+  border: 1px solid #1D30CE;
+  background: #866DEB;
   box-shadow: 2px 4px 4px 0 rgba(139, 139, 139, 0.30);
-  margin: 16px 0;
-  cursor: pointer;
+  color: white;
+  font-family: "Pixelify Sans", sans-serif;
+  margin: 15px 0;
+`
 
-  &:hover {
-    transform: scale(1.1)
-  }
+const QuestDiv = styled.div`
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  background-color: #F5F0FF;
+  border-radius: 12px;
+  padding: 10px;
+  gap: 10px;
+  margin: 20px 0;
+`
+
+const P = styled.p`
+  font-size: 18px;
+`
+
+const TimeP = styled.p`
+  font-size: 12px;
+`
+
+const CompleteDiv = styled.div`
+  display: flex;
+  align-items: center;
+`
+
+const TextDiv = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  text-align: left;
 `
 // user does something → dispatch is called → reducer runs and returns new state → component re-renders with new state.
