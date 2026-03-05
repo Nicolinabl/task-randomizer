@@ -33,7 +33,7 @@ const createQuestUnAuth = async (req, res) => {
   }
 };
 
-// FIXME add auth MUST --- Give kudos >>>>> Doesn't prevent from liking more than once - why??
+// -------- Give kudos ----------
 const giveKudos = async (req, res) => {
   //console.log("Give kudos");
   const { id } = req.params;
@@ -49,7 +49,7 @@ const giveKudos = async (req, res) => {
     const update = { $inc: { kudos: 1 }, $push: { kudosByUser: userId } };
     const options = { new: true, runValidators: true };
 
-    const addKudos = await Quest.findByIdAndUpdate(
+    const addKudos = await Quest.findOneAndUpdate(
       { _id: id, kudosByUser: { $ne: userId } },
       update,
       options,
@@ -61,7 +61,7 @@ const giveKudos = async (req, res) => {
         message: "Can't give cudos more than once to the same quest",
       });
     }
-    return res.status(200).json({ succes: true, response: addKudos });
+    return res.status(200).json({ success: true, response: addKudos });
   } catch (err) {
     return res.status(500).json({
       success: false,

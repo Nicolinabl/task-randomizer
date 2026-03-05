@@ -98,19 +98,19 @@ const deleteUser = async (req, res) => {
     const user = await User.findByIdAndDelete(id);
     if (!user) {
       return res.status(404).json({
-        succes: false,
+        success: false,
         message: `User with id ${id} doesn't exist or was permanently deleted`,
       });
     }
     return res.status(200).json({
-      succes: true,
+      success: true,
       response: [user.email, user.name],
       message: "User was permanently deleted",
     });
   } catch (err) {
     return res
       .status(500)
-      .json({ succes: false, message: "Server error", error: err.message });
+      .json({ success: false, message: "Server error", error: err.message });
   }
 };
 
@@ -140,7 +140,7 @@ const userStreak = async (req, res) => {
 
     if (completedQuests.length === 0) {
       return res.status(200).json({
-        succes: true,
+        success: true,
         message: "There are no completed quests yet",
         streak: 0,
       });
@@ -175,7 +175,7 @@ const userStreak = async (req, res) => {
     return res.status(200).json({ success: true, response: streak });
   } catch (err) {
     return res.status(500).json({
-      succes: false,
+      success: false,
       message: "Somethng went wrong at the server",
       error: err.errors,
     });
