@@ -55,10 +55,12 @@ const questSchema = new mongoose.Schema(
       default: 0,
     },
 
-    kudosByUser: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "User",
-    },
+    kudosByUser: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "User",
+      },
+    ],
   },
 
   { timestamps: true },
