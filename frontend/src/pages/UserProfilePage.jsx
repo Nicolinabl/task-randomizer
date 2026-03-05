@@ -22,14 +22,12 @@ export const UserProfile = () => {
           <Header />
 
           <Div>
-            {/* <Strike /> */}
-            <H2>Hello, {user.email}!</H2>
             <Avatar />
             <StyledLink to="/quests">Keep your avatar happy,<br></br> click here to get daily quest!</StyledLink>
           </Div>
 
-          <CreateQuest />
           <QuestList />
+          <CreateQuest />
           <QuestLibrary />
           <CompletedQuests />
         </>

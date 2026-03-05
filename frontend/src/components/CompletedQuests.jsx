@@ -15,7 +15,7 @@ export const CompletedQuests = () => {
     <Container>
       <HeadingContainer>
         <CheckboxChecked />
-        <h2>Completed:</h2>
+        <h2>My completed quests:</h2>
         <Button onClick={() => setIsVisible(!isVisible)}>
           {isVisible ? 'Hide' : 'Show'}
         </Button>
