@@ -124,10 +124,10 @@ const showUserQuests = async (req, res) => {
     });
 
     if (!filteredQuests.length) {
-      return res.status(404).json({
-        success: false,
+      return res.status(200).json({
+        success: true,
         response: [],
-        message: "No quests",
+        message: "No quests yet",
       });
     }
     return res
