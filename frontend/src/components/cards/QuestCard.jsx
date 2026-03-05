@@ -75,7 +75,7 @@ const ChipContainer = styled.div`
   align-items: center;
 
   border-radius: 4px;
-  background: #ffe2f3;
+  background: var(--light-purple);
 `;
 
 const TimeP = styled.p`
