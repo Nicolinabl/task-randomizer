@@ -88,10 +88,10 @@ const Form = styled.form`
   margin: 10px;
   padding: 16px;
   border-radius: 12px;
-  border: 2px solid #B594FF;
-  background: #FFF;
-  box-shadow: 2px 4px 4px 0 #DBDBDB;
-`
+  border: 2px solid var(--accent-purple);
+  background: #fff;
+  box-shadow: 2px 4px 4px 0 #dbdbdb;
+`;
 
 const Label = styled.label`
   display: flex;

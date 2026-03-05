@@ -18,12 +18,14 @@ export const GlobalStyle = createGlobalStyle`
     --secondary-button-color: #E9628C;
 
     --accent-color: #F497B4;
+    --accent-purple: #B594FF;
 
     --medium-pink: #FFD2EC;
     --medium-purple: #7C58FD;
     --light-yellow: #FFF4CA;
     --light-pink: #FFE2F3;
     --light-purple: #E5DEF8;
+    --dark-purple: #2D0FA3;
 
   }
 

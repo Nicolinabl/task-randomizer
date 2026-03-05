@@ -10,6 +10,7 @@ export const Navbar = ({ onLogout }) => {
 
   const handleLogoutClick = () => {
     onLogout(); // Call the logout function
+    setOpen(false);
     navigate("/"); // Redirect to homepage
   };
 
@@ -28,32 +29,30 @@ export const Navbar = ({ onLogout }) => {
         />
       </HamburgerWrapper>
       <NavMenu isOpen={isOpen}>
-        <StyledLink to="/" onClick={() => isOpen(false)}>
+        <StyledLink to="/" onClick={() => setOpen(false)}>
           Home
         </StyledLink>
         {/* <StyledLink to="/profile" onClick={() => isOpen(false)}>
           Profile
         </StyledLink> */}
-        <StyledLink to="/feed" onClick={() => isOpen(false)}>
+        <StyledLink to="/feed" onClick={() => setOpen(false)}>
           Friends
         </StyledLink>
-        <StyledLink to="about" onClick={() => isOpen(false)}>
+        <StyledLink to="about" onClick={() => setOpen(false)}>
           About
         </StyledLink>
-        <StyledLink to="/login" onClick={() => isOpen(false)}>
+        <StyledLink to="/login" onClick={() => setOpen(false)}>
           Log in
         </StyledLink>
-        <button onClick={handleLogoutClick}>Log out</button>
+        <LogoutButton onClick={handleLogoutClick}>
+          <p>Log out</p>
+        </LogoutButton>
       </NavMenu>
     </Nav>
   );
 };
 
 const Nav = styled.nav`
-  /*  display: flex;
-  background-color: var(--primary-color);
-  justify-content: space-between;
-  padding: 5px; */
   background-color: var(--primary-color);
   padding: 8px 20px;
   height: 56px;
@@ -63,8 +62,14 @@ const Nav = styled.nav`
   flex-direction: row;
   align-items: center;
   justify-content: space-between;
-  /* position: fixed;
-  z-index: 10; */
+  //position: fixed;
+  left: 0;
+  right: 0;
+  z-index: 100;
+
+  border-radius: 0 0 12px 12px;
+  /* Basic shadow */
+  box-shadow: 1px 2px 2px 0 #dbdbdb;
 `;
 const HamburgerWrapper = styled.div`
   margin-left: auto;
@@ -72,16 +77,15 @@ const HamburgerWrapper = styled.div`
 `;
 
 const NavMenu = styled.div`
-  background-color: aliceblue;
+  background-color: var(--medium-pink);
   display: ${({ isOpen }) => (isOpen ? "flex" : "none")};
-  //transition: transform 0.3s ease-in-out;
   flex-direction: column;
   position: fixed;
   top: 0;
   left: 0;
   right: 0;
-  width: 100vw;
-  height: 100vh;
+  width: 100%;
+  height: 100%;
   align-items: center;
   justify-content: center;
   padding: 0;
@@ -91,5 +95,51 @@ const NavMenu = styled.div`
 
 const StyledLink = styled(Link)`
   text-decoration: none;
+  font-family: "Roboto", sans-serif;
+  font-size: 20px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: normal;
+  color: var(--main-text-color);
+
+  &:hover {
+    font-weight: 500;
+    color: var(--dark-purple);
+    transform: 1.2;
+    transition: ease;
+  }
+
+  &:active {
+    color: var(--secondary-button-color);
+    transform: 0.85;
+  }
 `;
-// TODO: change to hamburger on small screens
+
+const LogoutButton = styled.button`
+  display: inline-flex;
+  height: 44px;
+  padding: 4px 12px;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+  border-radius: 12px;
+  border: 1px solid var(--medium-purple);
+  font-size: 14px;
+  font-family: "Roboto", sans-serif;
+  font-style: normal;
+  font-weight: 400;
+  line-height: normal;
+  background-color: var(--medium-pink);
+
+  &:hover {
+    font-weight: 500;
+    color: var(--dark-purple);
+    transform: scale(1.1);
+    transition: ease;
+  }
+
+  &:active {
+    color: var(--secondary-button-color);
+    transform: scale(0.85);
+  }
+`;

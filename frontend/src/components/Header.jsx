@@ -5,18 +5,19 @@ import { Streak } from "./StreakDisplay";
 export const Header = () => {
   return (
     <HeaderWrapper>
-      <h1>Welcome to XxxxXXX</h1>
-      <Streak />
-      <HeartIcon></HeartIcon>
-      <icon-svg></icon-svg>
-
+      <HeadingContainer>
+        <h1>Welcome to XxxxXXX</h1>
+        <HeartIcon></HeartIcon>
+        <Streak />
+      </HeadingContainer>
       <p>Never spend energy on choosing your chores again</p>
     </HeaderWrapper>
   );
 };
 const HeaderWrapper = styled.div`
+  border: 2px solid var(--accent-purple);
   border-radius: 12px;
-  background: var(--background-light-purple);
+  background: var(--main-white);
   box-shadow: 2px 4px 4px 0 #dbdbdb;
 
   display: flex;
@@ -35,4 +36,12 @@ const HeaderWrapper = styled.div`
   @media (min-width: 768px) {
     margin: 24px auto;
   }
+`;
+const HeadingContainer = styled.div`
+  display: flex;
+  flex-direction: row;
+  gap: 8px;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: baseline;
 `;
