@@ -92,7 +92,7 @@ const showDefaultQuests = async (req, res) => {
       return res.status(404).json({
         success: false,
         response: [],
-        message: "Couldn't find quests with this filters",
+        message: "Yay you have no quests!",
       });
     }
 
