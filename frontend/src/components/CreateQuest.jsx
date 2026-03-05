@@ -66,7 +66,7 @@ export const CreateQuest = () => {
         {/* NOTE: category commented out for now. Not used currently */}
 
         <label>
-          How many minutes will it take you?
+          How many minutes will it take?
           <Input 
             name="time" 
             type='number'
@@ -78,19 +78,20 @@ export const CreateQuest = () => {
 
         {error && <p>{error}</p>}
 
-        <Button type="submit">Add new quest</Button>
+        <Button type="submit">Add quest</Button>
       </Label>
     </Form>
   )
 }
 
 const Form = styled.form`
-  margin: 10px;
+  margin: 20px 0;
   padding: 16px;
   border-radius: 12px;
   border: 2px solid #B594FF;
   background: #FFF;
   box-shadow: 2px 4px 4px 0 #DBDBDB;
+  text-align: center;
 `
 
 const Label = styled.label`
@@ -109,7 +110,6 @@ const Input = styled.input`
 
 const Button = styled.button`
   display: flex;
-  width: 315px;
   height: 54px;
   padding: 8px 16px;
   justify-content: center;

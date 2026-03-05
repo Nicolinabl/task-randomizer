@@ -1,14 +1,16 @@
 // import { apiUrl } from '../../api';
 import styled from 'styled-components';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { QuestCard } from './cards/QuestCard';
 import { useQuestStore } from '../stores/useQuestStore';
 import { useUserStore } from '../stores/useUserStore';
+import { motion, AnimatePresence } from 'framer-motion'
 
 
 export const QuestList = () => {
   const { quests, error, isLoading, fetchQuests, deleteQuest, completeQuest } = useQuestStore()
   const { user } = useUserStore()  
+  const [ isVisible, setIsVisible ] = useState(false)
 
   useEffect(() => {
     fetchQuests()
@@ -19,7 +21,21 @@ export const QuestList = () => {
 
   return (
     <>
-      <p>Your quests:</p>
+      <h2>My quests</h2>
+      <button onClick={() => setIsVisible(!isVisible)}>
+        {isVisible ? 'Hide' : 'Show'}
+      </button>
+
+    <AnimatePresence>
+      {isVisible && (
+        <motion.div
+          initial={{ opacity: 0, height: 0 }}
+          animate={{ opacity: 1, height: 'auto' }}
+          exit={{ opacity: 0, height: 0 }}
+          transition={{ duration: 0.3, ease: 'easeInOut' }}
+          style={{ overflow: 'hidden' }}
+        >
+      
       {quests
         .filter(quest => !quest.done)
         .map((quest) => (
@@ -33,7 +49,10 @@ export const QuestList = () => {
             onDelete={deleteQuest}
             handleChecked={completeQuest}
           />
-      ))}
+        ))}
+      </motion.div>
+      )}
+    </AnimatePresence>
     </>
   )
 };
