@@ -8,11 +8,23 @@ export const GlobalStyle = createGlobalStyle`
 
   :root {
     --main-bg-color: #FFF1F9;
+    --background-light-purple: #F4F0FF;
+
     --main-text-color: #000000;
+    --main-white: #ffffff;
+
     --primary-color: #FFF4CA;
     --secondary-color: #DAFFE6;
+    --secondary-button-color: #E9628C;
+
     --accent-color: #F497B4;
-    --background-light-purple: #F4F0FF;
+
+    --medium-pink: #FFD2EC;
+    --medium-purple: #7C58FD;
+    --light-yellow: #FFF4CA;
+    --light-pink: #FFE2F3;
+    --light-purple: #E5DEF8;
+
   }
 
   #root {

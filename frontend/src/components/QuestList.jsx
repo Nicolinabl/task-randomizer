@@ -1,27 +1,31 @@
 // import { apiUrl } from '../../api';
-import styled from 'styled-components';
-import { useEffect } from 'react';
-import { QuestCard } from './cards/QuestCard';
-import { useQuestStore } from '../stores/useQuestStore';
-import { useUserStore } from '../stores/useUserStore';
-
+import styled from "styled-components";
+import { useEffect } from "react";
+import { QuestCard } from "./cards/QuestCard";
+import { useQuestStore } from "../stores/useQuestStore";
+import { useUserStore } from "../stores/useUserStore";
+import { HeartAnimation } from "../assets/animation/Heart";
 
 export const QuestList = () => {
-  const { quests, error, isLoading, fetchQuests, deleteQuest, completeQuest } = useQuestStore()
-  const { user } = useUserStore()  
+  const { quests, error, isLoading, fetchQuests, deleteQuest, completeQuest } =
+    useQuestStore();
+  const { user } = useUserStore();
 
   useEffect(() => {
-    fetchQuests()
-  }, [user])
+    fetchQuests();
+  }, [user]);
 
-  if (isLoading) return <p>Loading quests...</p>
-  if (error) return <p>{error}</p>
+  if (isLoading) return <p>Loading quests...</p>;
+  if (error) return <p>{error}</p>;
 
   return (
-    <>
-      <p>Your quests:</p>
+    <Container>
+      <HeadingContainer>
+        <HeartAnimation />
+        <h2>My quests:</h2>
+      </HeadingContainer>
       {quests
-        .filter(quest => !quest.done)
+        .filter((quest) => !quest.done)
         .map((quest) => (
           <QuestCard
             key={quest._id}
@@ -33,10 +37,29 @@ export const QuestList = () => {
             onDelete={deleteQuest}
             handleChecked={completeQuest}
           />
-      ))}
-    </>
-  )
+        ))}
+    </Container>
+  );
 };
+
+const Container = styled.div`
+  padding: 24px 0 24px;
+  align-items: center;
+`;
+
+const HeadingContainer = styled.div`
+  display: flex;
+  height: 64px;
+  padding: 0 16px;
+  gap: 8px;
+  align-items: center;
+  padding: 8px 16px;
+  margin-bottom: 8px;
+
+  align-self: stretch;
+  border-radius: 12px;
+  background: var(--main-white);
+`;
 
 // const Div = styled.div`
 //   display: flex;

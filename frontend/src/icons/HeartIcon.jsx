@@ -4,8 +4,8 @@ const HeartIcon = (props) => {
       viewBox="0 0 32 32"
       xmlns="http://www.w3.org/2000/svg"
       fill="none"
-      width="1em"
-      height="1em"
+      width="32px"
+      height="32px"
       {...props}
     >
       <path
