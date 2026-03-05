@@ -62,7 +62,7 @@ export const useQuestStore = create((set) => ({
 
       if (!response.ok) return { success: false, error: data.message };
 
-      set((state) => ({ quests: [...state.quests, data] }));
+      set((state) => ({ quests: [...state.quests, data.response || data] }))
       return { success: true };
     } catch (error) {
       return { success: false, error: "Something went wrong" };

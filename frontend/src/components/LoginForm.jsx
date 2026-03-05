@@ -3,8 +3,10 @@ import { Link, useNavigate } from 'react-router-dom'
 import { useEffect, useState } from 'react'
 import { apiUrl } from '../../api'
 import { useUserStore } from '../stores/useUserStore'
+import { useQuestStore } from '../stores/useQuestStore'
 
 export const LoginForm = () => {
+    const fetchQuests = useQuestStore((state) => state.fetchQuests)
     // State variables to store form input values
     // const [name, setName] = useState('')
     const [email, setEmail] = useState('')
@@ -62,7 +64,7 @@ export const LoginForm = () => {
 
         login({
           accessToken: data.accessToken,
-          userId: data.id,
+          userId: data.userID,
           email: email,
           name: data.name // check what the API actually returns here
         })
@@ -77,6 +79,8 @@ export const LoginForm = () => {
         // Clear the form inputs
         setEmail('')
         setPassword('')
+
+        await fetchQuests(data.accessToken)
   
         // When signed up successfully -> redirect to profile page
         navigate('/')
