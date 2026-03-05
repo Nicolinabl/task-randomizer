@@ -19,7 +19,7 @@ const HeaderWrapper = styled.div`
   border-radius: 12px;
   background: var(--main-white);
   box-shadow: 2px 4px 4px 0 #dbdbdb;
-  border: 2px solid #B594FF;
+  border: 2px solid #b594ff;
 
   display: flex;
   flex-direction: column;

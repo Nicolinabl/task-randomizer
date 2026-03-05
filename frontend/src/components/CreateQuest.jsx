@@ -64,7 +64,7 @@ export const CreateQuest = () => {
         </select> */}
         {/* NOTE: category commented out for now. Not used currently */}
         <label>
-          How many minutes will it take you?
+          How many minutes will it take?
           <Input
             name="time"
             type="number"
@@ -115,6 +115,6 @@ const Button = styled.button`
   box-shadow: 2px 4px 4px 0 rgba(139, 139, 139, 0.3);
   color: white;
   font-family: "Pixelify Sans", sans-serif;
-`
+`;
 
 // TODO: Add authentication check - redirect to login if no accessToken
