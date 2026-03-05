@@ -53,7 +53,7 @@ export const Navbar = ({ onLogout }) => {
 };
 
 const Nav = styled.nav`
-  background-color: var(--primary-color);
+  background-color: var(--medium-pink);
   padding: 8px 20px;
   height: 56px;
   width: 100%;
