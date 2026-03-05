@@ -21,7 +21,7 @@ export const GlobalStyle = createGlobalStyle`
     --accent-purple: #B594FF;
 
     --medium-pink: #FFD2EC;
-    --medium-purple: #7C58FD;
+    --medium-purple: #7954fd;
     --light-yellow: #FFF4CA;
     --light-pink: #FFE2F3;
     --light-purple: #E5DEF8;
@@ -56,6 +56,7 @@ export const GlobalStyle = createGlobalStyle`
     font-style: normal;
     font-weight: 500;
     line-height: normal;
+    margin: 10px 0;
   }
 
   h3 {
@@ -74,5 +75,6 @@ export const GlobalStyle = createGlobalStyle`
     line-height: normal;
     text-wrap: pretty;
   }
+
 
 `;

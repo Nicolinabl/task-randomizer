@@ -5,8 +5,8 @@ export const InfoCard = ({ title, description, icon }) => {
     <Div>
       {icon}
       <div>
-        <H3>{title}</H3>
-        <P>{description}</P>
+        <H2>{title}</H2>
+        <p>{description}</p>
       </div>
     </Div>
   )
@@ -26,15 +26,11 @@ const Div = styled.div`
 
 // TODO add #FFFFFF to root colors in globalstyles
 
-const H3 = styled.h3`
+const H2 = styled.h2`
   font-family: "Pixelify Sans", sans-serif;
-  font-size: 15px;
+  font-size: 18px;
   font-style: normal;
-  font-weight: 400;
+  font-weight: 500;
   line-height: normal;
   margin: 0;
-`
-
-const P = styled.p`
-  color: #8C737B;
 `

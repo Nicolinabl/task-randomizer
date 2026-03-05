@@ -88,7 +88,7 @@ export const LoginForm = () => {
     }
 
   return (
-    <>
+    <main>
       <Form onSubmit={handleSubmit}>
         <h2>Welcome Back! Log in now:</h2>
         {/* <label>
@@ -107,7 +107,7 @@ export const LoginForm = () => {
         <Button type="submit">Log in</Button>
         <StyledLink to="/signup">Not a user? Click here to sign up</StyledLink>
       </Form>
-    </>
+    </main>
   )
 }
 
@@ -145,11 +145,21 @@ const Button = styled.button`
   gap: 10px;
   border-radius: 12px;
   border: 1px solid #1D30CE;
-  background: #866DEB;
+  background: var(--medium-purple);
   box-shadow: 2px 4px 4px 0 rgba(139, 139, 139, 0.30);
   color: white;
   font-family: "Pixelify Sans", sans-serif;
-  font-size: 16px;
+  font-size: 20px;
+  font-weight: 500;
+  cursor: pointer;
+
+  &:hover {
+    background: var(--dark-purple);
+  }
+
+  &:active {
+    background: var(--accent-purple);
+  }
 `
 
 const StyledLink = styled(Link)`

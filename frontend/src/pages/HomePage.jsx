@@ -11,9 +11,9 @@ import { Link } from 'react-router-dom'
 
 export const Home = () => {
   return (
-    <Section>
+    <Main>
       <Div>
-        <h1>Welcome to AppName</h1>
+        <h1>Welcome to APPNAME</h1>
         <p>Your to-do list shouldn't feel like a boss battle before you even start. Let us do your mental labour! We'll pick the quest. You just win it. </p>
         <ButtonDiv>
           <StyledLink to={'/login'}><Button>Start your quest</Button></StyledLink>
@@ -24,32 +24,26 @@ export const Home = () => {
       <h2>How it works</h2>
 
       <InfoCard
-        icon={<Star />}
-        title="1. Let us do your mental labour"
-        description="Stop overthinking your to-do. We organize and choose your quests so you can just… do." 
-      />
-
-      <InfoCard
         icon={<Heart />}
-        title="2. Add your own quests"
+        title="1. Add your own quests"
         description="Got something specific in mind? Add your own custom quests and how long they take to complete." 
       />
 
       <InfoCard
         icon={<Library />}
-        title="3. Don't know what to add?"
+        title="2. Don't know what to add?"
         description="Browse our quest library! Plenty of ideas for self-care, fitness, creativity, and productivity." 
       />
 
       <InfoCard
         icon={<Dice />}
-        title="4. Get a random daily quest from your list"
+        title="3. Get a random daily quest from your list"
         description="Every day we pick a quest from your list. All you have to do is tell us how much time you have. And we'll roll the dice!" 
       />
 
       <InfoCard
         icon={<Friends />}
-        title="5. Keep keep streaks & share"
+        title="4. Keep keep streaks & share"
         description="Keep your avatar happy with daily streaks. Challenge friends and share your progress!" 
       />
 
@@ -77,7 +71,7 @@ export const Home = () => {
           </LinksDiv>
         </NameDiv>
       </CreatorDiv>
-    </Section>
+    </Main>
   );
 };
 
@@ -91,15 +85,19 @@ export const Button = styled.button`
   flex-shrink: 0;
   align-self: stretch;
   border-radius: 12px;
-  border: 2px solid #E9628C;
-  background: #F497B4;
+  border: 2px solid var(--secondary-button-color);
+  background: var(--accent-color);
   box-shadow: 2px 4px 4px 0 rgba(139, 139, 139, 0.30);
   margin: 20px 0;
   cursor: pointer;
   font-family: "Pixelify Sans", sans-serif;
 
   &:hover {
-    transform: scale(1.1);
+    background: var(--secondary-button-color);
+  }
+
+  &:active {
+    background: #E48187;
   }
 `
 
@@ -108,7 +106,7 @@ const ButtonDiv = styled.div`
   gap: 10px;
 `
 
-const Section = styled.section`
+const Main = styled.main`
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -141,6 +139,7 @@ const H3 = styled.h3`
 
 const StyledLink = styled(Link)`
   text-decoration: none;
+  display: contents;
 `
 
 

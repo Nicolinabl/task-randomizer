@@ -86,7 +86,7 @@ export const FriendFeed = () => {
 
 //Styles
 
-const PageWrapper = styled.div`
+const PageWrapper = styled.main`
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -97,6 +97,7 @@ const PageWrapper = styled.div`
 const H1 = styled.h1`
   margin: 20px 0;
 `
+
 
 
     // //add error handling
