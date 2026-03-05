@@ -3,6 +3,7 @@ import { useState, useEffect } from "react";
 import { apiUrl } from "../../../api";
 import { useUserStore } from "../../stores/useUserStore";
 
+
 export const FriendQuestCard = ({
   id,
   message,
@@ -43,26 +44,29 @@ export const FriendQuestCard = ({
     <MainWrapper isNew={isNew}>
       <Cardheader>
         <Name>{createdBy.name || 'User'}</Name>
-        <Avatar src={createdBy.moodUrl} alt={createdBy.name || 'User'} />
+        {/* <Avatar src={createdBy.moodUrl} alt={createdBy.name || 'User'} /> */}
+        <ActionWrapper>
+        <Button onClick={handleClick}>Kudos: {kudosCount}</Button>
+      </ActionWrapper>
       </Cardheader>
       <QuestInfoWrapper>
-        <Quest>{message}</Quest>
-        <Category>{category}</Category>
-        <Time>{timeNeeded}</Time>
-        <Done>
-          {new Date(doneAt).toLocaleDateString("en-GB", {
-            day: "numeric",
-            month: "short",
-            year: "numeric",
-            hour: "2-digit",
-            minute: "2-digit",
-          })}
-        </Done>
+        <TopInfo>
+          <Quest>{message}</Quest>
+          <Category>{category}</Category>
+          <Time>{timeNeeded} min</Time>
+        </TopInfo>
+        <BottomRow>
+          <Done>
+            {new Date(doneAt).toLocaleDateString("en-GB", {
+              day: "numeric",
+              month: "short",
+              year: "numeric",
+              hour: "2-digit",
+              minute: "2-digit",
+            })}
+          </Done>
+        </BottomRow>
       </QuestInfoWrapper>
-      <ActionWrapper>
-        <p>Give kudos</p>
-        <button onClick={handleClick}>Kudos: {kudosCount}</button>
-      </ActionWrapper>
     </MainWrapper>
   );
 };
@@ -83,25 +87,26 @@ const slideIn = keyframes`
 const MainWrapper = styled.div`
   display: flex;
   flex-direction: column;
-  background-color: var(--primary-color);
+  background-color: #FFFFFF;
   margin: 4px;
   padding: 12px 12px;
   border-radius: 12px;
+  width: 100%;
+  border: 1px solid var(--accent-color)
 `;
 
 const Cardheader = styled.div`
   display: flex;
-  flex-direction: column;
-  background-color: var(--primary-color);
+  background-color: var(--main-bg-color);
+  justify-content: space-between;
   margin: 0;
-  padding: 4px;
+  padding: 5px;
   border-radius: 12px;
 `;
 
 const Name = styled.h1`
-  font-size: 14px;
+  font-size: 15px;
   font-weight: 700;
-  margin: 4px;
   padding: 12px 12px;
 `;
 
@@ -116,7 +121,7 @@ const QuestInfoWrapper = styled.div`
   display: flex;
   flex-direction: column;
   margin: 0;
-  padding: 0;
+  padding: 5px;
 `;
 
 const Quest = styled.div`
@@ -130,12 +135,12 @@ const Category = styled.div`
 `;
 
 const Time = styled.div`
-  font-size: 14px;
+  font-size: 12px;
   font-weight: 400;
 `;
 
 const Done = styled.div`
-  font-size: 14px;
+  font-size: 10px;
   font-weight: 400;
 `;
 
@@ -144,3 +149,33 @@ const ActionWrapper = styled.div`
   justify-content: space-between;
   align-items: center;
 `;
+
+const Button = styled.button`
+  display: flex;
+  padding: 5px;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  flex-shrink: 0;
+  align-self: stretch;
+  border-radius: 12px;
+  border: 2px solid #E9628C;
+  background: #F497B4;
+  box-shadow: 2px 4px 4px 0 rgba(139, 139, 139, 0.30);
+  cursor: pointer;
+  font-family: "Pixelify Sans", sans-serif;
+
+  /* Small shadow */
+  box-shadow: 0 1px 1px 0 #dbdbdb;
+`;
+
+const TopInfo = styled.div`
+  display: flex;
+  flex-direction: column;
+`
+
+const BottomRow = styled.div`
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 8px;
+  `
