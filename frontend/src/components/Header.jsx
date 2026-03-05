@@ -19,10 +19,12 @@ const HeaderWrapper = styled.div`
   border-radius: 12px;
   background: var(--main-white);
   box-shadow: 2px 4px 4px 0 #dbdbdb;
+  border: 2px solid #B594FF;
 
   display: flex;
   flex-direction: column;
-  justify-content: center;
+  // justify-content: center;
+  align-items: center;
 
   gap: 8px;
   width: 100%;

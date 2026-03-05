@@ -23,9 +23,9 @@ export const UserProfile = () => {
 
           <Div>
             {/* <Strike /> */}
+            <H2>Hello, {user.email}!</H2>
             <Avatar />
-            <p>Hello, {user.email}!</p>
-            <Link to="/quests">Get quest of the day</Link>
+            <StyledLink to="/quests">Keep your avatar happy,<br></br> click here to get daily quest!</StyledLink>
           </Div>
 
           <CreateQuest />
@@ -51,6 +51,24 @@ const Div = styled.div`
   flex-direction: column;
   justify-content: center;
   align-items: center;
+  margin: 40px 0;
+  text-align: center;
 `;
+
+const H2 = styled.h2`
+  margin: 0  0 30px 0;
+`
+
+const StyledLink = styled(Link)`
+  text-decoration: none;
+  color: black;
+  font-family: "Pixelify Sans", sans-serif;
+  margin-top: 10px;
+
+  &:hover {
+    transform: scale(1.1)
+  }
+`
+
 
 // FIXME: change what content is showed depending on logged in or logged out user

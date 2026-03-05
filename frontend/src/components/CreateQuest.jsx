@@ -81,7 +81,6 @@ export const CreateQuest = () => {
 };
 
 const Form = styled.form`
-  margin: 10px;
   padding: 16px;
   border-radius: 12px;
   border: 2px solid var(--accent-purple);
@@ -105,7 +104,6 @@ const Input = styled.input`
 
 const Button = styled.button`
   display: flex;
-  width: 315px;
   height: 54px;
   padding: 8px 16px;
   justify-content: center;
@@ -116,6 +114,7 @@ const Button = styled.button`
   background: #866deb;
   box-shadow: 2px 4px 4px 0 rgba(139, 139, 139, 0.3);
   color: white;
-`;
+  font-family: "Pixelify Sans", sans-serif;
+`
 
 // TODO: Add authentication check - redirect to login if no accessToken
