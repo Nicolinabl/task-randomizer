@@ -8,6 +8,7 @@ export const Streak = () => {
   return (
     <StreakWrapper>
       <h3>Daily streak:</h3>
+      <h2>My streak:</h2>
       {isStreakLoading ? (
         <span>Loading...</span>
       ) : (
