@@ -13,7 +13,7 @@ export const Home = () => {
   return (
     <Main>
       <Div>
-        <h1>Welcome to APPNAME</h1>
+        <h1>Welcome to Randify</h1>
         <p>Your to-do list shouldn't feel like a boss battle before you even start. Let us do your mental labour! We'll pick the quest. You just win it. </p>
         <ButtonDiv>
           <StyledLink to={'/login'}><Button>Start your quest</Button></StyledLink>
