@@ -44,13 +44,13 @@ const [state, dispatch] = useReducer(reducer, initialState)
 // Get the live version of the quest from the store so checkbox stays in sync
 const currentQuest = quests.find(quest => quest._id === state.randomQuest?._id)
 
-const handleComplete = async (id, checked) => {
-  await completeQuest(id, checked)
-  if (checked) {
-    alert('Great work! 🎉')
-    navigate('/')
-  }
-}
+  const handleComplete = async (id, checked) => {
+    await completeQuest(id, checked);
+    if (checked) {
+      //alert("Great work! 🎉");
+      navigate("/rewards");
+    }
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault()
@@ -64,8 +64,8 @@ const handleComplete = async (id, checked) => {
     const freshQuests = await fetchQuests()
 
     if (freshQuests.length === 0) {
-      dispatch({ type: 'noMatch', message: 'You have no quests yet!' })
-      return
+      dispatch({ type: "noMatch", message: "You have no quests yet!" });
+      return;
     }
 
     // Filter out already completed quests first
@@ -80,8 +80,11 @@ const handleComplete = async (id, checked) => {
     const filtered = notDone.filter(quest => quest.timeNeeded <= Number(state.timeAvailable))
 
     if (filtered.length === 0) {
-      dispatch({ type: 'noMatch', message: `No quests under ${state.timeAvailable} minutes` })
-      return
+      dispatch({
+        type: "noMatch",
+        message: `Looks like you don't have quests under ${state.timeAvailable} minutes, try again!`,
+      });
+      return;
     }
 
     // Problem initially: gave random quest below requested time available, but could giv quest a LOT shorter then inputted time. Solved by: first sort timeNeeded closest to available time first.
