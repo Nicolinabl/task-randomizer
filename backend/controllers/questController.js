@@ -57,11 +57,11 @@ const giveKudos = async (req, res) => {
 
     if (!addKudos) {
       return res.status(400).json({
-        succes: false,
+        success: false,
         message: "Can't give cudos more than once to the same quest",
       });
     }
-    return res.status(200).json(addKudos);
+    return res.status(200).json({ succes: true, response: addKudos });
   } catch (err) {
     return res.status(500).json({
       success: false,
