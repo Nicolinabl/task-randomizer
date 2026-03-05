@@ -59,14 +59,14 @@ export const FriendFeed = () => {
     // pass params from login and register forms to an authentication component to then add authentication after H2
     // smth like {!user ? (<Authentification onAuthSuccess = {handleAuth}>)}
     <PageWrapper>
-      <h2>My friends finished quests</h2>
+      <H1>Friends completed quests</H1>
 
-      <form>
+      {/* <form>
         <label>
           Find a friend:
           <input type="search" placeholder="Search username 🔎" />
         </label>
-      </form>
+      </form> */}
       {friendsQuests.map((quest, index) => (
         <FriendQuestCard
           key={quest._id}
@@ -93,6 +93,10 @@ const PageWrapper = styled.div`
   align-items: center;
   padding: 0 20px;
 `;
+
+const H1 = styled.h1`
+  margin: 20px 0;
+`
 
 
     // //add error handling
