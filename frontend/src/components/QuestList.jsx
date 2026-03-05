@@ -24,7 +24,7 @@ export const QuestList = () => {
     <Container>
       <HeadingContainer>
         <HeartAnimation />
-        <h2>My quests:</h2>
+        <h2>My quests to conquer:</h2>
         <Button onClick={() => setIsVisible(!isVisible)}>
           {isVisible ? 'Hide' : 'Show'}
         </Button>

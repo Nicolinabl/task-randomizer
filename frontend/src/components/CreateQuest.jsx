@@ -63,7 +63,7 @@ export const CreateQuest = () => {
 
   return (
     <Form onSubmit={handleSubmit}>
-      <h2>Create new quest</h2>
+      <h2>Add quest to list</h2>
       <Label>
         What do you need to do?
         <Input
@@ -112,10 +112,12 @@ export const CreateQuest = () => {
 const Form = styled.form`
   padding: 16px;
   border-radius: 12px;
-  border: 2px solid var(--accent-purple);
-  background: #fff;
-  box-shadow: 2px 4px 4px 0 #dbdbdb;
-`;
+  border: 2px solid #B594FF;
+  background: #FFF;
+  box-shadow: 2px 4px 4px 0 #DBDBDB;
+  text-align: center;
+  margin: 20px 0 20px 0;
+`
 
 const Label = styled.label`
   display: flex;
