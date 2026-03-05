@@ -117,10 +117,19 @@ const Button = styled.button`
   gap: 10px;
   border-radius: 12px;
   border: 1px solid #1D30CE;
-  background: #866DEB;
+  background: var(--medium-purple);
   box-shadow: 2px 4px 4px 0 rgba(139, 139, 139, 0.30);
   color: white;
   font-family: "Pixelify Sans", sans-serif;
+  font-size: 20px;
+
+  &:hover {
+    background: var(--dark-purple);
+  }
+
+  &:active {
+    background: var(--accent-purple)
+  }
 `
 
 // TODO: Add authentication check - redirect to login if no accessToken

@@ -91,6 +91,14 @@ const ButtonAdd = styled.button`
 
   /* Small shadow */
   box-shadow: 0 2px 2px 0 #dbdbdb;
+
+  &:hover {
+    background: var(--accent-color)
+  }
+
+  &:active {
+    background: #E48187;
+  }
 `;
 
 const Div = styled.div`

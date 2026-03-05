@@ -103,24 +103,26 @@ export const SignupForm = () => {
   }
 
   return (
-    <Form onSubmit={handleSubmit}>
-      <h2>Sign up here</h2>
-      <Label>
-        Username
-        <Input type="text" placeholder="username" onChange={event => setName(event.target.value)}/>
-      </Label>
-      <Label>
-        email
-        <Input type="email" placeholder="email" onChange={event => setEmail(event.target.value)}/>
-      </Label>
-      <Label>
-        Password
-        <Input type="password" placeholder="password" onChange={event => setPassword(event.target.value)}/>
-      </Label>
-      {error && <p>{error}</p>}
-      <Button type="submit">Sign up</Button>
-      <StyledLink to="/login">I already have an account</StyledLink>
-    </Form>
+    <main>
+      <Form onSubmit={handleSubmit}>
+        <h2>Sign up here</h2>
+        <Label>
+          Username
+          <Input type="text" placeholder="username" onChange={event => setName(event.target.value)}/>
+        </Label>
+        <Label>
+          email
+          <Input type="email" placeholder="email" onChange={event => setEmail(event.target.value)}/>
+        </Label>
+        <Label>
+          Password
+          <Input type="password" placeholder="password" onChange={event => setPassword(event.target.value)}/>
+        </Label>
+        {error && <p>{error}</p>}
+        <Button type="submit">Sign up</Button>
+        <StyledLink to="/login">I already have an account</StyledLink>
+      </Form>
+    </main>
   )
 }
 
@@ -158,11 +160,19 @@ const Button = styled.button`
   gap: 10px;
   border-radius: 12px;
   border: 1px solid #1D30CE;
-  background: #866DEB;
+  background: var(--medium-purple);
   box-shadow: 2px 4px 4px 0 rgba(139, 139, 139, 0.30);
   color: white;
   font-family: "Pixelify Sans", sans-serif;
-  font-size: 16px;
+  font-size: 20px;
+
+  &:hover {
+    background: var(--dark-purple);
+  }
+
+  &:active {
+    background: var(--accent-purple);
+  }
 `
 
 const StyledLink = styled(Link)`

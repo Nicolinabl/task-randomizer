@@ -87,4 +87,12 @@ const Button = styled.button`
 
   /* Small shadow */
   box-shadow: 0 1px 1px 0 #dbdbdb;
+
+  &:hover {
+    background: var(--light-purple)
+  }
+
+  &:active {
+    background: var(--accent-purple)
+  }
 `;

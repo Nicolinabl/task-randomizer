@@ -36,7 +36,7 @@ export const UserProfile = () => {
   );
 };
 
-const PageWrapper = styled.div`
+const PageWrapper = styled.main`
   display: flex;
   flex-direction: column;
   justify-content: center;

@@ -177,6 +177,14 @@ const Button = styled.button`
 
   /* Small shadow */
   box-shadow: 0 1px 1px 0 #dbdbdb;
+
+  &:hover {
+    background: var(--secondary-button-color);
+  }
+
+  &:active {
+    background: #E48187;
+  }
 `;
 
 const TopInfo = styled.div`
