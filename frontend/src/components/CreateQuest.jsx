@@ -66,7 +66,7 @@ export const CreateQuest = () => {
         {/* NOTE: category commented out for now. Not used currently */}
 
         <label>
-          How many minutes will it take you?
+          How many minutes will it take?
           <Input 
             name="time" 
             type='number'
@@ -85,13 +85,14 @@ export const CreateQuest = () => {
 }
 
 const Form = styled.form`
-  margin: 10px;
   padding: 16px;
   border-radius: 12px;
-  border: 2px solid var(--accent-purple);
-  background: #fff;
-  box-shadow: 2px 4px 4px 0 #dbdbdb;
-`;
+  border: 2px solid #B594FF;
+  background: #FFF;
+  box-shadow: 2px 4px 4px 0 #DBDBDB;
+  text-align: center;
+  margin: 20px 0 20px 0;
+`
 
 const Label = styled.label`
   display: flex;
@@ -109,7 +110,6 @@ const Input = styled.input`
 
 const Button = styled.button`
   display: flex;
-  width: 315px;
   height: 54px;
   padding: 8px 16px;
   justify-content: center;
@@ -120,6 +120,7 @@ const Button = styled.button`
   background: #866DEB;
   box-shadow: 2px 4px 4px 0 rgba(139, 139, 139, 0.30);
   color: white;
+  font-family: "Pixelify Sans", sans-serif;
 `
 
 // TODO: Add authentication check - redirect to login if no accessToken

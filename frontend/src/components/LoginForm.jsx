@@ -90,31 +90,75 @@ export const LoginForm = () => {
   return (
     <>
       <Form onSubmit={handleSubmit}>
-        <h4>Welcome Back! Log in now:</h4>
+        <h2>Welcome Back! Log in now:</h2>
         {/* <label>
           Username
           <input type="text" placeholder="username" onChange={event => setName(event.target.value)}/>
         </label> */}
-        <label>
+        <Label>
           email
-          <input type="email" placeholder="email" onChange={event => setEmail(event.target.value)}/>
-        </label>
-        <label>
+          <Input type="email" placeholder="email" onChange={event => setEmail(event.target.value)}/>
+        </Label>
+        <Label>
           Password
-          <input type="password" placeholder="password" onChange={event => setPassword(event.target.value)}/>
-        </label>
+          <Input type="password" placeholder="password" onChange={event => setPassword(event.target.value)}/>
+        </Label>
         {error && <p>{error}</p>}
-        <button type="submit">Log in</button>
-        <Link to="/signup">Not a user? Sign up</Link>
+        <Button type="submit">Log in</Button>
+        <StyledLink to="/signup">Not a user? Click here to sign up</StyledLink>
       </Form>
     </>
   )
 }
 
 const Form = styled.form`
+  margin: 10px;
+  padding: 16px;
+  border-radius: 12px;
+  border: 2px solid #B594FF;
+  background: #FFF;
+  box-shadow: 2px 4px 4px 0 #DBDBDB;
+  text-align: center;
+`
+const Label = styled.label`
   display: flex;
   flex-direction: column;
-  background-color: var(--primary-color);
-  margin: 10px;
+`
+
+const Input = styled.input`
+  border: none;
   border-radius: 12px;
+  padding: 15px 16px 14px 16px;
+  background: #F4F0FF;
+  margin: 16px 0;
+  width: 100%;
+  font-size: 16px;
+`
+
+const Button = styled.button`
+  display: flex;
+  height: 54px;
+  width: 100%;
+  padding: 8px 16px;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  border-radius: 12px;
+  border: 1px solid #1D30CE;
+  background: #866DEB;
+  box-shadow: 2px 4px 4px 0 rgba(139, 139, 139, 0.30);
+  color: white;
+  font-family: "Pixelify Sans", sans-serif;
+  font-size: 16px;
+`
+
+const StyledLink = styled(Link)`
+  text-decoration: none;
+  color: black;
+  margin: 20px;
+  display: block;
+
+  &:hover{
+    transform: scale(1.1)
+  }
 `
