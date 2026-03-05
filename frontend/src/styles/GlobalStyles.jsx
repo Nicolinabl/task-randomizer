@@ -27,6 +27,8 @@ export const GlobalStyle = createGlobalStyle`
     --light-purple: #E5DEF8;
     --dark-purple: #2D0FA3;
 
+     --extra-pink: #FFF1F9;
+
   }
 
   #root {
