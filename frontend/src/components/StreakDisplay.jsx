@@ -7,7 +7,7 @@ export const Streak = () => {
 
   return (
     <StreakWrapper>
-      <p>Daily strike:</p>
+      <h2>My streak:</h2>
       {isStreakLoading ? (
         <span>Loading...</span>
       ) : (
@@ -22,9 +22,11 @@ const StreakWrapper = styled.div`
   gap: 8px;
   justify-content: flex-start;
   align-items: center;
+  margin-top: 20px;
 `;
 
 const StreakNumber = styled.span`
   font-weight: 700;
   font-size: 18px;
+  color: #B594FF;
 `;

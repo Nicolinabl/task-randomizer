@@ -12,6 +12,7 @@
   "dependencies": {
     "@dicebear/collection": "^9.4.0",
     "@dicebear/core": "^9.4.0",
+    "framer-motion": "^12.35.0",
     "hamburger-menu": "^0.7.1",
     "hamburger-react": "^2.5.2",
     "lottie-react": "^2.4.1",

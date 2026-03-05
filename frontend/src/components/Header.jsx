@@ -6,22 +6,24 @@ export const Header = () => {
   return (
     <HeaderWrapper>
       <h1>Welcome to XxxxXXX</h1>
+      <p>Never spend energy on choosing your chores again</p>
       <Streak />
       <HeartIcon></HeartIcon>
       <icon-svg></icon-svg>
-
-      <p>Never spend energy on choosing your chores again</p>
     </HeaderWrapper>
   );
 };
 const HeaderWrapper = styled.div`
   border-radius: 12px;
-  background: var(--background-light-purple);
+  // background: var(--background-light-purple);
+  background-color: #FFFFFF;
   box-shadow: 2px 4px 4px 0 #dbdbdb;
+  border: 2px solid #B594FF;
 
   display: flex;
   flex-direction: column;
-  justify-content: center;
+  // justify-content: center;
+  align-items: center;
 
   gap: 8px;
   width: 100%;
