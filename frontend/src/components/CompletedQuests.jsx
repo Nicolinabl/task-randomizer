@@ -37,6 +37,7 @@ export const CompletedQuests = () => {
           id={quest._id}
           message={quest.message}
           done={quest.done}
+          timeNeeded={quest.timeNeeded}
           handleChecked={completeQuest}
           onDelete={deleteQuest}
         />
