@@ -27,6 +27,12 @@ const StreakWrapper = styled.div`
 
 const StreakNumber = styled.span`
   font-weight: 700;
-  font-size: 18px;
-  color: #B594FF;
+  font-size: 20px;
+  font-family: "Roboto", sans-serif;
+  font-style: normal;
+  line-height: normal;
+  color: var(--dark-purple);
+  background-color: var(--light-pink);
+  padding: 2px 8px;
+  border-radius: 4px;
 `;
