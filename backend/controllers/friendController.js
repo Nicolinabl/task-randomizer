@@ -31,7 +31,7 @@ const getFriendsFeed = async (req, res) => {
     //returning all friends quests filtered with query, and populating only fields we need
     const friendsQuests = await query
       .populate({ path: "createdBy", select: "name moodUrl" })
-      .select("message category timeNeeded doneAt createdBy");
+      .select("message category timeNeeded doneAt createdBy kudos");
 
     //console.log(`quests: ${friendsQuests}`);
     if (!friendsQuests.length) {
