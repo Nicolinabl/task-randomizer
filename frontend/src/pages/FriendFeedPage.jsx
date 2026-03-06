@@ -3,10 +3,10 @@ import { useState, useEffect } from "react";
 import { Navbar } from "../components/Navbar";
 import { FriendQuestCard } from "../components/cards/FriendQuestCard";
 import { apiUrl } from "../../api";
-import { useUserStore } from '../stores/useUserStore'
+import { useUserStore } from "../stores/useUserStore";
 
 export const FriendFeed = () => {
-  const { user } = useUserStore()  
+  const { user } = useUserStore();
   const [friendsQuests, setFriendsQuests] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -30,27 +30,27 @@ export const FriendFeed = () => {
   useEffect(() => {
     const fetchFeed = async () => {
       try {
-        const response = await fetch(apiUrl + '/feed/quests', {
+        const response = await fetch(apiUrl + "/feed/quests", {
           headers: {
-            'Content-Type': 'application/json',
-            'Authorization': user?.accessToken
-          }
-        })
+            "Content-Type": "application/json",
+            Authorization: user?.accessToken,
+          },
+        });
 
-        if (!response.ok) throw new Error("Couldn't fetch feed")
+        if (!response.ok) throw new Error("Couldn't fetch feed");
 
-        const data = await response.json()
-        setFriendsQuests(data)
+        const data = await response.json();
+        setFriendsQuests(data);
       } catch (err) {
-        setError("Couldn't load quests feed")
-        console.error(err)
+        setError("Couldn't load quests feed");
+        console.error(err);
       } finally {
-        setLoading(false)
+        setLoading(false);
       }
-    }
+    };
 
-    if (user) fetchFeed()
-  }, [user])
+    if (user) fetchFeed();
+  }, [user]);
 
   if (loading) return <div>Loading feed...</div>;
   if (error) return <div>{error}</div>;
@@ -59,7 +59,9 @@ export const FriendFeed = () => {
     // pass params from login and register forms to an authentication component to then add authentication after H2
     // smth like {!user ? (<Authentification onAuthSuccess = {handleAuth}>)}
     <PageWrapper>
-      <H1>Friends completed quests</H1>
+      <HeaderWrapper>
+        <H1>Friends completed quests</H1>
+      </HeaderWrapper>
 
       {/* <form>
         <label>
@@ -86,6 +88,10 @@ export const FriendFeed = () => {
 
 //Styles
 
+const HeaderWrapper = styled.div`
+  margin: 16px 0 4px;
+`;
+
 const PageWrapper = styled.main`
   display: flex;
   flex-direction: column;
@@ -96,27 +102,25 @@ const PageWrapper = styled.main`
 
 const H1 = styled.h1`
   margin: 20px 0;
-`
+`;
 
-
-
-    // //add error handling
-    // setLoading(true);
-    // fetch(apiUrl + "/friends", {
-    //   headers: {
-    //     "Content-Type": "application/json",
-    //     ...accessToken(),
-    //   },
-    // })
-    //   .then((res) => {
-    //     if (!res.ok) throw new Error("Couldn't fetch data");
-    //     return res.json();
-    //   })
-    //   .then((data) => {
-    //     setFriendsQuests(data);
-    //   })
-    //   .catch((err) => {
-    //     console.error(err);
-    //     setError("Coulndn't load friends quests");
-    //   })
-    //   .finally(() => setLoading(false));
+// //add error handling
+// setLoading(true);
+// fetch(apiUrl + "/friends", {
+//   headers: {
+//     "Content-Type": "application/json",
+//     ...accessToken(),
+//   },
+// })
+//   .then((res) => {
+//     if (!res.ok) throw new Error("Couldn't fetch data");
+//     return res.json();
+//   })
+//   .then((data) => {
+//     setFriendsQuests(data);
+//   })
+//   .catch((err) => {
+//     console.error(err);
+//     setError("Coulndn't load friends quests");
+//   })
+//   .finally(() => setLoading(false));

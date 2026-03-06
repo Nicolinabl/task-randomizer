@@ -20,7 +20,7 @@ export const Rewards = () => {
   return (
     <PageWrapper>
       <ButtonClose onClick={handleClick}>X</ButtonClose>
-      <h2>You are on fire today</h2>
+      <h2>You are on fire today🔥</h2>
       <p>Keep it up and don't forget to smile!</p>
       <MemeOfTheDay />
       <ButtonReward onClick={handleClick}>Back home</ButtonReward>
@@ -79,6 +79,7 @@ const ButtonReward = styled.button`
 
   border-radius: 12px;
   border: 1px solid var(--medium-purple);
+  margin-bottom: 64px;
 
   /* Small shadow */
   box-shadow: 0 2px 2px 0 #dbdbdb;
