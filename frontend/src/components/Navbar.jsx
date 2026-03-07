@@ -74,12 +74,12 @@ const Nav = styled.nav`
 `;
 const HamburgerWrapper = styled.div`
   margin-left: auto;
-  z-index: 100;
+  z-index: 1000;
 `;
 
 const NavMenu = styled.div`
   background-color: var(--medium-pink);
-  display: ${({ isOpen }) => (isOpen ? "flex" : "none")};
+  display: ${({ $isOpen }) => ($isOpen ? "flex" : "none")};
   flex-direction: column;
   position: fixed;
   z-index: 999;
@@ -91,7 +91,6 @@ const NavMenu = styled.div`
   align-items: center;
   justify-content: center;
   padding: 0;
-  width: auto;
   gap: 16px;
 `;
 
