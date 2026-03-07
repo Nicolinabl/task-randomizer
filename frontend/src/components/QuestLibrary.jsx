@@ -5,6 +5,7 @@ import styled from "styled-components";
 //import questLibrary from "../library.json";
 import HeartIcon from "../icons/HeartIcon";
 import { motion, AnimatePresence } from "framer-motion";
+import toast from "react-hot-toast";
 
 export const QuestLibrary = () => {
   const { fetchLibraryQuests, libraryQuests, duplicateQuest, createQuest } =
@@ -15,8 +16,15 @@ export const QuestLibrary = () => {
     fetchLibraryQuests();
   }, []);
 
-  const handleAdd = (quest) => {
-    duplicateQuest(quest);
+  const handleAdd = async (quest) => {
+    const result = await duplicateQuest(quest);
+
+    if (result?.success) {
+      toast.success("Quest is added to your list!");
+    }
+    if (result?.error) {
+      toast.error(result?.error || "Oops, couldn't add quest to your list");
+    }
   };
 
   return (

@@ -13,6 +13,7 @@ import { apiUrl } from "../api";
 import { Navbar } from "./components/Navbar";
 import { useUserStore } from "./stores/useUserStore";
 import { GiveUp } from "./pages/GiveUpPage";
+import { Toaster } from "react-hot-toast";
 
 export const App = () => {
   const { getUser, logout } = useUserStore();
@@ -29,6 +30,14 @@ export const App = () => {
     <>
       <GlobalStyle />
       <Navbar onLogout={logout} />
+      <Toaster
+        position="top-center"
+        reverseOrder={false}
+        toastOptions={{
+          style: { borderRadius: "12px", background: "#7954fd", color: "#fff" },
+        }}
+      />
+
       <Routes>
         <Route path="/" element={<UserProfile />} />
         <Route path="/about" element={<About />} />

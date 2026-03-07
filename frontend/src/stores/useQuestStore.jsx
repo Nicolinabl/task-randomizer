@@ -1,6 +1,7 @@
 import { create } from "zustand";
 import { apiUrl } from "../../api";
 import { useUserStore } from "./useUserStore";
+import toast from "react-hot-toast";
 
 export const useQuestStore = create((set) => ({
   // Initial state
@@ -57,7 +58,6 @@ export const useQuestStore = create((set) => ({
           message,
           timeNeeded: Number(timeNeeded),
           category: category,
-          createdBy: user._id,
         }),
       });
 
@@ -86,8 +86,11 @@ export const useQuestStore = create((set) => ({
       set((state) => ({
         quests: state.quests.filter((q) => q._id !== questId),
       }));
+
+      toast.success("Ok, quest was deleted");
     } catch (error) {
       console.error("Error deleting quest:", error);
+      toast.error("Couldn't delete quest");
     }
   },
 
@@ -117,8 +120,15 @@ export const useQuestStore = create((set) => ({
       }));
 
       await fetchStreak();
+
+      if (done) {
+        toast.success("Wow, you did it again!");
+      } else {
+        toast("Ok, changed to undone");
+      }
     } catch (err) {
       console.error("Error completing quest:", err);
+      toast.error("Couldn't change quest status");
     }
   },
 
@@ -151,12 +161,14 @@ export const useQuestStore = create((set) => ({
       });
 
       const data = await response.json();
-      if (!response.ok || !data.success) throw new Error("Couldn't add quest");
+      if (!response.ok || !data.success)
+        return { success: false, error: data.message };
 
       // Add the new quest to the user's quest list in the store
-      set((state) => ({ quests: [...state.quests, data.response] }));
+      set((state) => ({ quests: [data.response, ...state.quests] }));
+      return { success: true };
     } catch (err) {
-      console.error("Error adding quest from library:", err);
+      return { succes: false, error: "Error adding quest from library" };
     }
   },
 }));
