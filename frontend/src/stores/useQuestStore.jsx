@@ -19,7 +19,10 @@ export const useQuestStore = create((set) => ({
 
     try {
       const response = await fetch(apiUrl + "/quests/all", {
-        headers: { Authorization: accessToken },
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: accessToken,
+        },
       });
       const data = await response.json();
 
@@ -53,8 +56,8 @@ export const useQuestStore = create((set) => ({
         body: JSON.stringify({
           message,
           timeNeeded: Number(timeNeeded),
-          category: [category],
-          createdBy: user.userId,
+          category: category,
+          createdBy: user._id,
         }),
       });
 
@@ -62,7 +65,7 @@ export const useQuestStore = create((set) => ({
 
       if (!response.ok) return { success: false, error: data.message };
 
-      set((state) => ({ quests: [...state.quests, data.response || data] }))
+      set((state) => ({ quests: [...state.quests, data.response || data] }));
       return { success: true };
     } catch (error) {
       return { success: false, error: "Something went wrong" };
@@ -92,7 +95,7 @@ export const useQuestStore = create((set) => ({
   completeQuest: async (questId, done) => {
     const { user, fetchStreak } = useUserStore.getState();
 
-    const accessToken = useUserStore.getState().user?.accessToken;
+    const accessToken = user?.accessToken;
     if (!user?.accessToken) return;
 
     try {
@@ -124,6 +127,9 @@ export const useQuestStore = create((set) => ({
     try {
       const response = await fetch(apiUrl + "/quests/library");
       const data = await response.json();
+
+      if (!response.ok) throw new Error("Couldn't fetch library quests");
+
       set({ libraryQuests: data.response });
     } catch (error) {
       console.error(error);
@@ -131,20 +137,21 @@ export const useQuestStore = create((set) => ({
   },
 
   // Duplicate quests from library to personal questlist
-  duplicateQuest: async (questId) => {
+  duplicateQuest: async (id) => {
     const accessToken = useUserStore.getState().user?.accessToken;
     if (!accessToken) return;
 
     try {
-      const response = await fetch(apiUrl + `/quests/library/${questId}/add`, {
+      const response = await fetch(apiUrl + `/quests/library/${id}/add`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
           Authorization: accessToken,
         },
       });
+
       const data = await response.json();
-      if (!response.ok) throw new Error("Failed to add quest");
+      if (!response.ok || !data.success) throw new Error("Couldn't add quest");
 
       // Add the new quest to the user's quest list in the store
       set((state) => ({ quests: [...state.quests, data.response] }));

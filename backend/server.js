@@ -43,109 +43,97 @@ app.get("/", (req, res) => {
   //console.log("OUR ENV VAR", process.env.OUR_VAR);
 });
 
-// TODO ---- USER ENDPOINTS ----
-//✅ ---- Register new user ----
+//---- USER ENDPOINTS ----
+
+//---- Register new user ----
 app.post("/signup", userController.registerUser);
 
-//✅---- Login with existing user ----
+//---- Login with existing user ----
 app.post("/login", userController.loginUser);
 
-// FIXME only user with the same id can delete itself // MUST ---- Delete user -----
+// ---- Delete user -----
 app.delete("/users/:id", authentificateUser, userController.deleteUser);
 
-// FIXME MUST---- Smiley state of mood ---- >>>> only for auth users, returns sad/happy/delighted avatars
-/* app.get("/user/mood", authentificateUser, userController.userMood); */
-
-// FIXME MUST ---- User's Rewards Collection >>>>> only for auth users
+// ------- User's Rewards Collection ---------
 app.get("/rewards", authentificateUser, userController.userRewards);
 
-// ✅ MUST ---- Streaks >>>>> only for auth users
+// ---- Streaks ---------
 app.get("/streaks", authentificateUser, userController.userStreak);
 
-// FIXME Nice+ ---- User page (shows: current strike, settings, log out, delete user, bonus points, profile picture state, user library) >>>>> only for auth users
+// Nice-to-have: ---- User page (shows: current strike, settings, log out, delete user, bonus points, profile picture state, user library) >>>>> only for auth users
 app.get("/profile/:id", authentificateUser, userController.profileSettings);
 
-// EXTRA ---- Edit profile >>>>> only for authorised users for their own profiles(toggle easy/hard mode, change password?)
+// EXTRA ---- Edit profile, (toggle easy/hard mode, change password)
 app.patch("/profile/settings", authentificateUser, userController.updateUser);
 
-// TODO ---- QUESTS ----
-// --- Create a quest >>>>> only for auth users -----
+// ---- QUESTS ----
+
+// --- Create a quest -----
 app.post("/quests", authentificateUser, questController.createQuestUnAuth);
 
-// FIXME add auth MUST --- Give kudos >>>>> Doesn't prevent from liking more than once - why??
+// --- Give kudos --------
 app.post("/quests/:id/kudos", authentificateUser, questController.giveKudos);
 
-// ✅ ---- Show All Quests from Library, (OBS! Doesn't requie authentication, filters on category and time <=N -----
+// ---- Show All Quests from Library, (OBS! Doesn't requie authentication, filters on category and time <=N -----
 //Test example: http://localhost:8080/quests/library/?category=cleaning&time=20
 app.get("/quests/library", questController.showDefaultQuests);
 
-// ✅ ----- Returns all user's quests, can filter on category and time <= N) >>>>> only for auth users.
+// ----- Returns all user's quests, can filter on category and time <= N) -------
 app.get("/quests/all", authentificateUser, questController.showUserQuests);
 
-// ✅ ---- Duplicates a quest from library >>> only for auth users -------
+// ---- Duplicates a quest from library >>> only for auth users -------
 app.post(
   "/quests/library/:id/add",
   authentificateUser,
   questController.duplicateQuest,
 );
 
-// ✅ ------ Check quest as done ----- >>> for auth users, check that they only can check as done their own quests!
+// ------ Check quest as done -----
 app.patch(
   "/quests/:id/complete",
   authentificateUser,
   questController.checkQuestDone,
 );
 
-//  ✅ add auth for users MUST ---- Delete one quest >>>>> only for authorised users for their list
+// ---- Delete one quest ----------
 app.delete("/quests/:id", questController.deleteQuest);
 
-// FIXME add query, error handling MUST ---- User's done quests /quests/done/true
+// ---- User's done quests /quests/done/true
 app.get(
   "/quests/done?done=true",
   authentificateUser,
   questController.filterUserQuests,
 );
 
-// FIXME add randomizing, add looking through all users quests(added from library to users database)
-// MUST ---- User's daily random(!) quest >>>>> only for auth users // "/user/:userId/quests/:questId"
-//NOW: only finds one from general database
+// ---- User's daily random quest ------
 app.get("/quests/:id", authentificateUser, questController.getRandomQuest);
 
-// FIXME NICE+ ---- Quests history >>>>>> only for auth users
+// Nice-to-have ---- Quests history >>>>>> only for auth users
 app.get(
   "/quests/history",
   authentificateUser,
   questController.showQuestHistory,
 );
 
-// EXTRA ---- DELETE more than 1 quest at a time >>>>> only for authorised users for their list
+// ---- Delete more than 1 quest at a time >>>>> only for authorised users for their list
 app.delete(
   "/quests/delete/more",
   authentificateUser,
   questController.deleteManyQuests,
 );
 
-// EXTRA ---- Edit one quest (Message, time, deadline, categories) >>>>> only for authorised users for their list
-//app.patch("/quest/:id/edit")
+// ---- FRIENDS ----
 
-// TODO ---- FRIENDS ----
-
-// FIXME (add friends only to filter) MUST ---- Friends Feed page >>>>> only for auth users( if it's a friends page, otherwise for everybody?)
-// What it should do:
-// - req auth,
-// - fetches done quests from other users
-// - sorts them by done date (desc)
-// - excludes current users quests
-// - populates users info
+// ---- Friends Feed page --------
 app.get("/feed/quests", authentificateUser, friendController.getFriendsFeed);
 
-// FIXME add errorhandling ---- Find a friend by ID ------
+// ---- Find a friend by ID ------
 app.get("/friends/:id", authentificateUser, friendController.findUserById);
 
-// TODO add params, add errorhandling ---- Find a friend by Name ------
+// ---- Find a friend by Name ------
 app.get("/friends/:name", authentificateUser, friendController.findUserdByName);
 
-// FIXME NICE+ ---- Delete a friend >>>>> only for authorised users for their feed
+// ---- Delete a friend ---------
 app.delete("/friends/:id", friendController.removeFriend);
 
 // -------------------------------------------

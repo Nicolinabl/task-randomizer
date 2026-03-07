@@ -29,7 +29,7 @@ export const Navbar = ({ onLogout }) => {
         />
       </HamburgerWrapper>
 
-      <NavMenu isOpen={isOpen}>
+      <NavMenu $isOpen={isOpen}>
         <StyledLink to="/" onClick={() => setOpen(false)}>
           Home
         </StyledLink>

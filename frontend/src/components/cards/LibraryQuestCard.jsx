@@ -18,7 +18,7 @@ export const LibraryQuestCard = ({
           </ChipContainer>
         </div>
       </Div>
-      <ButtonAdd onClick={() => onAdd(id)}>+</ButtonAdd>
+      <ButtonAdd onClick={onAdd}>+</ButtonAdd>
     </Container>
   );
 };
@@ -93,11 +93,11 @@ const ButtonAdd = styled.button`
   box-shadow: 0 2px 2px 0 #dbdbdb;
 
   &:hover {
-    background: var(--accent-color)
+    background: var(--accent-color);
   }
 
   &:active {
-    background: #E48187;
+    background: #e48187;
   }
 `;
 

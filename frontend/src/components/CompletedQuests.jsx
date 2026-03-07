@@ -2,12 +2,12 @@ import { CheckboxChecked } from "../icons/CheckboxChecked";
 import { useQuestStore } from "../stores/useQuestStore";
 import { QuestCard } from "./cards/QuestCard";
 import styled from "styled-components";
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion, AnimatePresence } from "framer-motion";
 import { useState } from "react";
 
 export const CompletedQuests = () => {
   const { quests, completeQuest, deleteQuest } = useQuestStore();
-  const [ isVisible, setIsVisible ] = useState(false)
+  const [isVisible, setIsVisible] = useState(false);
 
   const completed = quests.filter((quest) => quest.done === true);
 
@@ -17,33 +17,32 @@ export const CompletedQuests = () => {
         <CheckboxChecked />
         <h2>My completed quests:</h2>
         <Button onClick={() => setIsVisible(!isVisible)}>
-          {isVisible ? 'Hide' : 'Show'}
+          {isVisible ? "Hide" : "Show"}
         </Button>
       </HeadingContainer>
 
       <AnimatePresence>
-          {isVisible && (
-            <motion.div
+        {isVisible && (
+          <motion.div
             initial={{ opacity: 0, height: 0 }}
-            animate={{ opacity: 1, height: 'auto' }}
+            animate={{ opacity: 1, height: "auto" }}
             exit={{ opacity: 0, height: 0 }}
-            transition={{ duration: 0.3, ease: 'easeInOut' }}
-            style={{ overflow: 'hidden' }}
-        >
-
-      {completed.map((quest) => (
-        <QuestCard
-          key={quest._id}
-          id={quest._id}
-          message={quest.message}
-          done={quest.done}
-          timeNeeded={quest.timeNeeded}
-          handleChecked={completeQuest}
-          onDelete={deleteQuest}
-        />
-      ))}
-      </motion.div>
-      )}
+            transition={{ duration: 0.3, ease: "easeInOut" }}
+            style={{ overflow: "hidden" }}
+          >
+            {completed.map((quest) => (
+              <QuestCard
+                key={quest._id}
+                id={quest._id}
+                message={quest.message}
+                done={quest.done}
+                timeNeeded={quest.timeNeeded}
+                handleChecked={completeQuest}
+                onDelete={deleteQuest}
+              />
+            ))}
+          </motion.div>
+        )}
       </AnimatePresence>
     </Container>
   );
@@ -89,10 +88,10 @@ const Button = styled.button`
   box-shadow: 0 1px 1px 0 #dbdbdb;
 
   &:hover {
-    background: var(--light-purple)
+    background: var(--light-purple);
   }
 
   &:active {
-    background: var(--accent-purple)
+    background: var(--accent-purple);
   }
 `;

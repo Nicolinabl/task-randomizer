@@ -10,8 +10,8 @@ import { json, response } from "express";
 
 // ---- All Quest routes: ----
 
-// FIXME // MUST --- Create a quest >>>>> only for auth users
-// add: redirecting for not authorized (EXTRA functionality)
+// --- Create a quest ----
+// add: redirecting for not authorized (EXTRA)
 const createQuestUnAuth = async (req, res) => {
   const { message, timeNeeded, category, deadline } = req.body;
   //console.log("createdBy:", req.user?.id);
@@ -119,9 +119,11 @@ const showUserQuests = async (req, res) => {
   }
 
   try {
-    const filteredQuests = await Quest.find(query).populate({
-      path: "createdBy",
-    });
+    const filteredQuests = await Quest.find(query)
+      .populate({
+        path: "createdBy",
+      })
+      .sort({ createdAt: -1 });
 
     if (!filteredQuests.length) {
       return res.status(200).json({
@@ -140,14 +142,11 @@ const showUserQuests = async (req, res) => {
   }
 };
 
-// TODO add randomizing, add looking through all users quests
-// MUST ---- User's daily random(!) quest >>>>> only for auth users // "/user/:userId/quests/:questId"
-//NOW: only finds one from general database
+// ---- User's daily random(!) quest -------
 const getRandomQuest = async (req, res) => {
   const { id } = req.params;
 
   try {
-    // const libraryQuests = quests.find((item) => item._id === id);
     const dailyQuest = await Quest.findById(id); //from database
     if (!dailyQuest) {
       return res.status(404).json({
@@ -168,7 +167,6 @@ const getRandomQuest = async (req, res) => {
 };
 
 //  ----- Duplicates a single quest from library to user's quest lits -------
-//id=quest id, requires authentication from user
 
 const duplicateQuest = async (req, res) => {
   try {
@@ -177,7 +175,7 @@ const duplicateQuest = async (req, res) => {
     if (!mongoose.Types.ObjectId.isValid(id)) {
       return res
         .status(400)
-        .json({ succes: false, message: `This id ${id} is not valid` });
+        .json({ success: false, message: `This id ${id} is not valid` });
     }
 
     const defaultQuest = await LibraryQuest.findById(id);
@@ -203,7 +201,7 @@ const duplicateQuest = async (req, res) => {
   } catch (err) {
     return res
       .status(500)
-      .json({ succes: false, message: "Server error", errors: err.message });
+      .json({ success: false, message: "Server error", errors: err.message });
   }
 };
 
@@ -228,7 +226,7 @@ const checkQuestDone = async (req, res) => {
     //console.log(done);
     return res
       .status(400)
-      .json({ succes: false, message: "Invalid type of data" });
+      .json({ success: false, message: "Invalid type of data" });
   }
 
   if (!mongoose.Types.ObjectId.isValid(id)) {

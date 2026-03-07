@@ -1,17 +1,22 @@
 import { LibraryQuestCard } from "./cards/LibraryQuestCard";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useQuestStore } from "../stores/useQuestStore";
 import styled from "styled-components";
-import questLibrary from "../library.json";
+//import questLibrary from "../library.json";
 import HeartIcon from "../icons/HeartIcon";
-import { motion, AnimatePresence } from 'framer-motion'
+import { motion, AnimatePresence } from "framer-motion";
 
 export const QuestLibrary = () => {
-  const { fetchLibraryQuests, libraryQuests, duplicateQuest, createQuest } = useQuestStore();
-  const [ isVisible, setIsVisible ] = useState(false)
+  const { fetchLibraryQuests, libraryQuests, duplicateQuest, createQuest } =
+    useQuestStore();
+  const [isVisible, setIsVisible] = useState(false);
+
+  useEffect(() => {
+    fetchLibraryQuests();
+  }, []);
 
   const handleAdd = (quest) => {
-    createQuest(quest.message, quest.timeNeeded, quest.category);
+    duplicateQuest(quest);
   };
 
   return (
@@ -20,32 +25,31 @@ export const QuestLibrary = () => {
         <HeartIcon />
         <h2>Add from quest library:</h2>
         <Button onClick={() => setIsVisible(!isVisible)}>
-          {isVisible ? 'Hide' : 'Show'}
+          {isVisible ? "Hide" : "Show"}
         </Button>
-        </HeadingContainer>
+      </HeadingContainer>
 
-        <AnimatePresence>
-          {isVisible && (
-            <motion.div
+      <AnimatePresence>
+        {isVisible && (
+          <motion.div
             initial={{ opacity: 0, height: 0 }}
-            animate={{ opacity: 1, height: 'auto' }}
+            animate={{ opacity: 1, height: "auto" }}
             exit={{ opacity: 0, height: 0 }}
-            transition={{ duration: 0.3, ease: 'easeInOut' }}
-            style={{ overflow: 'hidden' }}
-        >
-        
-      {questLibrary.map((quest, index) => (
-        <LibraryQuestCard
-          key={index}
-          id={index}
-          message={quest.message}
-          timeNeeded={quest.timeNeeded}
-          category={quest.category}
-          onAdd={() => handleAdd(quest)}
-        />
-      ))}
-      </motion.div>
-      )}
+            transition={{ duration: 0.3, ease: "easeInOut" }}
+            style={{ overflow: "hidden" }}
+          >
+            {libraryQuests.map((quest) => (
+              <LibraryQuestCard
+                key={quest._id}
+                id={quest._id}
+                message={quest.message}
+                timeNeeded={quest.timeNeeded}
+                category={quest.category}
+                onAdd={() => handleAdd(quest._id)}
+              />
+            ))}
+          </motion.div>
+        )}
       </AnimatePresence>
     </Container>
   );
@@ -92,10 +96,10 @@ const Button = styled.button`
   box-shadow: 0 1px 1px 0 #dbdbdb;
 
   &:hover {
-    background: var(--light-purple)
+    background: var(--light-purple);
   }
 
   &:active {
-    background: var(--accent-purple)
+    background: var(--accent-purple);
   }
 `;
