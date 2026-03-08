@@ -136,4 +136,4 @@ const Button = styled.button`
   }
 `;
 
-// TODO: Add authentication check - redirect to login if no accessToken
+

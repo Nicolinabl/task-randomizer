@@ -99,4 +99,4 @@ const StyledLink = styled(Link)`
   }
 `;
 
-// FIXME: change what content is showed depending on logged in or logged out user
+

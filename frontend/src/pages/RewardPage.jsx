@@ -103,4 +103,4 @@ const ButtonReward = styled.button`
 //button Close
 //Button hahaha
 
-// TODO: Put content here + set up route
+

@@ -24,8 +24,6 @@ const Div = styled.div`
   background: #FFFFFF;
 `;
 
-// TODO add #FFFFFF to root colors in globalstyles
-
 const H2 = styled.h2`
   font-family: "Pixelify Sans", sans-serif;
   font-size: 18px;

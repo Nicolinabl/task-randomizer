@@ -186,5 +186,3 @@ const StyledLink = styled(Link)`
   }
 `
 
-// TODO: This is only basic form and step 1/2. Add step 2 (add code sent to email to verify)
-// TODO: when user signed up, also log in

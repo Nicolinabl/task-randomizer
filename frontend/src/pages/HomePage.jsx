@@ -180,4 +180,4 @@ const StyledLink = styled(Link)`
   display: contents;
 `;
 
-// TODO: This is home page for logged out user. Decide what to keep there. Simplify?
+

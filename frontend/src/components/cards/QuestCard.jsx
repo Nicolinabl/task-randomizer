@@ -116,5 +116,4 @@ const ButtonDelete = styled.button`
   }
 `;
 
-// TODO hide/show list of tasks
-// TODO change delete button to icon
+
